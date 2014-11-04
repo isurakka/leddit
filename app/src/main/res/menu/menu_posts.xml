@@ -1,28 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".PostsActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings" android:icon="@android:drawable/ic_menu_more"
-        android:orderInCategory="100" android:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/menuSubmit"
-                android:title="subscribe"
-                android:showAsAction="ifRoom|withText"/>
-            <item
-                android:id="@+id/menuSubscribe"
-                android:title="submit"
-                android:showAsAction="ifRoom|withText"/>
-        </menu>
-    </item>
 
     <item android:id="@+id/action_refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
-        android:title="Refresh"
-        android:showAsAction="ifRoom"/>
+    android:icon="@android:drawable/ic_menu_rotate"
+    android:title="Refresh"
+    android:showAsAction="always"/>
+
+    <item android:id="@+id/action_filter_label"
+        android:title="DASDDASDAS"
+        android:showAsAction="ifRoom"
+        android:label="AALALAALLAL"
+        android:actionViewClass="android.widget.TextView" />
+
     <item
         android:icon="@android:drawable/arrow_down_float"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always|withText"
         android:title="filter">
-        <menu android:showAsAction="ifRoom|withText">
+        <menu android:showAsAction="always|withText">
             <item
                 android:id="@+id/menuHot"
                 android:title="hot"
