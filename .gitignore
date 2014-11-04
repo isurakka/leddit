@@ -27,6 +27,10 @@ proguard/
 # Log Files
 *.log
 
+# built native files
+*.o
+*.so
+
 
 
 # BY ANDROID STUDIO
@@ -35,5 +39,10 @@ proguard/
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.idea/tasks.xml
 .DS_Store
 /build
+
+# Database files (may contain password)
+.idea/datasources.xml
+.idea/dataSources.ids
