@@ -1,6 +1,7 @@
 package com.leddit.leddit.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leddit.leddit.api.output.RedditObject;
 
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
@@ -16,6 +17,12 @@ public class RedditApi {
 
         RedditApiService rService = restAdapter.create(RedditApiService.class);
 
-        System.out.print(rService.listSubreddit("javascript", "hot").getData().getChildren().get(0).getData().getSubreddit());
+        RedditObject o = rService.listSubreddit("games", "hot");
+
+        for(int i = 0; i < o.getData().getChildren().size(); i++)
+        {
+            System.out.println(o.getData().getChildren().get(i).getData().getTitle());
+        }
+
     }
 }
