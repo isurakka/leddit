@@ -12,6 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ListView;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends Activity
@@ -101,6 +108,10 @@ public class MainActivity extends Activity
          */
         private static final String SUBREDDIT_NAME = "section_number";
 
+        private ListView listView;
+        private List<RedditThread> threads;
+        private RedditThreadListAdapter adapter;
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -111,7 +122,20 @@ public class MainActivity extends Activity
             Bundle args = new Bundle();
             args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
+
+            fragment.threads = ThreadListFragment.getThreads(subredditName);
+
             return fragment;
+        }
+
+        private static List<RedditThread> getThreads(String subredditName) {
+            // TODO: Get threads from api
+
+            List<RedditThread> ret = Arrays.asList(
+                    new RedditThread("This is a test thread 1", 9001, "google.com", DateTime.now(), "Hessu", 123),
+                    new RedditThread("This is a test thread 2", 3251, "pallo.fi", DateTime.now(), "Kalle", 34));
+
+            return ret;
         }
 
         public ThreadListFragment() {
@@ -121,6 +145,11 @@ public class MainActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_threadlist, container, false);
+
+            listView = (ListView)rootView.findViewById(R.id.thread_list);
+            adapter = new RedditThreadListAdapter(inflater, threads);
+            listView.setAdapter(adapter);
+
             return rootView;
         }
 
