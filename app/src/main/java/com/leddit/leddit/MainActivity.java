@@ -147,7 +147,7 @@ public class MainActivity extends Activity
             View rootView = inflater.inflate(R.layout.fragment_threadlist, container, false);
 
             listView = (ListView)rootView.findViewById(R.id.thread_list);
-            adapter = new RedditThreadListAdapter(inflater, threads);
+            adapter = new RedditThreadListAdapter(listView.getContext(), threads);
             listView.setAdapter(adapter);
 
             return rootView;

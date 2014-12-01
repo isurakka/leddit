@@ -1,10 +1,15 @@
 package com.leddit.leddit;
 
+import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -18,12 +23,14 @@ import java.util.List;
  */
 public class RedditThreadListAdapter extends BaseAdapter {
 
-    LayoutInflater inflater;
+    Context context;
     List<RedditThread> threads;
+    static int id = 0;
 
-    public RedditThreadListAdapter(LayoutInflater inflater, List<RedditThread> threads)
+    public RedditThreadListAdapter(Context context, List<RedditThread> threads)
     {
-        this.inflater = inflater;
+        // TODO: Remove parameter inflater if getView service inflater works
+        this.context = context;
         this.threads = threads;
     }
 
@@ -45,15 +52,49 @@ public class RedditThreadListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        //LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_thread, null);
 
-        TextView title = (TextView)convertView.findViewById(R.id.title);
-        TextView score = (TextView)convertView.findViewById(R.id.score);
-        TextView domain = (TextView)convertView.findViewById(R.id.domain);
-        TextView time = (TextView)convertView.findViewById(R.id.time);
-        TextView user = (TextView)convertView.findViewById(R.id.user);
-        TextView comments = (TextView)convertView.findViewById(R.id.comments);
+        convertView.setOnTouchListener(new View.OnTouchListener() {
+
+            float x;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+
+                if (action == MotionEvent.ACTION_DOWN)
+                {
+                    x = event.getX();
+                }
+                else if (action == MotionEvent.ACTION_UP)
+                {
+                    float xDiff = event.getX() - x;
+
+                    // If x movement high enough, flip the flipper
+                    if (Math.abs(xDiff) > 60)
+                    {
+                        ViewFlipper flipper = (ViewFlipper)v.findViewById(R.id.viewFlipper);
+                        flipper.showNext();
+                    }
+                }
+
+                return true;
+            }
+        });
+
+        View threadInfo = convertView.findViewById(R.id.thread_info);
+
+        TextView title = (TextView)threadInfo.findViewById(R.id.title);
+        TextView score = (TextView)threadInfo.findViewById(R.id.score);
+        TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
+        TextView time = (TextView)threadInfo.findViewById(R.id.time);
+        TextView user = (TextView)threadInfo.findViewById(R.id.user);
+        TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
         // TODO: Image preview
 
         RedditThread thread = threads.get(position);
