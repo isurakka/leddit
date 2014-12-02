@@ -8,15 +8,17 @@ import org.joda.time.DateTime;
 public class RedditThread {
     private String title;
     private int score;
+    private String link;
     private String domain;
     private DateTime postDate;
     private String user;
     private int commentCount;
 
-    public RedditThread(String title, int score, String domain, DateTime postDate, String user, int commentCount)
+    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, int commentCount)
     {
         this.title = title;
         this.score = score;
+        this.link = link;
         this.domain = domain;
         this.postDate = postDate;
         this.user = user;
@@ -69,5 +71,13 @@ public class RedditThread {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

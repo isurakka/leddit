@@ -1,6 +1,8 @@
 package com.leddit.leddit;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -59,6 +61,25 @@ public class RedditThreadListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.list_thread, null);
 
+        final View threadInfo = convertView.findViewById(R.id.thread_info);
+
+        TextView title = (TextView)threadInfo.findViewById(R.id.title);
+        TextView score = (TextView)threadInfo.findViewById(R.id.score);
+        TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
+        TextView time = (TextView)threadInfo.findViewById(R.id.time);
+        TextView user = (TextView)threadInfo.findViewById(R.id.user);
+        TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
+        // TODO: Image preview
+
+        final RedditThread thread = threads.get(position);
+
+        title.setText(thread.getTitle());
+        score.setText(Integer.toString(thread.getScore()));
+        domain.setText(thread.getDomain());
+        time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), thread.getPostDate()).getHours() + "h");
+        user.setText(thread.getUser());
+        comments.setText(thread.getCommentCount() + " comments");
+
         convertView.setOnTouchListener(new View.OnTouchListener() {
 
             float x;
@@ -80,31 +101,17 @@ public class RedditThreadListAdapter extends BaseAdapter {
                     {
                         ViewFlipper flipper = (ViewFlipper)v.findViewById(R.id.viewFlipper);
                         flipper.showNext();
+                        return true;
                     }
+
+                    // Open link
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(thread.getLink()));
+                    context.startActivity(browserIntent);
                 }
 
                 return true;
             }
         });
-
-        View threadInfo = convertView.findViewById(R.id.thread_info);
-
-        TextView title = (TextView)threadInfo.findViewById(R.id.title);
-        TextView score = (TextView)threadInfo.findViewById(R.id.score);
-        TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
-        TextView time = (TextView)threadInfo.findViewById(R.id.time);
-        TextView user = (TextView)threadInfo.findViewById(R.id.user);
-        TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
-        // TODO: Image preview
-
-        RedditThread thread = threads.get(position);
-
-        title.setText(thread.getTitle());
-        score.setText(Integer.toString(thread.getScore()));
-        domain.setText(thread.getDomain());
-        time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), thread.getPostDate()).getHours() + "h");
-        user.setText(thread.getUser());
-        comments.setText(thread.getCommentCount() + " comments");
 
         return convertView;
     }
