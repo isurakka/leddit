@@ -31,7 +31,6 @@ public class RedditThreadListAdapter extends BaseAdapter {
 
     public RedditThreadListAdapter(Context context, List<RedditThread> threads)
     {
-        // TODO: Remove parameter inflater if getView service inflater works
         this.context = context;
         this.threads = threads;
     }
@@ -54,12 +53,11 @@ public class RedditThreadListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
-        if (convertView == null)
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_thread, null);
+        }
 
         final View threadInfo = convertView.findViewById(R.id.thread_info);
 
@@ -80,6 +78,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
         user.setText(thread.getUser());
         comments.setText(thread.getCommentCount() + " comments");
 
+        // TODO: This is not the correct place to do event stuff
         convertView.setOnTouchListener(new View.OnTouchListener() {
 
             float x;
@@ -96,11 +95,18 @@ public class RedditThreadListAdapter extends BaseAdapter {
                 {
                     float xDiff = event.getX() - x;
 
+                    ViewFlipper flipper = (ViewFlipper)v.findViewById(R.id.viewFlipper);
+
                     // If x movement high enough, flip the flipper
                     if (Math.abs(xDiff) > 60)
                     {
-                        ViewFlipper flipper = (ViewFlipper)v.findViewById(R.id.viewFlipper);
                         flipper.showNext();
+                        return true;
+                    }
+
+                    // Don't proceed if we have action view visible;
+                    if (flipper.getDisplayedChild() != 0)
+                    {
                         return true;
                     }
 

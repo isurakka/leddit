@@ -5,14 +5,19 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ViewFlipper;
 
 import org.joda.time.DateTime;
 
@@ -148,6 +153,15 @@ public class MainActivity extends Activity
             listView = (ListView)rootView.findViewById(R.id.thread_list);
             adapter = new RedditThreadListAdapter(listView.getContext(), threads);
             listView.setAdapter(adapter);
+
+            // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
+            /*
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            });
+            */
 
             return rootView;
         }
