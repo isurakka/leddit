@@ -2,6 +2,8 @@ package com.leddit.leddit;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 /**
  * Created by Iiro on 30.11.2014.
  */
@@ -11,10 +13,16 @@ public class RedditThread {
     private String link;
     private String domain;
     private DateTime postDate;
+    // TODO: RedditUser class with lazy loading instead?
     private String user;
-    private int commentCount;
 
-    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, int commentCount)
+    // TODO: Lazy loading + getters
+    private String text;
+
+    // TODO: Lazy loading + getters
+    private List<RedditComment> comments;
+
+    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments)
     {
         this.title = title;
         this.score = score;
@@ -22,8 +30,10 @@ public class RedditThread {
         this.domain = domain;
         this.postDate = postDate;
         this.user = user;
-        this.commentCount = commentCount;
+        this.comments = comments;
     }
+
+    // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
 
     public String getTitle() {
         return title;
@@ -66,11 +76,7 @@ public class RedditThread {
     }
 
     public int getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
+        return comments.size();
     }
 
     public String getLink() {

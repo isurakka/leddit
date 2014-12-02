@@ -136,8 +136,10 @@ public class MainActivity extends Activity
             // TODO: Get threads from api
 
             List<RedditThread> ret = Arrays.asList(
-                    new RedditThread("This is a test thread 1", 9001, "https://www.google.fi", "google.com", DateTime.now(), "Hessu", 123),
-                    new RedditThread("This is a test thread 2", 3251, "http://fi.wikipedia.org/wiki/Pallo_(geometria)", "pallo.fi", DateTime.now(), "Kalle", 34));
+                    new RedditThread("This is a test thread 1", 9001, "https://www.google.fi", "google.com", DateTime.now(), "Hessu",
+                            Arrays.asList(new RedditComment(0, "Syneh", 53, DateTime.now(), "Uli uli :D"))),
+                    new RedditThread("This is a test thread 2", 3251, "http://fi.wikipedia.org/wiki/Pallo_(geometria)", "pallo.fi", DateTime.now(), "Kalle",
+                            Arrays.asList(new RedditComment(0, "Kalle", 53, DateTime.now(), "dsafw fwjaofj ;_;"))));
 
             return ret;
         }
