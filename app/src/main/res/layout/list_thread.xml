@@ -2,7 +2,7 @@
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/viewFlipper"
     android:layout_width="fill_parent"
-    android:layout_height="80dp"
+    android:layout_height="70dp"
     android:layout_weight="1.0">
     <LinearLayout
         android:id="@+id/thread_info"
@@ -29,7 +29,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:gravity="top" >
                 <TextView
                     android:id="@+id/domain"
                     android:text="domain"
@@ -56,7 +57,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="bottom">
                 <TextView
                     android:id="@+id/user"
                     android:text="user"

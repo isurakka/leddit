@@ -62,7 +62,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_thread, null);
+            convertView = inflater.inflate(R.layout.list_thread, parent, false);
         }
 
         final View threadInfo = convertView.findViewById(R.id.thread_info);
