@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
@@ -157,6 +158,24 @@ public class MainActivity extends Activity
             listView.setAdapter(adapter);
 
             // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
+            listView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+
+                    if (action == MotionEvent.ACTION_DOWN)
+                    {
+                        Log.d("listView touch", "DOWN");
+                    }
+                    else if (action == MotionEvent.ACTION_UP)
+                    {
+                        Log.d("listView touch", "UP");
+                    }
+
+                    return true;
+                }
+            });
+
             /*
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

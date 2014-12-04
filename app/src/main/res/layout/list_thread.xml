@@ -83,20 +83,23 @@
             android:src="@android:drawable/arrow_up_float"
             android:layout_weight=".33"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:clickable="false"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_dialog_email"
             android:layout_weight=".33"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:clickable="false"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@android:drawable/arrow_down_float"
             android:layout_weight=".33"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:clickable="false"/>
     </LinearLayout>
 </ViewFlipper>

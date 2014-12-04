@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.text.Layout;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -78,8 +80,11 @@ public class RedditThreadListAdapter extends BaseAdapter {
         user.setText(thread.getUser());
         comments.setText(thread.getCommentCount() + " comments");
 
+
+        final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
+
         // TODO: This is not the correct place to do event stuff
-        convertView.setOnTouchListener(new View.OnTouchListener() {
+        flipper.setOnTouchListener(new View.OnTouchListener() {
 
             float x;
 
@@ -89,13 +94,13 @@ public class RedditThreadListAdapter extends BaseAdapter {
 
                 if (action == MotionEvent.ACTION_DOWN)
                 {
+                    Log.d("flipper touch", "DOWN");
                     x = event.getX();
                 }
                 else if (action == MotionEvent.ACTION_UP)
                 {
+                    Log.d("flipper touch", "UP");
                     float xDiff = event.getX() - x;
-
-                    ViewFlipper flipper = (ViewFlipper)v.findViewById(R.id.viewFlipper);
 
                     // If x movement high enough, flip the flipper
                     if (Math.abs(xDiff) > 60)
