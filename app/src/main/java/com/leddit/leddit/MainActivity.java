@@ -67,11 +67,11 @@ public class MainActivity extends Activity
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Activity got message");
 
-            // TODO: Init fragment properly
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, CommentsFragment.newInstance(null))
-                    .commit();
+            ThreadListFragment threadListFragment = (ThreadListFragment)getFragmentManager().findFragmentByTag("threadListFragment");
+            //threadListFragment
+
+            int threadPosition = intent.getIntExtra("threadPosition", 0);
+            ViewComments(threadListFragment.threads.get(threadPosition));
         }
     };
 
@@ -80,13 +80,16 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, ThreadListFragment.newInstance(item))
+                .replace(R.id.container, ThreadListFragment.newInstance(item), "threadListFragment")
                 .commit();
     }
 
     public void ViewComments(RedditThread thread)
     {
-
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, CommentsFragment.newInstance(thread))
+                .commit();
     }
 
     public void onSectionAttached(String item) {
@@ -143,7 +146,7 @@ public class MainActivity extends Activity
         private static final String SUBREDDIT_NAME = "section_number";
 
         private ListView listView;
-        private List<RedditThread> threads;
+        public List<RedditThread> threads;
         private RedditThreadListAdapter adapter;
 
         /**
@@ -232,7 +235,8 @@ public class MainActivity extends Activity
         private static final String SUBREDDIT_NAME = "section_number";
 
         private ListView listView;
-        private RedditThreadListAdapter adapter;
+        //private RedditThreadListAdapter adapter;
+        private RedditThread thread;
 
         public static CommentsFragment newInstance(RedditThread thread) {
             CommentsFragment fragment = new CommentsFragment();
@@ -240,7 +244,7 @@ public class MainActivity extends Activity
             //args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-            //fragment.threads = ThreadListFragment.getThreads(subredditName);
+            fragment.thread = thread;
 
             return fragment;
         }

@@ -57,7 +57,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -76,6 +76,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
         // TODO: Image preview
 
         final RedditThread thread = threads.get(position);
+        final int finalPosition = position;
 
         title.setText(thread.getTitle());
         score.setText(Integer.toString(thread.getScore()));
@@ -134,6 +135,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
                             Log.d("flipper touch", "UP COMMENTS BUTTON");
                             Log.d("sender", "Broadcasting message");
                             Intent intent = new Intent("open-comments");
+                            intent.putExtra("threadPosition", finalPosition);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         }
                     }
