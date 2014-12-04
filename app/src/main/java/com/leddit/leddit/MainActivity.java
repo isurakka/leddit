@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,6 +24,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
+
+import com.leddit.leddit.api.RedditApi;
 
 import org.joda.time.DateTime;
 
@@ -160,21 +163,7 @@ public class MainActivity extends Activity
             args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-            fragment.threads = ThreadListFragment.getThreads(subredditName);
-
             return fragment;
-        }
-
-        private static List<RedditThread> getThreads(String subredditName) {
-            // TODO: Get threads from api
-
-            List<RedditThread> ret = Arrays.asList(
-                    new RedditThread("This is a test thread 1", 9001, "https://www.google.fi", "google.com", DateTime.now(), "Hessu",
-                            Arrays.asList(new RedditComment(0, "Syneh", 53, DateTime.now(), "Uli uli :D"))),
-                    new RedditThread("This is a test thread 2", 3251, "http://fi.wikipedia.org/wiki/Pallo_(geometria)", "pallo.fi", DateTime.now(), "Kalle",
-                            Arrays.asList(new RedditComment(0, "Kalle", 53, DateTime.now(), "dsafw fwjaofj ;_;"))));
-
-            return ret;
         }
 
         public ThreadListFragment() {
@@ -186,35 +175,8 @@ public class MainActivity extends Activity
             View rootView = inflater.inflate(R.layout.fragment_threadlist, container, false);
 
             listView = (ListView)rootView.findViewById(R.id.thread_list);
-            adapter = new RedditThreadListAdapter(listView.getContext(), threads);
-            listView.setAdapter(adapter);
 
             // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction();
-
-                    if (action == MotionEvent.ACTION_DOWN)
-                    {
-                        Log.d("listView touch", "DOWN");
-                    }
-                    else if (action == MotionEvent.ACTION_UP)
-                    {
-                        Log.d("listView touch", "UP");
-                    }
-
-                    return true;
-                }
-            });
-
-            /*
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            });
-            */
 
             return rootView;
         }
@@ -222,8 +184,32 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getString(SUBREDDIT_NAME));
+            String subredditName = getArguments().getString(SUBREDDIT_NAME);
+            ((MainActivity) activity).onSectionAttached(subredditName);
+
+            new GetThreadsTask(this).execute(subredditName, "hot");
+        }
+
+        class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
+        {
+            ThreadListFragment fragment;
+
+            public GetThreadsTask(ThreadListFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected List<RedditThread> doInBackground(String... params) {
+                return new RedditApi().getThreads(params[0], params[1]);
+            }
+
+            @Override
+            protected void onPostExecute(List<RedditThread> redditThreads) {
+                fragment.threads = redditThreads;
+                fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+                fragment.listView.setAdapter(adapter);
+            }
         }
     }
 
