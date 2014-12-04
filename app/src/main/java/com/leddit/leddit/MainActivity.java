@@ -5,9 +5,13 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +56,24 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                messageReceiver,
+                new IntentFilter("open-comments"));
     }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "Activity got message");
+
+            // TODO: Init fragment properly
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, CommentsFragment.newInstance(null))
+                    .commit();
+        }
+    };
 
     @Override
     public void onNavigationDrawerItemSelected(String item) {
@@ -61,6 +82,11 @@ public class MainActivity extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ThreadListFragment.newInstance(item))
                 .commit();
+    }
+
+    public void ViewComments(RedditThread thread)
+    {
+
     }
 
     public void onSectionAttached(String item) {
@@ -103,9 +129,12 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        super.onDestroy();
+    }
+
     public static class ThreadListFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -192,6 +221,50 @@ public class MainActivity extends Activity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getString(SUBREDDIT_NAME));
+        }
+    }
+
+    public static class CommentsFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String SUBREDDIT_NAME = "section_number";
+
+        private ListView listView;
+        private RedditThreadListAdapter adapter;
+
+        public static CommentsFragment newInstance(RedditThread thread) {
+            CommentsFragment fragment = new CommentsFragment();
+            Bundle args = new Bundle();
+            //args.putString(SUBREDDIT_NAME, subredditName);
+            fragment.setArguments(args);
+
+            //fragment.threads = ThreadListFragment.getThreads(subredditName);
+
+            return fragment;
+        }
+
+        public CommentsFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_comments, container, false);
+
+            //listView = (ListView)rootView.findViewById(R.id.thread_list);
+            //adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+            //listView.setAdapter(adapter);
+
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getString("asd"));
         }
     }
 

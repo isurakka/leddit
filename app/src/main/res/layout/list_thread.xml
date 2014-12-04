@@ -86,6 +86,7 @@
             android:focusableInTouchMode="false"
             android:clickable="false"/>
         <ImageButton
+            android:id="@+id/thread_comments_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_dialog_email"

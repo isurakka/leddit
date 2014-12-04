@@ -2,7 +2,9 @@ package com.leddit.leddit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.Layout;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -69,7 +72,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
         TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
         TextView time = (TextView)threadInfo.findViewById(R.id.time);
         TextView user = (TextView)threadInfo.findViewById(R.id.user);
-        TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
+        final TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
         // TODO: Image preview
 
         final RedditThread thread = threads.get(position);
@@ -111,14 +114,29 @@ public class RedditThreadListAdapter extends BaseAdapter {
                     }
 
                     // Don't proceed if we have action view visible;
-                    if (flipper.getDisplayedChild() != 0)
+                    if (flipper.getDisplayedChild() == 0)
                     {
-                        return true;
+                        Log.d("flipper touch", "UP THREAD INFO");
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(thread.getLink()));
+                        context.startActivity(browserIntent);
                     }
-
-                    // Open link
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(thread.getLink()));
-                    context.startActivity(browserIntent);
+                    else if (flipper.getDisplayedChild() == 1)
+                    {
+                        Log.d("flipper touch", "UP THREAD ACTIONS");
+                        ImageButton commentsButton = (ImageButton)flipper.findViewById(R.id.thread_comments_button);
+                        Rect rect = new Rect();
+                        commentsButton.getHitRect(rect);
+                        float hitX = event.getX();
+                        float hitY = event.getY();
+                        boolean contains = rect.contains((int)hitX, (int)hitY);
+                        if (contains)
+                        {
+                            Log.d("flipper touch", "UP COMMENTS BUTTON");
+                            Log.d("sender", "Broadcasting message");
+                            Intent intent = new Intent("open-comments");
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        }
+                    }
                 }
 
                 return true;
