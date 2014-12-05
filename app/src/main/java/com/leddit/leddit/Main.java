@@ -8,6 +8,6 @@ import com.leddit.leddit.api.RedditApi;
 /*public class Main {
     public static void main(String[] args) {
 
-        RedditApi api = new RedditApi();
+        RedditApi api = RedditApi.getInstance();
     }
 }*/

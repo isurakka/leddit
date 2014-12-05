@@ -9,6 +9,7 @@ import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
+import com.leddit.leddit.api.output.RedditLoginData;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
 
@@ -25,9 +26,18 @@ import retrofit.converter.JacksonConverter;
 
 public class RedditApi {
 
-    RedditApiService rService;
+    private static RedditApiService rService;
+    private static RedditApi instance = null;
 
-    public RedditApi()
+
+    public static RedditApi getInstance() {
+        if (instance == null) {
+            instance = new RedditApi();
+        }
+        return instance;
+    }
+
+    private RedditApi()
     {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
@@ -40,37 +50,99 @@ public class RedditApi {
 
         rService = restAdapter.create(RedditApiService.class);
 
-        /*List<RedditCommentObject> commentObjectList = rService.listThreadComments("test", "2o9mug", null);
+        /*List<RedditComment> comments = RedditApi.getComments();
 
-        for(int i = 0; i < commentObjectList.size(); i++)
+        for (int i = 0; i < comments.size(); i++)
         {
-            RedditCommentData data = commentObjectList.get(i).getData();
+            System.out.println(pad(comments.get(i).getDepth()) + "Score: " + comments.get(i).getScore() + ", Author: " + comments.get(i).getUser() + ", Date: " + comments.get(i).getPostDate());
+            System.out.println(pad(comments.get(i).getDepth()) + comments.get(i).getText() + "\n");
 
-            for(int j = 0; j < data.getChildren().size(); j++)
-            {
-
-                System.out.println(data.getChildren().get(i).getData().getBody());
-
-            }
         }*/
 
-        List<RedditThread> threadList = this.getThreads("games", "hot");
+        /*List<RedditThread> threadList = this.getThreads("games", "hot");
 
         for(int i = 0; i < threadList.size(); i++)
         {
             RedditThread thread = threadList.get(i);
 
             System.out.println("{\n" +
-                    "\tTitle: " + thread.getTitle() +
-                    "\n\tDomain: " + thread.getDomain() +
-                    "\n\tLink: " + thread.getLink() +
-                    "\n\tUser: " + thread.getUser() +
-                    "\n\tComments: " + thread.getCommentCount() +
-                    "\n\tDate: " + thread.getPostDate() +
-                    "\n\tScore: " + thread.getScore() +
-                    "\n}");
+                "\tTitle: " + thread.getTitle() +
+                "\n\tDomain: " + thread.getDomain() +
+                "\n\tLink: " + thread.getLink() +
+                "\n\tUser: " + thread.getUser() +
+                "\n\tComments: " + thread.getCommentCount() +
+                "\n\tDate: " + thread.getPostDate() +
+                "\n\tScore: " + thread.getScore() +
+                "\n}");
 
+        }*/
+    }
+
+    private static List<RedditComment> tmpComments;
+
+    public static List<RedditComment> getComments()
+    {
+        tmpComments = new ArrayList<RedditComment>();
+        List<RedditCommentObject> tmpCommentList = rService.listThreadComments("test", "2o9mug", null);
+
+        for (int i = 0; i < tmpCommentList.size(); i++)
+        {
+            RedditCommentData data = tmpCommentList.get(i).getData();
+
+            for (int j = 0; j < data.getChildren().size(); j++)
+            {
+                int depth = 0;
+
+                DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
+                commentPostDate.plus(data.getChildren().get(j).getData().getCreated_utc());
+
+                tmpComments.add(new RedditComment(depth, data.getChildren().get(j).getData().getAuthor(),
+                        data.getChildren().get(j).getData().getScore(), commentPostDate,
+                        data.getChildren().get(j).getData().getBody()));
+
+                if (data.getChildren().get(j).getData().getReplies().getData() != null)
+                {
+                    RedditApi.recursive(data.getChildren().get(j).getData().getReplies(), depth);
+                }
+            }
         }
+
+        return tmpComments;
+    }
+
+    private static void recursive(RedditCommentObject commentObject, int depth)
+    {
+        if(commentObject == null)
+        {
+            return;
+        }
+            depth++;
+
+        for (int i = 0; i < commentObject.getData().getChildren().size(); i++)
+        {
+            DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
+            commentPostDate.plus(commentObject.getData().getChildren().get(i).getData().getCreated_utc());
+
+            tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
+                    commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
+                    commentObject.getData().getChildren().get(i).getData().getBody()));
+
+            if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
+            {
+                RedditApi.recursive(commentObject.getData().getChildren().get(i).getData().getReplies(), depth);
+            }
+        }
+    }
+
+    private static String pad(int pad)
+    {
+        String p = "";
+
+        for(int i = 0; i < pad; i++)
+        {
+            p += "    ";
+        }
+        return p;
     }
 
     public List<RedditThread> getThreads(String subreddit, String sorting)
@@ -99,4 +171,13 @@ public class RedditApi {
 
         return tmpList;
     }
+
+    /*public String login(String username, String password, boolean remember)
+    {
+        Map loginInfo = new HashMap<String, String>();
+        loginInfo.put("user", username);
+        loginInfo.put("passwd", password);
+
+        RedditLoginData loginData = rService.login(loginInfo);
+    }*/
 }
