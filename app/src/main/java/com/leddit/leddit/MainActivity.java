@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,6 +24,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
+
+import com.leddit.leddit.api.RedditApi;
 
 import org.joda.time.DateTime;
 
@@ -67,11 +70,11 @@ public class MainActivity extends Activity
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Activity got message");
 
-            // TODO: Init fragment properly
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, CommentsFragment.newInstance(null))
-                    .commit();
+            ThreadListFragment threadListFragment = (ThreadListFragment)getFragmentManager().findFragmentByTag("threadListFragment");
+            //threadListFragment
+
+            int threadPosition = intent.getIntExtra("threadPosition", 0);
+            ViewComments(threadListFragment.threads.get(threadPosition));
         }
     };
 
@@ -80,13 +83,16 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, ThreadListFragment.newInstance(item))
+                .replace(R.id.container, ThreadListFragment.newInstance(item), "threadListFragment")
                 .commit();
     }
 
     public void ViewComments(RedditThread thread)
     {
-
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, CommentsFragment.newInstance(thread))
+                .commit();
     }
 
     public void onSectionAttached(String item) {
@@ -143,7 +149,7 @@ public class MainActivity extends Activity
         private static final String SUBREDDIT_NAME = "section_number";
 
         private ListView listView;
-        private List<RedditThread> threads;
+        public List<RedditThread> threads;
         private RedditThreadListAdapter adapter;
 
         /**
@@ -157,21 +163,7 @@ public class MainActivity extends Activity
             args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-            fragment.threads = ThreadListFragment.getThreads(subredditName);
-
             return fragment;
-        }
-
-        private static List<RedditThread> getThreads(String subredditName) {
-            // TODO: Get threads from api
-
-            List<RedditThread> ret = Arrays.asList(
-                    new RedditThread("This is a test thread 1", 9001, "https://www.google.fi", "google.com", DateTime.now(), "Hessu",
-                            Arrays.asList(new RedditComment(0, "Syneh", 53, DateTime.now(), "Uli uli :D"))),
-                    new RedditThread("This is a test thread 2", 3251, "http://fi.wikipedia.org/wiki/Pallo_(geometria)", "pallo.fi", DateTime.now(), "Kalle",
-                            Arrays.asList(new RedditComment(0, "Kalle", 53, DateTime.now(), "dsafw fwjaofj ;_;"))));
-
-            return ret;
         }
 
         public ThreadListFragment() {
@@ -183,35 +175,8 @@ public class MainActivity extends Activity
             View rootView = inflater.inflate(R.layout.fragment_threadlist, container, false);
 
             listView = (ListView)rootView.findViewById(R.id.thread_list);
-            adapter = new RedditThreadListAdapter(listView.getContext(), threads);
-            listView.setAdapter(adapter);
 
             // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction();
-
-                    if (action == MotionEvent.ACTION_DOWN)
-                    {
-                        Log.d("listView touch", "DOWN");
-                    }
-                    else if (action == MotionEvent.ACTION_UP)
-                    {
-                        Log.d("listView touch", "UP");
-                    }
-
-                    return true;
-                }
-            });
-
-            /*
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            });
-            */
 
             return rootView;
         }
@@ -219,8 +184,32 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getString(SUBREDDIT_NAME));
+            String subredditName = getArguments().getString(SUBREDDIT_NAME);
+            ((MainActivity) activity).onSectionAttached(subredditName);
+
+            new GetThreadsTask(this).execute(subredditName, "hot");
+        }
+
+        class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
+        {
+            ThreadListFragment fragment;
+
+            public GetThreadsTask(ThreadListFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected List<RedditThread> doInBackground(String... params) {
+                return new RedditApi().getThreads(params[0], params[1]);
+            }
+
+            @Override
+            protected void onPostExecute(List<RedditThread> redditThreads) {
+                fragment.threads = redditThreads;
+                fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+                fragment.listView.setAdapter(adapter);
+            }
         }
     }
 
@@ -232,7 +221,8 @@ public class MainActivity extends Activity
         private static final String SUBREDDIT_NAME = "section_number";
 
         private ListView listView;
-        private RedditThreadListAdapter adapter;
+        //private RedditThreadListAdapter adapter;
+        private RedditThread thread;
 
         public static CommentsFragment newInstance(RedditThread thread) {
             CommentsFragment fragment = new CommentsFragment();
@@ -240,7 +230,7 @@ public class MainActivity extends Activity
             //args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-            //fragment.threads = ThreadListFragment.getThreads(subredditName);
+            fragment.thread = thread;
 
             return fragment;
         }

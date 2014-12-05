@@ -76,7 +76,7 @@ public class RedditThread {
     }
 
     public int getCommentCount() {
-        return comments.size();
+        return comments != null ? comments.size() : 0;
     }
 
     public String getLink() {
