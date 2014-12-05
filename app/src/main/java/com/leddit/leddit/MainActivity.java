@@ -21,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -89,7 +91,13 @@ public class MainActivity extends Activity
         }
         else if (listName == "actions")
         {
-
+            if (item == "Login")
+            {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, AuthorizeFragment.newInstance(RedditApi.getInstance().getAuthorizationUrl()), "threadListFragment")
+                        .commit();
+            }
         }
     }
 
@@ -298,11 +306,8 @@ public class MainActivity extends Activity
     }
 
     public static class AuthorizeFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String SUBREDDIT_NAME = "section_number";
+
+        String uri;
 
         public static AuthorizeFragment newInstance(String uri) {
             AuthorizeFragment fragment = new AuthorizeFragment();
@@ -310,7 +315,7 @@ public class MainActivity extends Activity
             //args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-
+            fragment.uri = uri;
 
             return fragment;
         }
@@ -321,9 +326,42 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_authorize, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_authorize, container, false);
 
+            final WebView webView = (WebView)rootView.findViewById(R.id.webView);
+            webView.setWebViewClient(new WebViewClient() {
 
+                boolean done = false;
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    Log.d("WEBVIEW", url);
+
+                    if (done)
+                        return true;
+
+                    // SUCCESS
+                    // http://google.fi/?state=asd&code=asd
+
+                    // DENIED
+                    // http://www.google.fi/?state=asd&error=access_denied
+
+                    Uri uri = Uri.parse(url);
+                    String state = uri.getQueryParameter("state");
+                    String code = uri.getQueryParameter("code");
+                    if (state != null && code != null)
+                    {
+                        Log.d("WEBVIEW state", state);
+                        Log.d("WEBVIEW code", code);
+                        RedditApi.getInstance().authorizationCallback(state, code);
+                        done = true;
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
+            webView.loadUrl(uri);
 
             return rootView;
         }
@@ -331,6 +369,9 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
+
+
+
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getString("asd"));
         }

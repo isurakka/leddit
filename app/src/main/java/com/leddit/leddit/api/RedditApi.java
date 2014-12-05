@@ -155,7 +155,7 @@ public class RedditApi {
         + "response_type=code&scope=identity&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
     }
 
-    public void authorizationCallback(String params)
+    public void authorizationCallback(String state, String code)
     {
 
     }
