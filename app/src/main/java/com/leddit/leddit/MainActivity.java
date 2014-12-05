@@ -201,7 +201,7 @@ public class MainActivity extends Activity
 
             @Override
             protected List<RedditThread> doInBackground(String... params) {
-                return new RedditApi().getThreads(params[0], params[1]);
+                return RedditApi.getInstance().getThreads(params[0], params[1]);
             }
 
             @Override
