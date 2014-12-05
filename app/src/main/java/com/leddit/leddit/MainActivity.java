@@ -83,10 +83,16 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(String item) {
-        // update the main content by replacing fragments
+        ViewSubreddit(item, "hot");
+    }
+
+    public void ViewSubreddit(String subreddit, String sorting)
+    {
+        // TODO: Use sorting
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, ThreadListFragment.newInstance(item), "threadListFragment")
+                .replace(R.id.container, ThreadListFragment.newInstance(subreddit), "threadListFragment")
                 .commit();
     }
 
@@ -131,7 +137,9 @@ public class MainActivity extends Activity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+
+            //getFragmentManager().findFragmentByTag("threadListFragment");
             return true;
         }
 
