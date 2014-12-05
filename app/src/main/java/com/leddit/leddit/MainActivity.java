@@ -23,11 +23,14 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.leddit.leddit.api.RedditApi;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Hours;
 
 import java.util.Arrays;
 import java.util.List;
@@ -220,6 +223,7 @@ public class MainActivity extends Activity
          */
         private static final String SUBREDDIT_NAME = "section_number";
 
+        private View threadInfo;
         private ListView listView;
         //private RedditThreadListAdapter adapter;
         private RedditThread thread;
@@ -243,7 +247,27 @@ public class MainActivity extends Activity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_comments, container, false);
 
-            //listView = (ListView)rootView.findViewById(R.id.thread_list);
+            threadInfo = rootView.findViewById(R.id.thread_info);
+
+            // Find views
+            TextView title = (TextView)threadInfo.findViewById(R.id.title);
+            TextView score = (TextView)threadInfo.findViewById(R.id.score);
+            TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
+            TextView time = (TextView)threadInfo.findViewById(R.id.time);
+            TextView user = (TextView)threadInfo.findViewById(R.id.user);
+            final TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
+
+            // Set values
+            title.setText(thread.getTitle());
+            score.setText(Integer.toString(thread.getScore()));
+            domain.setText(thread.getDomain());
+            time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), thread.getPostDate()).getHours() + "h");
+            user.setText(thread.getUser());
+            comments.setText(thread.getCommentCount() + " comments");
+
+            // Populate list
+            listView = (ListView)rootView.findViewById(R.id.comment_list);
+
             //adapter = new RedditThreadListAdapter(listView.getContext(), threads);
             //listView.setAdapter(adapter);
 
