@@ -15,6 +15,8 @@ public class RedditThread {
     private DateTime postDate;
     // TODO: RedditUser class with lazy loading instead?
     private String user;
+    private String subreddit;
+    private String id36;
 
     // TODO: Lazy loading + getters
     private String text;
@@ -22,7 +24,7 @@ public class RedditThread {
     // TODO: Lazy loading + getters
     private List<RedditComment> comments;
 
-    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments)
+    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments, String subreddit, String id36)
     {
         this.title = title;
         this.score = score;
@@ -31,6 +33,8 @@ public class RedditThread {
         this.postDate = postDate;
         this.user = user;
         this.comments = comments;
+        this.subreddit = subreddit;
+        this.id36 = id36;
     }
 
     // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
@@ -85,5 +89,21 @@ public class RedditThread {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getSubreddit() {
+        return subreddit;
+    }
+
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
+    }
+
+    public String getId36() {
+        return id36;
+    }
+
+    public void setId36(String id36) {
+        this.id36 = id36;
     }
 }
