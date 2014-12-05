@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leddit.leddit.api.Serializers.CommentOrStringSerializer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jonah on 4.12.2014.
  */
@@ -64,6 +67,9 @@ public class RedditCommentBlob
     private String parent_id;
     private int controversiality;
     private boolean score_hidden;
+    private int count;
+
+    private List<String> children = new ArrayList<String>();
 
     //@JsonSerialize(using = CommentOrStringSerializer.class)
     RedditCommentObject replies = new RedditCommentObject();
@@ -475,5 +481,21 @@ public class RedditCommentBlob
 
     public void setScore_hidden(boolean score_hidden) {
         this.score_hidden = score_hidden;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public List<String> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<String> children) {
+        this.children = children;
     }
 }

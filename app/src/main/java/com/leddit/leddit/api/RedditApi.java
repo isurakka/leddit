@@ -49,41 +49,15 @@ public class RedditApi {
             .build();
 
         rService = restAdapter.create(RedditApiService.class);
-
-        /*List<RedditComment> comments = RedditApi.getComments();
-
-        for (int i = 0; i < comments.size(); i++)
-        {
-            System.out.println(pad(comments.get(i).getDepth()) + "Score: " + comments.get(i).getScore() + ", Author: " + comments.get(i).getUser() + ", Date: " + comments.get(i).getPostDate());
-            System.out.println(pad(comments.get(i).getDepth()) + comments.get(i).getText() + "\n");
-
-        }*/
-
-        /*List<RedditThread> threadList = this.getThreads("games", "hot");
-
-        for(int i = 0; i < threadList.size(); i++)
-        {
-            RedditThread thread = threadList.get(i);
-
-            System.out.println("{\n" +
-                "\tTitle: " + thread.getTitle() +
-                "\n\tDomain: " + thread.getDomain() +
-                "\n\tLink: " + thread.getLink() +
-                "\n\tUser: " + thread.getUser() +
-                "\n\tComments: " + thread.getCommentCount() +
-                "\n\tDate: " + thread.getPostDate() +
-                "\n\tScore: " + thread.getScore() +
-                "\n}");
-
-        }*/
     }
 
     private static List<RedditComment> tmpComments;
+    private static List<RedditCommentObject> tmpCommentList;
 
-    public static List<RedditComment> getComments()
+    public static List<RedditComment> getComments(RedditThread thread)
     {
         tmpComments = new ArrayList<RedditComment>();
-        List<RedditCommentObject> tmpCommentList = rService.listThreadComments("test", "2o9mug", null);
+        List<RedditCommentObject> tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), null);
 
         for (int i = 0; i < tmpCommentList.size(); i++)
         {
@@ -134,17 +108,6 @@ public class RedditApi {
         }
     }
 
-    private static String pad(int pad)
-    {
-        String p = "";
-
-        for(int i = 0; i < pad; i++)
-        {
-            p += "    ";
-        }
-        return p;
-    }
-
     public List<RedditThread> getThreads(String subreddit, String sorting)
     {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
@@ -162,10 +125,12 @@ public class RedditApi {
             DateTime postDate = new DateTime(DateTimeZone.UTC);
             postDate.plus(postData.getCreated_utc());
             String user = postData.getAuthor();
+            String sub = postData.getSubreddit();
+            String id36 = postData.getId();
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36);
             tmpList.add(thread);
         }
 
