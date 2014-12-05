@@ -13,7 +13,6 @@ public class RedditCommentObject
 
     public RedditCommentObject()
     {
-
     }
 
     public RedditCommentObject(String kind, RedditCommentData data)
