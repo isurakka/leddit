@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Jonah on 20.11.2014.
  */
-public class Main {
+/*public class Main {
     public static void main(String[] args) {
 
         RedditApi api = RedditApi.getInstance();
@@ -21,7 +21,7 @@ public class Main {
 
         }*/
 
-        List<RedditThread> threadList = api.getThreads("games", "hot");
+        /*List<RedditThread> threadList = api.getThreads("games", "hot");
 
         for(int i = 0; i < threadList.size(); i++)
         {
@@ -46,7 +46,9 @@ public class Main {
 
             System.out.println("\t}\n}");
 
-        }
+        }*/
+/*
+        System.out.println(api.getAuthorizationUrl());
     }
 
     private static String pad(int pad)
@@ -59,4 +61,4 @@ public class Main {
         }
         return p;
     }
-}
+}*/
