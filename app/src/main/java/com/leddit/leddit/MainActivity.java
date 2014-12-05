@@ -82,8 +82,15 @@ public class MainActivity extends Activity
     };
 
     @Override
-    public void onNavigationDrawerItemSelected(String item) {
-        ViewSubreddit(item, "hot");
+    public void onNavigationDrawerSubredditSelected(String listName, String item) {
+        if (listName == "subreddits")
+        {
+            ViewSubreddit(item, "hot");
+        }
+        else if (listName == "actions")
+        {
+
+        }
     }
 
     public void ViewSubreddit(String subreddit, String sorting)
@@ -278,6 +285,45 @@ public class MainActivity extends Activity
 
             //adapter = new RedditThreadListAdapter(listView.getContext(), threads);
             //listView.setAdapter(adapter);
+
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getString("asd"));
+        }
+    }
+
+    public static class AuthorizeFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String SUBREDDIT_NAME = "section_number";
+
+        public static AuthorizeFragment newInstance(String uri) {
+            AuthorizeFragment fragment = new AuthorizeFragment();
+            Bundle args = new Bundle();
+            //args.putString(SUBREDDIT_NAME, subredditName);
+            fragment.setArguments(args);
+
+
+
+            return fragment;
+        }
+
+        public AuthorizeFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_authorize, container, false);
+
+
 
             return rootView;
         }
