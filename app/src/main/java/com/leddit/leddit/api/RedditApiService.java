@@ -20,4 +20,5 @@ public interface RedditApiService {
 
     @POST("/api/login/.json")
     RedditLoginData login(@QueryMap Map<String, String> loginOptions);
+
 }
