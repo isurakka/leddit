@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.leddit.leddit.api.AuthAttempt;
+import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.RedditApi;
 
 import org.joda.time.DateTime;
@@ -96,7 +97,7 @@ public class MainActivity extends Activity
             {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, AuthorizeFragment.newInstance(RedditApi.getInstance().getAuthorizationUrl()), "threadListFragment")
+                        .replace(R.id.container, AuthorizeFragment.newInstance(), "threadListFragment")
                         .commit();
             }
         }
@@ -308,16 +309,14 @@ public class MainActivity extends Activity
 
     public static class AuthorizeFragment extends Fragment {
 
-        String uri;
         AuthAttempt attempt;
 
-        public static AuthorizeFragment newInstance(String uri) {
+        public static AuthorizeFragment newInstance() {
             AuthorizeFragment fragment = new AuthorizeFragment();
             Bundle args = new Bundle();
             //args.putString(SUBREDDIT_NAME, subredditName);
             fragment.setArguments(args);
 
-            fragment.uri = uri;
             fragment.attempt = new AuthAttempt();
 
             return fragment;
@@ -356,7 +355,7 @@ public class MainActivity extends Activity
                     {
                         Log.d("WEBVIEW state", state);
                         Log.d("WEBVIEW code", code);
-                        RedditApi.getInstance().authorizationCallback(state, code);
+                        AuthState authState = attempt.userAuthProcess(state, code);
                         done = true;
                         return true;
                     }
@@ -364,7 +363,7 @@ public class MainActivity extends Activity
                     return false;
                 }
             });
-            webView.loadUrl(uri);
+            webView.loadUrl(attempt.getAuthUrl());
 
             return rootView;
         }
