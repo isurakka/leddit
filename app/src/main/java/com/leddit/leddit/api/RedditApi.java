@@ -52,12 +52,10 @@ public class RedditApi {
         JacksonConverter converter = new JacksonConverter(mapper);
 
         RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-            .setClient(new OkClient())
             .setEndpoint("http://www.reddit.com/").setConverter(converter)
             .build();
 
         RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-            .setClient(new OkClient())
             .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
             .build();
 
