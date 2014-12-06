@@ -15,6 +15,9 @@ public interface RedditApiService {
     @GET("/r/{subreddit}/{orderby}/.json")
     RedditObject listSubreddit(@Path("subreddit") String subreddit, @Path("orderby") String orderBy);
 
+    @GET("/{orderby}/.json")
+    RedditObject frontPage(@Path("orderby") String orderBy);
+
     @GET("/r/{subreddit}/comments/{article}/.json")
     List<RedditCommentObject> listThreadComments(@Path("subreddit") String subreddit, @Path("article") String article, @QueryMap Map<String, String> options);
 

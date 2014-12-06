@@ -21,7 +21,7 @@ import java.util.List;
 
         }*/
 
-        /*List<RedditThread> threadList = api.getThreads("games", "hot");
+        /*List<RedditThread> threadList = api.getFrontpage("hot");
 
         for(int i = 0; i < threadList.size(); i++)
         {
@@ -46,9 +46,7 @@ import java.util.List;
 
             System.out.println("\t}\n}");
 
-        }*/
-/*
-        System.out.println(api.getAuthorizationUrl());
+        }
     }
 
     private static String pad(int pad)
