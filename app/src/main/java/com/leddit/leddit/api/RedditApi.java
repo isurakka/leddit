@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.JacksonConverter;
 
 public class RedditApi {
@@ -51,12 +52,14 @@ public class RedditApi {
         JacksonConverter converter = new JacksonConverter(mapper);
 
         RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
+            .setClient(new OkClient())
             .setEndpoint("http://www.reddit.com/").setConverter(converter)
             .build();
 
         RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
-                .build();
+            .setClient(new OkClient())
+            .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
+            .build();
 
         rService = restAdapter.create(RedditApiService.class);
         aService = restAdapter.create(RedditAuthorizationService.class);
@@ -180,20 +183,12 @@ public class RedditApi {
 
     public AuthState authorize(String state, String code)
     {
-        Map<String, String> authInput = new HashMap<String, String>();
-        authInput.put("state", state);
-        authInput.put("scope", "identity");
-        authInput.put("client_id", "zEa_JbWyOK6Gzw");
-        authInput.put("redirect_uri", "http://google.fi");
-        authInput.put("code", code);
-        authInput.put("grant_type", "authorization_code");
-
-        String auth = new String(Base64.encodeToString("zEa_JbWyOK6Gzw:WIspmC2T5Q1NEOiGziYHupRJ2Bo".getBytes(), Base64.DEFAULT));
+        String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q".getBytes(), Base64.DEFAULT));
         String fullAuth = "Basic " + auth;
 
         System.out.println("Authorization is: " + fullAuth);
 
-        AuthState authState = aService.authorize(fullAuth, authInput);
+        AuthState authState = aService.authorize(auth, "http://google.fi", code, "authorization_code");
 
         return authState;
     }

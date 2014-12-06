@@ -12,16 +12,20 @@ import java.util.UUID;
 public class AuthAttempt
 {
     UUID state;
+    String scope;
 
     public AuthAttempt()
     {
         this.state = UUID.randomUUID();
+        scope = "modposts,identity,edit,flair,history,modconfig,modflair,modlog,"+
+                "modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,"+
+                "subscribe,vote,wikiedit,wikiread";
     }
 
     public String getAuthUrl()
     {
         return "https://ssl.reddit.com/api/v1/authorize?state=" + this.state + "&duration=permanent"
-                + "&response_type=code&scope=identity&client_id=zEa_JbWyOK6Gzw&redirect_uri=http://google.fi";
+                + "&response_type=code&scope=" + this.scope + "&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
     }
 
     public AuthState userAuthProcess(String returnedState, String code)
@@ -50,6 +54,9 @@ public class AuthAttempt
 
             return null;
         }
+    }
 
+    public String getScope() {
+        return scope;
     }
 }
