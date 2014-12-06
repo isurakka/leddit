@@ -24,11 +24,27 @@ public class AuthAttempt
                 + "response_type=code&scope=identity&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
     }
 
-    public AuthState userAuthProcess(String state, String code)
+    public AuthState userAuthProcess(String returnedState, String code)
     {
-        System.out.println(state);
-        System.out.println(code);
+        if(returnedState == this.state.toString())
+        {
+            System.out.println(returnedState);
+            System.out.println(code);
 
-        return new AuthState("", "", DateTime.now(), "", "");
+            AuthState s = RedditApi.getInstance().authorize(returnedState, code);
+
+            System.out.println(s.getAccess_token());
+            System.out.println(s.getToken_type());
+            System.out.println(s.getExpires_in());
+            System.out.println(s.getScope());
+            System.out.println(s.getRefresh_token());
+
+            return s;
+        }
+        else
+        {
+            return null;
+        }
+
     }
 }
