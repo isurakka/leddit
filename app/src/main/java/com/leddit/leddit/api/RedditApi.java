@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.JacksonConverter;
@@ -52,15 +53,27 @@ public class RedditApi {
         JacksonConverter converter = new JacksonConverter(mapper);
 
         RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-            .setEndpoint("http://www.reddit.com/").setConverter(converter)
-            .build();
+                .setEndpoint("http://www.reddit.com/").setConverter(converter)
+                .build();
+
+        RequestInterceptor authorizationRequestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestFacade request) {
+                System.out.println("Authentication request intercepted and header injected!");
+                String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q:".getBytes(), Base64.DEFAULT));
+                String fullAuth = "Basic " + auth;
+
+                request.addHeader("Authorization", fullAuth);
+            }
+        };
 
         RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-            .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
-            .build();
+                .setRequestInterceptor(authorizationRequestInterceptor)
+                .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
+                .build();
 
         rService = restAdapter.create(RedditApiService.class);
-        aService = restAdapter.create(RedditAuthorizationService.class);
+        aService = restAdapter2.create(RedditAuthorizationService.class);
 
     }
 
@@ -181,12 +194,7 @@ public class RedditApi {
 
     public AuthState authorize(String state, String code)
     {
-        String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q".getBytes(), Base64.DEFAULT));
-        String fullAuth = "Basic " + auth;
-
-        System.out.println("Authorization is: " + fullAuth);
-
-        AuthState authState = aService.authorize(auth, "http://google.fi", code, "authorization_code");
+        AuthState authState = aService.authorize("http://google.fi", code, "authorization_code");
 
         return authState;
     }

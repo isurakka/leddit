@@ -17,8 +17,7 @@ public interface RedditAuthorizationService
 {
     @FormUrlEncoded
     @POST("/api/v1/access_token")
-    AuthState authorize(@Header("Authorization") String auth,
-                        @Field("redirect_uri") String redirect_uri,
+    AuthState authorize(@Field("redirect_uri") String redirect_uri,
                         @Field("code") String code,
                         @Field("grant_type") String grant_type);
 }
