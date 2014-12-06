@@ -26,6 +26,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.leddit.leddit.api.AuthAttempt;
@@ -67,12 +68,16 @@ public class MainActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                messageReceiver,
+        LocalBroadcastManager bm = LocalBroadcastManager.getInstance(this);
+        bm.registerReceiver(
+                openCommentsReceiver,
                 new IntentFilter("open-comments"));
+        bm.registerReceiver(
+                authorizedReceiver,
+                new IntentFilter("authorized"));
     }
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver openCommentsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Activity got message");
@@ -82,6 +87,13 @@ public class MainActivity extends Activity
 
             int threadPosition = intent.getIntExtra("threadPosition", 0);
             ViewComments(threadListFragment.threads.get(threadPosition));
+        }
+    };
+
+    private BroadcastReceiver authorizedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "Got authorized broadcast");
         }
     };
 
@@ -170,7 +182,7 @@ public class MainActivity extends Activity
 
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(openCommentsReceiver);
         super.onDestroy();
     }
 
@@ -377,12 +389,21 @@ public class MainActivity extends Activity
                     Uri uri = Uri.parse(url);
                     String state = uri.getQueryParameter("state");
                     String code = uri.getQueryParameter("code");
+                    String error = uri.getQueryParameter("error");
+                    Log.d("queryparam state", state != null ? state : "null");
+                    Log.d("queryparam code", code != null ? code : "null");
+                    Log.d("queryparam error", error != null ? error : "null");
                     if (state != null && code != null)
                     {
                         Log.d("WEBVIEW state", state);
                         Log.d("WEBVIEW code", code);
                         new UserAuthTask(AuthorizeFragment.this).execute(new UserAuthTaskParams(attempt, state, code));
                         done = true;
+                        return true;
+                    }
+                    else if (state != null && error != null && error.equalsIgnoreCase("access_denied"))
+                    {
+                        Toast.makeText(getActivity(), "Why you do this?", Toast.LENGTH_LONG).show();
                         return true;
                     }
 
@@ -435,6 +456,18 @@ public class MainActivity extends Activity
 
             @Override
             protected void onPostExecute(AuthState authState) {
+                if (authState == null)
+                {
+                    Toast.makeText(getActivity(), "Authorization failed!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Toast.makeText(getActivity(), "Authorized!", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent("authorized");
+                //intent.putExtra("threadPosition", finalPosition);
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+
                 Log.d("UserAuthTask", "END");
             }
         }
