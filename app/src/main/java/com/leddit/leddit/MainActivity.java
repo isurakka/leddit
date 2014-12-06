@@ -372,8 +372,9 @@ public class MainActivity extends Activity
 
         private View threadInfo;
         private ListView listView;
-        //private RedditThreadListAdapter adapter;
+        private RedditCommentListAdapter adapter;
         private RedditThread thread;
+        private CommentsLoadTask commentsTask;
 
         public static CommentsFragment newInstance(RedditThread thread) {
             CommentsFragment fragment = new CommentsFragment();
@@ -415,10 +416,18 @@ public class MainActivity extends Activity
             // Populate list
             listView = (ListView)rootView.findViewById(R.id.comment_list);
 
-            //adapter = new RedditThreadListAdapter(listView.getContext(), threads);
-            //listView.setAdapter(adapter);
-
             return rootView;
+        }
+
+        public void Refresh()
+        {
+            if (commentsTask != null && commentsTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                return;
+            }
+
+            commentsTask = new CommentsLoadTask(this);
+            commentsTask.execute();
         }
 
         @Override
@@ -426,6 +435,43 @@ public class MainActivity extends Activity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getString("asd"));
+
+            Refresh();
+        }
+
+        @Override
+        public void onDetach() {
+            if (commentsTask != null && commentsTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                commentsTask.cancel(true);
+            }
+            super.onDetach();
+        }
+
+        class CommentsLoadTask extends AsyncTask<Void, Void, List<RedditComment>>
+        {
+            CommentsFragment fragment;
+
+            public CommentsLoadTask(CommentsFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected List<RedditComment> doInBackground(Void... asd) {
+                Log.d("CommentsLoadTask", "START");
+
+                return RedditApi.getInstance().getComments(fragment.thread);
+            }
+
+            @Override
+            protected void onPostExecute(List<RedditComment> comments) {
+                fragment.thread.setComments(comments);
+                fragment.adapter = new RedditCommentListAdapter(listView.getContext(), fragment.thread);
+                fragment.listView.setAdapter(adapter);
+
+                Log.d("CommentsLoadTask", "END");
+            }
         }
     }
 

@@ -32,7 +32,7 @@ public class RedditThread {
         this.domain = domain;
         this.postDate = postDate;
         this.user = user;
-        this.comments = comments;
+        this.setComments(comments);
         this.subreddit = subreddit;
         this.id36 = id36;
     }
@@ -80,7 +80,7 @@ public class RedditThread {
     }
 
     public int getCommentCount() {
-        return comments != null ? comments.size() : 0;
+        return getComments() != null ? getComments().size() : 0;
     }
 
     public String getLink() {
@@ -105,5 +105,13 @@ public class RedditThread {
 
     public void setId36(String id36) {
         this.id36 = id36;
+    }
+
+    public List<RedditComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<RedditComment> comments) {
+        this.comments = comments;
     }
 }
