@@ -167,10 +167,12 @@ public class RedditApi {
             String user = postData.getAuthor();
             String sub = postData.getSubreddit();
             String id36 = postData.getId();
+            int num_comments = postData.getNum_comments();
+            boolean is_self = postData.isIs_self();
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self);
             tmpList.add(thread);
         }
 
@@ -196,10 +198,12 @@ public class RedditApi {
             String user = postData.getAuthor();
             String sub = postData.getSubreddit();
             String id36 = postData.getId();
+            int num_comments = postData.getNum_comments();
+            boolean is_self = postData.isIs_self();
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self);
             tmpList.add(thread);
         }
 
