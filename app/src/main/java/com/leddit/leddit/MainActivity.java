@@ -188,6 +188,7 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, CommentsFragment.newInstance(thread))
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -300,9 +301,18 @@ public class MainActivity extends Activity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_threadlist, container, false);
 
+            // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
             listView = (ListView)rootView.findViewById(R.id.thread_list);
 
-            // TODO: Use listView.setOnItemClickListener instead of doing click events in list adapter
+            if (threads != null)
+            {
+                adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+                listView.setAdapter(adapter);
+            }
+            else
+            {
+                Refresh();
+            }
 
             return rootView;
         }
@@ -312,8 +322,6 @@ public class MainActivity extends Activity
             super.onAttach(activity);
             String subredditName = getArguments().getString(SUBREDDIT_NAME);
             ((MainActivity) activity).onSectionAttached(subredditName);
-
-            Refresh();
         }
 
         @Override
