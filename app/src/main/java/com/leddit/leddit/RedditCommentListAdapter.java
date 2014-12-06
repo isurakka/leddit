@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -66,6 +68,7 @@ public class RedditCommentListAdapter extends BaseAdapter {
         TextView score = (TextView)commentContainer.findViewById(R.id.score);
         TextView time = (TextView)commentContainer.findViewById(R.id.time);
         TextView text = (TextView)commentContainer.findViewById(R.id.text);
+        Space indent = (Space)convertView.findViewById(R.id.indent);
 
         RedditComment comment = thread.getComments().get(position);
 
@@ -73,6 +76,9 @@ public class RedditCommentListAdapter extends BaseAdapter {
         score.setText(Integer.toString(comment.getScore()));
         time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), comment.getPostDate()).getHours() + "h");
         text.setText(comment.getText());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)context.getResources().getDimension(R.dimen.comment_indent) * comment.getDepth(), ViewGroup.LayoutParams.MATCH_PARENT);
+        indent.setLayoutParams(params);
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
 
