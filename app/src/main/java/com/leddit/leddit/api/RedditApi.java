@@ -217,4 +217,12 @@ public class RedditApi {
     {
         System.out.println("TEST");
     }
+
+    public static AuthState getRedditAuthState() {
+        return redditAuthState;
+    }
+
+    public static void setRedditAuthState(AuthState redditAuthState) {
+        RedditApi.redditAuthState = redditAuthState;
+    }
 }
