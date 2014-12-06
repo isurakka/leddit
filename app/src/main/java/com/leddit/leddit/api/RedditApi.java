@@ -35,6 +35,7 @@ public class RedditApi {
     public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
     public static final String REDIRECT_URI = "http://google.fi";
 
+    private static RedditOauthApiService oService;
     private static RedditAuthorizationService aService;
     private static RedditApiService rService;
     private static RedditApi instance = null;
@@ -61,25 +62,30 @@ public class RedditApi {
                 .setEndpoint("http://www.reddit.com/").setConverter(converter)
                 .build();
 
-       /*RequestInterceptor authorizationRequestInterceptor = new RequestInterceptor() {
+        RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
+                .build();
 
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                System.out.println("Authentication request intercepted and header injected!");
-                String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q:".getBytes(), Base64.DEFAULT));
-                String fullAuth = "Basic " + auth;
+                System.out.println("Oauth API Request intercepted and bearer token (" + redditAuthState.getAccess_token() + ") injected!");
 
-                request.addHeader("Authorization", fullAuth);
+                //String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q:".getBytes(), Base64.DEFAULT));
+                //String fullAuth = "Basic " + auth;
+
+                request.addHeader("Authorization", redditAuthState.getAccess_token());
             }
-        };*/
+        };
 
-        RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
+        RestAdapter restAdapter3 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(requestInterceptor)
                 .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
                 .build();
 
         rService = restAdapter.create(RedditApiService.class);
         aService = restAdapter2.create(RedditAuthorizationService.class);
-
+        oService = restAdapter3.create(RedditOauthApiService.class);
     }
 
     private static List<RedditComment> tmpComments;
@@ -205,5 +211,10 @@ public class RedditApi {
         AuthState authState = aService.authorize(fullAuth, REDIRECT_URI, code, "authorization_code");
         this.redditAuthState = authState;
         return authState;
+    }
+
+    public void oauthCallTest()
+    {
+        System.out.println("TEST");
     }
 }
