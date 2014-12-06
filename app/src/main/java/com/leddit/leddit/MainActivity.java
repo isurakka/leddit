@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.RedditApi;
 
 import org.joda.time.DateTime;
@@ -308,6 +309,7 @@ public class MainActivity extends Activity
     public static class AuthorizeFragment extends Fragment {
 
         String uri;
+        AuthAttempt attempt;
 
         public static AuthorizeFragment newInstance(String uri) {
             AuthorizeFragment fragment = new AuthorizeFragment();
@@ -316,6 +318,7 @@ public class MainActivity extends Activity
             fragment.setArguments(args);
 
             fragment.uri = uri;
+            fragment.attempt = new AuthAttempt();
 
             return fragment;
         }
