@@ -119,6 +119,10 @@ public class MainActivity extends Activity
             {
                 ViewSubreddit(null, "hot");
             }
+            else if (item == "Test")
+            {
+                new TestTask().execute();
+            }
         }
     }
 
@@ -193,6 +197,26 @@ public class MainActivity extends Activity
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(openCommentsReceiver);
         super.onDestroy();
+    }
+
+    class TestTask extends AsyncTask<Void, Void, Void>
+    {
+        public TestTask()
+        {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.d("TestTask", "oauthCallTest START");
+            RedditApi.getInstance().oauthCallTest();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void asd) {
+            Log.d("TestTask", "oauthCallTest END");
+        }
     }
 
     public static class ThreadListFragment extends Fragment {

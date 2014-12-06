@@ -114,6 +114,7 @@ public class NavigationDrawerFragment extends Fragment {
                 new String[]{
                         "Front page",
                         "Login",
+                        "Test",
                 }));
 
         return rootView;
