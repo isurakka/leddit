@@ -17,6 +17,8 @@ public class RedditThread {
     private String user;
     private String subreddit;
     private String id36;
+    private int num_comments;
+    private boolean is_self;
 
     // TODO: Lazy loading + getters
     private String text;
@@ -24,7 +26,7 @@ public class RedditThread {
     // TODO: Lazy loading + getters
     private List<RedditComment> comments;
 
-    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments, String subreddit, String id36)
+    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments, String subreddit, String id36, int num_comments, boolean is_self)
     {
         this.title = title;
         this.score = score;
@@ -35,6 +37,8 @@ public class RedditThread {
         this.setComments(comments);
         this.subreddit = subreddit;
         this.id36 = id36;
+        this.num_comments = num_comments;
+        this.is_self = is_self;
     }
 
     // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
@@ -113,5 +117,21 @@ public class RedditThread {
 
     public void setComments(List<RedditComment> comments) {
         this.comments = comments;
+    }
+
+    public int getNum_comments() {
+        return num_comments;
+    }
+
+    public void setNum_comments(int num_comments) {
+        this.num_comments = num_comments;
+    }
+
+    public boolean isIs_self() {
+        return is_self;
+    }
+
+    public void setIs_self(boolean is_self) {
+        this.is_self = is_self;
     }
 }
