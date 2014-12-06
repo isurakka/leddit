@@ -25,6 +25,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,6 +83,7 @@ public class MainActivity extends Activity
             if (authState != null)
             {
                 RedditApi.getInstance().setRedditAuthState(authState);
+                mNavigationDrawerFragment.RemoveLogin();
                 Log.d("authState", "Loaded authState from file");
             }
         } catch (FileNotFoundException e) {
@@ -106,6 +108,8 @@ public class MainActivity extends Activity
         bm.registerReceiver(
                 authorizedReceiver,
                 new IntentFilter("authorized"));
+
+        ViewSubreddit(null, "hot");
     }
 
     private BroadcastReceiver openCommentsReceiver = new BroadcastReceiver() {
@@ -141,6 +145,8 @@ public class MainActivity extends Activity
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            mNavigationDrawerFragment.RemoveLogin();
 
             ViewSubreddit(null, "hot");
         }

@@ -21,12 +21,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    public ArrayList<String> actions;
 
     /**
      * Remember the position of the selected item.
@@ -58,6 +64,23 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
 
     public NavigationDrawerFragment() {
+        actions = new ArrayList<String>() {{
+                add("Front page");
+                add("Login");
+                add("Test");
+        }};
+    }
+
+    public void RemoveLogin()
+    {
+        ListView view = (ListView)getView().findViewById(R.id.actions);
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>)view.getAdapter();
+
+        int loginPosition = actions.indexOf("Login");
+        actions.add(loginPosition, "Logout");
+        actions.add(loginPosition, "Profile");
+        actions.remove("Login");
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -111,11 +134,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
-                new String[]{
-                        "Front page",
-                        "Login",
-                        "Test",
-                }));
+                actions));
 
         return rootView;
     }
