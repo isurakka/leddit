@@ -1,6 +1,7 @@
 package com.leddit.leddit;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class RedditThread {
     private String id36;
     private int num_comments;
     private boolean is_self;
+    private int n_ago;
+    private String t_ago;
 
     // TODO: Lazy loading + getters
     private String text;

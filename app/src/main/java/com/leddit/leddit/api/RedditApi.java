@@ -162,7 +162,7 @@ public class RedditApi {
             int score = postData.getScore();
             String link = postData.getUrl();
             String domain = postData.getDomain();
-            DateTime postDate = new DateTime(DateTimeZone.UTC);
+            DateTime postDate = new DateTime(postData.getCreated_utc() * 1000, DateTimeZone.UTC);
             postDate.plus(postData.getCreated_utc());
             String user = postData.getAuthor();
             String sub = postData.getSubreddit();
@@ -193,8 +193,7 @@ public class RedditApi {
             int score = postData.getScore();
             String link = postData.getUrl();
             String domain = postData.getDomain();
-            DateTime postDate = new DateTime(DateTimeZone.UTC);
-            postDate.plus(postData.getCreated_utc());
+            DateTime postDate = new DateTime(postData.getCreated_utc() * 1000, DateTimeZone.UTC);
             String user = postData.getAuthor();
             String sub = postData.getSubreddit();
             String id36 = postData.getId();

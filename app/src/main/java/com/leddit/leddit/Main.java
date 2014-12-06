@@ -1,6 +1,11 @@
 package com.leddit.leddit;
 
 import com.leddit.leddit.api.RedditApi;
+import com.leddit.leddit.api.Utility;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeField;
+import org.joda.time.DateTimeZone;
 
 import java.util.List;
 
@@ -21,7 +26,7 @@ import java.util.List;
 
         }*/
 
-        /*List<RedditThread> threadList = api.getFrontpage("hot");
+        /*List<RedditThread> threadList = api.getThreads("games", "hot");
 
         for(int i = 0; i < threadList.size(); i++)
         {
@@ -35,16 +40,8 @@ import java.util.List;
                     "\n\tComments: " + thread.getCommentCount() +
                     "\n\tDate: " + thread.getPostDate() +
                     "\n\tScore: " + thread.getScore() +
-                    "\n\tComments:\n{");
-
-            List<RedditComment> comments = RedditApi.getComments(thread);
-
-            for (int j = 0; j < comments.size(); j++)
-            {
-                System.out.println("\t\t" + pad(comments.get(j).getDepth()) + comments.get(j).getText());
-            }
-
-            System.out.println("\t}\n}");
+                    "\n\tPosted: " + Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)) + " ago" +
+                    "\n}\n");
 
         }
     }
