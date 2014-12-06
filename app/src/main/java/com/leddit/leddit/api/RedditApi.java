@@ -35,12 +35,12 @@ public class RedditApi {
     public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
     public static final String REDIRECT_URI = "http://google.fi";
 
-    private static RedditOauthApiService oService;
-    private static RedditAuthorizationService aService;
-    private static RedditApiService rService;
+    private RedditOauthApiService oService;
+    private RedditAuthorizationService aService;
+    private RedditApiService rService;
     private static RedditApi instance = null;
 
-    private static AuthState redditAuthState;
+    private AuthState redditAuthState;
 
 
     public static RedditApi getInstance() {
@@ -88,10 +88,10 @@ public class RedditApi {
         oService = restAdapter3.create(RedditOauthApiService.class);
     }
 
-    private static List<RedditComment> tmpComments;
-    private static List<RedditCommentObject> tmpCommentList;
+    private List<RedditComment> tmpComments;
+    private List<RedditCommentObject> tmpCommentList;
 
-    public static List<RedditComment> getComments(RedditThread thread)
+    public List<RedditComment> getComments(RedditThread thread)
     {
         tmpComments = new ArrayList<RedditComment>();
         List<RedditCommentObject> tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), null);
@@ -113,7 +113,7 @@ public class RedditApi {
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
-                    RedditApi.recursive(data.getChildren().get(j).getData().getReplies(), depth);
+                    recursive(data.getChildren().get(j).getData().getReplies(), depth);
                 }
             }
         }
@@ -121,7 +121,7 @@ public class RedditApi {
         return tmpComments;
     }
 
-    private static void recursive(RedditCommentObject commentObject, int depth)
+    private void recursive(RedditCommentObject commentObject, int depth)
     {
         if(commentObject == null)
         {
@@ -140,7 +140,7 @@ public class RedditApi {
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
-                RedditApi.recursive(commentObject.getData().getChildren().get(i).getData().getReplies(), depth);
+                recursive(commentObject.getData().getChildren().get(i).getData().getReplies(), depth);
             }
         }
     }
@@ -218,11 +218,11 @@ public class RedditApi {
         System.out.println("TEST");
     }
 
-    public static AuthState getRedditAuthState() {
+    public AuthState getRedditAuthState() {
         return redditAuthState;
     }
 
-    public static void setRedditAuthState(AuthState redditAuthState) {
-        RedditApi.redditAuthState = redditAuthState;
+    public void setRedditAuthState(AuthState redditAuthState) {
+       this.redditAuthState = redditAuthState;
     }
 }
