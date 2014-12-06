@@ -1,5 +1,7 @@
 package com.leddit.leddit.api;
 
+import android.util.Base64;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -152,12 +154,17 @@ public class RedditApi {
         Map<String, String> authInput = new HashMap<String, String>();
         authInput.put("state", state);
         authInput.put("scope", "identity");
-        authInput.put("client_id", "TPdgxXER-lcR8Q");
+        authInput.put("client_id", "zEa_JbWyOK6Gzw");
         authInput.put("redirect_uri", "http://google.fi");
         authInput.put("code", code);
         authInput.put("grant_type", "authorization_code");
 
-        AuthState authState = aService.authorize(authInput);
+        String auth = new String(Base64.encodeToString("zEa_JbWyOK6Gzw:WIspmC2T5Q1NEOiGziYHupRJ2Bo".getBytes(), Base64.DEFAULT));
+        String fullAuth = "Basic " + auth;
+
+        System.out.println("Authorization is: " + fullAuth);
+
+        AuthState authState = aService.authorize(fullAuth, authInput);
 
         return authState;
     }

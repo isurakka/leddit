@@ -4,6 +4,7 @@ import com.leddit.leddit.api.output.RedditAuthorizationAccessData;
 
 import java.util.Map;
 
+import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
 
@@ -13,5 +14,5 @@ import retrofit.http.QueryMap;
 public interface RedditAuthorizationService
 {
     @POST("/api/v1/access_token/.json")
-    AuthState authorize(@QueryMap Map<String, String> authOptions);
+    AuthState authorize(@Header("Authorization") String auth, @QueryMap Map<String, String> authOptions);
 }

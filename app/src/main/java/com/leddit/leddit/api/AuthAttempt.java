@@ -20,14 +20,15 @@ public class AuthAttempt
 
     public String getAuthUrl()
     {
-        return "https://ssl.reddit.com/api/v1/authorize?state=" + this.state.toString() + "&duration=permanent&"
-                + "response_type=code&scope=identity&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
+        return "https://ssl.reddit.com/api/v1/authorize?state=" + this.state + "&duration=permanent"
+                + "&response_type=code&scope=identity&client_id=zEa_JbWyOK6Gzw&redirect_uri=http://google.fi";
     }
 
     public AuthState userAuthProcess(String returnedState, String code)
     {
-        if(returnedState == this.state.toString())
+        if(UUID.fromString(returnedState).compareTo(this.state) == 0)
         {
+            System.out.println("--STATE MATCH--");
             System.out.println(returnedState);
             System.out.println(code);
 
@@ -43,6 +44,10 @@ public class AuthAttempt
         }
         else
         {
+            System.out.println("--INVALID STATE--");
+            System.out.println("Client state: " + this.state.toString());
+            System.out.println("Returned state: " + returnedState);
+
             return null;
         }
 
