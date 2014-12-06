@@ -15,6 +15,7 @@ import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditLoginData;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
+import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -52,6 +53,8 @@ public class RedditApi {
 
     private RedditApi()
     {
+        redditAuthState = new AuthState();
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -74,13 +77,13 @@ public class RedditApi {
                 //String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q:".getBytes(), Base64.DEFAULT));
                 //String fullAuth = "Basic " + auth;
 
-                request.addHeader("Authorization", redditAuthState.getAccess_token());
+                request.addHeader("Authorization", "bearer " + redditAuthState.getAccess_token());
             }
         };
 
         RestAdapter restAdapter3 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(requestInterceptor)
-                .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
+                .setEndpoint("https://oauth.reddit.com/").setConverter(converter)
                 .build();
 
         rService = restAdapter.create(RedditApiService.class);
@@ -215,7 +218,21 @@ public class RedditApi {
 
     public void oauthCallTest()
     {
-        System.out.println("TEST");
+
+        System.out.println("Access token: " + redditAuthState.getAccess_token());
+        System.out.println("Type: " + redditAuthState.getToken_type());
+        System.out.println("Expire: " + redditAuthState.getExpires_in());
+        System.out.println("Scope: " + redditAuthState.getScope());
+        System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
+
+        if(redditAuthState.getAccess_token() != null)
+        {
+            System.out.println(oService.me().getName());
+        }
+        else
+        {
+            System.out.println("NULL TOKEN");
+        }
     }
 
     public AuthState getRedditAuthState() {
