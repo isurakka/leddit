@@ -149,6 +149,35 @@ public class RedditApi {
         return tmpList;
     }
 
+    public List<RedditThread> getFrontpage(String sorting)
+    {
+        List<RedditThread> tmpList = new ArrayList<RedditThread>();
+        RedditObject o = rService.frontPage(sorting);
+        RedditThread thread;
+
+        for(int i = 0; i < o.getData().getChildren().size(); i++)
+        {
+            RedditPostData postData = o.getData().getChildren().get(i).getData();
+
+            String title = postData.getTitle();
+            int score = postData.getScore();
+            String link = postData.getUrl();
+            String domain = postData.getDomain();
+            DateTime postDate = new DateTime(DateTimeZone.UTC);
+            postDate.plus(postData.getCreated_utc());
+            String user = postData.getAuthor();
+            String sub = postData.getSubreddit();
+            String id36 = postData.getId();
+
+            List<RedditComment> comments = new ArrayList<RedditComment>();
+
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36);
+            tmpList.add(thread);
+        }
+
+        return tmpList;
+    }
+
     public AuthState authorize(String state, String code)
     {
         Map<String, String> authInput = new HashMap<String, String>();
