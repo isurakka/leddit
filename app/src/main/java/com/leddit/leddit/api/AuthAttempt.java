@@ -12,10 +12,8 @@ import java.util.UUID;
 public class AuthAttempt
 {
     UUID state;
-    String username;
-    String password;
 
-    public AuthAttempt(String username, String password)
+    public AuthAttempt()
     {
         this.state = UUID.randomUUID();
     }
