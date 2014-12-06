@@ -156,7 +156,12 @@ public class MainActivity extends Activity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
 
-            //getFragmentManager().findFragmentByTag("threadListFragment");
+            ThreadListFragment threadList = (ThreadListFragment)getFragmentManager().findFragmentByTag("threadListFragment");
+            if (threadList != null)
+            {
+                threadList.Refresh();
+            }
+
             return true;
         }
 
@@ -179,6 +184,7 @@ public class MainActivity extends Activity
         private ListView listView;
         public List<RedditThread> threads;
         private RedditThreadListAdapter adapter;
+        private GetThreadsTask threadsTask;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -215,7 +221,27 @@ public class MainActivity extends Activity
             String subredditName = getArguments().getString(SUBREDDIT_NAME);
             ((MainActivity) activity).onSectionAttached(subredditName);
 
-            new GetThreadsTask(this).execute(subredditName, "hot");
+            Refresh();
+        }
+
+        @Override
+        public void onDetach() {
+            if (threadsTask != null && threadsTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                threadsTask.cancel(true);
+            }
+            super.onDetach();
+        }
+
+        public void Refresh()
+        {
+            if (threadsTask != null && threadsTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                return;
+            }
+
+            threadsTask = new GetThreadsTask(this);
+            threadsTask.execute(getArguments().getString(SUBREDDIT_NAME), "hot");
         }
 
         class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
