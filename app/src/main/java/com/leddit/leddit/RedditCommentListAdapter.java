@@ -17,6 +17,8 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.leddit.leddit.api.Utility;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Hours;
@@ -74,7 +76,7 @@ public class RedditCommentListAdapter extends BaseAdapter {
 
         user.setText(comment.getUser());
         score.setText(Integer.toString(comment.getScore()));
-        time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), comment.getPostDate()).getHours() + "h");
+        time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
         text.setText(comment.getText());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)context.getResources().getDimension(R.dimen.comment_indent) * comment.getDepth(), ViewGroup.LayoutParams.MATCH_PARENT);

@@ -19,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.leddit.leddit.api.Utility;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Hours;
@@ -81,9 +83,9 @@ public class RedditThreadListAdapter extends BaseAdapter {
         title.setText(thread.getTitle());
         score.setText(Integer.toString(thread.getScore()));
         domain.setText(thread.getDomain());
-        time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), thread.getPostDate()).getHours() + "h");
+        time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
         user.setText(thread.getUser());
-        comments.setText(thread.getCommentCount() + " comments");
+        comments.setText(thread.getNum_comments() + " comments");
 
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);

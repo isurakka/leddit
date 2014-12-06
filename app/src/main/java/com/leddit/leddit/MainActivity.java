@@ -34,6 +34,7 @@ import android.widget.ViewFlipper;
 import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.RedditApi;
+import com.leddit.leddit.api.Utility;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -423,9 +424,9 @@ public class MainActivity extends Activity
             title.setText(thread.getTitle());
             score.setText(Integer.toString(thread.getScore()));
             domain.setText(thread.getDomain());
-            time.setText(Hours.hoursBetween(DateTime.now(DateTimeZone.UTC), thread.getPostDate()).getHours() + "h");
+            time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
             user.setText(thread.getUser());
-            comments.setText(thread.getCommentCount() + " comments");
+            comments.setText(thread.getNum_comments() + " comments");
 
             // Populate list
             listView = (ListView)rootView.findViewById(R.id.comment_list);
