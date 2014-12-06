@@ -147,39 +147,18 @@ public class RedditApi {
         return tmpList;
     }
 
-    public String getAuthorizationUrl()
+    public AuthState authorize(String state, String code)
     {
-        UUID state = UUID.randomUUID();
-
-        return "https://ssl.reddit.com/api/v1/authorize?state=" + state.toString() + "&duration=permanent&"
-        + "response_type=code&scope=identity&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
-    }
-
-    public void authorizationCallback(String state, String code)
-    {
-
-    }
-
-    public void authorize()
-    {
-        /*Map<String, String> authInput = new HashMap<String, String>();
-        authInput.put("state", "d99649e9-c052-426f-bd5b-3ff26a3fccd3");
-        authInput.put("duration", "permanent");
-        authInput.put("response_type", "code");
+        Map<String, String> authInput = new HashMap<String, String>();
+        authInput.put("state", state);
         authInput.put("scope", "identity");
         authInput.put("client_id", "TPdgxXER-lcR8Q");
         authInput.put("redirect_uri", "http://google.fi");
+        authInput.put("code", code);
+        authInput.put("grant_type", "authorization_code");
 
-        String authorizationData = aService.authorize(authInput);*/
+        AuthState authState = aService.authorize(authInput);
 
+        return authState;
     }
-
-    /*public String login(String username, String password, boolean remember)
-    {
-        Map loginInfo = new HashMap<String, String>();
-        loginInfo.put("user", username);
-        loginInfo.put("passwd", password);
-
-        RedditLoginData loginData = rService.login(loginInfo);
-    }*/
 }
