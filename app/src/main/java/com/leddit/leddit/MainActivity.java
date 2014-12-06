@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Hours;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,6 +70,29 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("authState");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            AuthState authState = (AuthState)is.readObject();
+            is.close();
+            fis.close();
+
+            if (authState != null)
+            {
+                RedditApi.getInstance().setRedditAuthState(authState);
+                Log.d("authState", "Loaded authState from file");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -94,6 +125,22 @@ public class MainActivity extends Activity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Got authorized broadcast");
+
+            AuthState authState = intent.getParcelableExtra("authState");
+
+            Log.d("files dir", getFilesDir().toString());
+
+            try {
+                FileOutputStream fos = MainActivity.this.openFileOutput("authState", Context.MODE_PRIVATE);
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(authState);
+                os.close();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             ViewSubreddit(null, "hot");
         }
@@ -502,7 +549,7 @@ public class MainActivity extends Activity
                 Toast.makeText(getActivity(), "Authorized!", Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent("authorized");
-                //intent.putExtra("threadPosition", finalPosition);
+                intent.putExtra("authState", (android.os.Parcelable) authState);
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                 Log.d("UserAuthTask", "END");

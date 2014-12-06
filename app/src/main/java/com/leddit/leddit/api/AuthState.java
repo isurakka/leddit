@@ -1,15 +1,32 @@
 package com.leddit.leddit.api;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Jonah on 6.12.2014.
  */
-public class AuthState
-{
+public class AuthState implements Parcelable, Serializable {
+
+    private static final long serialVersionUID = 0L;
     private String access_token;
     private String token_type;
     private long expires_in;
     private String scope;
     private String refresh_token;
+
+    public AuthState() {  }
+
+    public AuthState(Parcel in)
+    {
+        access_token = in.readString();
+        token_type = in.readString();
+        expires_in = in.readLong();
+        scope = in.readString();
+        refresh_token = in.readString();
+    }
 
     public String getAccess_token() {
         return access_token;
@@ -49,5 +66,19 @@ public class AuthState
 
     public void setExpires_in(long expires_in) {
         this.expires_in = expires_in;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(access_token);
+        dest.writeString(token_type);
+        dest.writeLong(expires_in);
+        dest.writeString(scope);
+        dest.writeString(refresh_token);
     }
 }
