@@ -381,7 +381,7 @@ public class MainActivity extends Activity
                     {
                         Log.d("WEBVIEW state", state);
                         Log.d("WEBVIEW code", code);
-                        AuthState authState = attempt.userAuthProcess(state, code);
+                        new UserAuthTask(AuthorizeFragment.this).execute(new UserAuthTaskParams(attempt, state, code));
                         done = true;
                         return true;
                     }
@@ -402,6 +402,41 @@ public class MainActivity extends Activity
 
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getString("asd"));
+        }
+
+        class UserAuthTaskParams
+        {
+            AuthAttempt attempt;
+            String state;
+            String code;
+
+            UserAuthTaskParams(AuthAttempt attempt, String state, String code)
+            {
+                this.attempt = attempt;
+                this.state = state;
+                this.code = code;
+            }
+        }
+
+        class UserAuthTask extends AsyncTask<UserAuthTaskParams, Void, AuthState>
+        {
+            AuthorizeFragment fragment;
+
+            public UserAuthTask(AuthorizeFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected AuthState doInBackground(UserAuthTaskParams... params) {
+                Log.d("UserAuthTask", "START");
+                return params[0].attempt.userAuthProcess(params[0].state, params[0].code);
+            }
+
+            @Override
+            protected void onPostExecute(AuthState authState) {
+                Log.d("UserAuthTask", "END");
+            }
         }
     }
 
