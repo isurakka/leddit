@@ -105,12 +105,17 @@ public class MainActivity extends Activity
         }
         else if (listName == "actions")
         {
+            // TODO: Checking via displayed string is a bad way to do this
             if (item == "Login")
             {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, AuthorizeFragment.newInstance(), "threadListFragment")
                         .commit();
+            }
+            else if (item == "Front page")
+            {
+                ViewSubreddit(null, "hot");
             }
         }
     }
@@ -141,7 +146,9 @@ public class MainActivity extends Activity
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+
+        // TODO: The string should probably not be hard coded here
+        actionBar.setTitle(mTitle == null ? "Front page" : mTitle);
     }
 
 
@@ -267,6 +274,10 @@ public class MainActivity extends Activity
 
             @Override
             protected List<RedditThread> doInBackground(String... params) {
+                if (params[0] == null) {
+                    return RedditApi.getInstance().getFrontpage(params[1]);
+                }
+
                 return RedditApi.getInstance().getThreads(params[0], params[1]);
             }
 

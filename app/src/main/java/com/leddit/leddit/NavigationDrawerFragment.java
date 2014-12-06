@@ -109,9 +109,10 @@ public class NavigationDrawerFragment extends Fragment {
 
         mDrawerActionListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_single_choice,
+                android.R.layout.simple_list_item_1,
                 android.R.id.text1,
                 new String[]{
+                        "Front page",
                         "Login",
                 }));
 
