@@ -94,6 +94,8 @@ public class MainActivity extends Activity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "Got authorized broadcast");
+
+            ViewSubreddit(null, "hot");
         }
     };
 
