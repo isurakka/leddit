@@ -25,7 +25,7 @@ public class AuthAttempt
     public String getAuthUrl()
     {
         return "https://ssl.reddit.com/api/v1/authorize?state=" + this.state + "&duration=permanent"
-                + "&response_type=code&scope=" + this.scope + "&client_id=TPdgxXER-lcR8Q&redirect_uri=http://google.fi";
+                + "&response_type=code&scope=" + this.scope + "&client_id=" + RedditApi.CLIENT_ID + "&redirect_uri=" + RedditApi.REDIRECT_URI;
     }
 
     public AuthState userAuthProcess(String returnedState, String code)

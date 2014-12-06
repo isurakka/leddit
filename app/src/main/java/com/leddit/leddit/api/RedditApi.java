@@ -32,9 +32,14 @@ import retrofit.converter.JacksonConverter;
 
 public class RedditApi {
 
+    public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
+    public static final String REDIRECT_URI = "http://google.fi";
+
     private static RedditAuthorizationService aService;
     private static RedditApiService rService;
     private static RedditApi instance = null;
+
+    private static AuthState redditAuthState;
 
 
     public static RedditApi getInstance() {
@@ -56,7 +61,8 @@ public class RedditApi {
                 .setEndpoint("http://www.reddit.com/").setConverter(converter)
                 .build();
 
-        RequestInterceptor authorizationRequestInterceptor = new RequestInterceptor() {
+       /*RequestInterceptor authorizationRequestInterceptor = new RequestInterceptor() {
+
             @Override
             public void intercept(RequestFacade request) {
                 System.out.println("Authentication request intercepted and header injected!");
@@ -65,10 +71,9 @@ public class RedditApi {
 
                 request.addHeader("Authorization", fullAuth);
             }
-        };
+        };*/
 
         RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
-                .setRequestInterceptor(authorizationRequestInterceptor)
                 .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
                 .build();
 
@@ -194,8 +199,11 @@ public class RedditApi {
 
     public AuthState authorize(String state, String code)
     {
-        AuthState authState = aService.authorize("http://google.fi", code, "authorization_code");
+        String auth = new String(Base64.encodeToString((CLIENT_ID + ":").getBytes(), Base64.DEFAULT));
+        String fullAuth = "Basic " + auth;
 
+        AuthState authState = aService.authorize(fullAuth, REDIRECT_URI, code, "authorization_code");
+        this.redditAuthState = authState;
         return authState;
     }
 }
