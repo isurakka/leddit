@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 public class AuthState implements Parcelable, Serializable {
 
-    private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 1L;
     private String access_token;
     private String token_type;
     private DateTime expires_in;
