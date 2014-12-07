@@ -6,85 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.leddit.leddit.MainActivity.CommentsFragment">
 
-    <LinearLayout
-        android:id="@+id/thread_info"
-        android:orientation="horizontal"
+    <include
+        layout="@layout/thread_info"
         android:layout_width="match_parent"
-        android:layout_height="70dp" >
-
-        <TextView
-            android:id="@+id/score"
-            android:text="0"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".15"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_score"
-            android:textColor="@color/titleColor"
-            />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight=".70"
-            android:gravity="center">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="top" >
-                <TextView
-                    android:id="@+id/domain"
-                    android:text="domain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".50"
-                    android:textSize="@dimen/text_size_small"/>
-                <TextView
-                    android:id="@+id/time"
-                    android:text="0h"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".50"
-                    android:textSize="@dimen/text_size_small"/>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/title"
-                android:text="title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/titleColor"
-                android:textSize="@dimen/text_size_title"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="bottom">
-                <TextView
-                    android:id="@+id/user"
-                    android:text="user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".50"
-                    android:textSize="@dimen/text_size_small"/>
-                <TextView
-                    android:id="@+id/comments"
-                    android:text="0 comments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".50"
-                    android:textSize="@dimen/text_size_small"/>
-            </LinearLayout>
-        </LinearLayout>
-        <ImageButton
-            android:id="@+id/preview"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".15"/>
-    </LinearLayout>
+        android:layout_height="@dimen/thread_info_height" />
     <ListView
         android:id="@+id/comment_list"
         android:layout_width="match_parent"
