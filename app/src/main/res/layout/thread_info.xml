@@ -3,14 +3,15 @@
     android:id="@+id/thread_info"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/thread_info_padding"
+    android:paddingBottom="@dimen/thread_info_padding">
 
     <TextView
         android:id="@+id/score"
         android:text="0"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/score_width"
         android:layout_height="match_parent"
-        android:layout_weight=".20"
         android:gravity="center"
         android:textSize="@dimen/text_size_score"
         android:textColor="@color/titleColor"
@@ -20,7 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight=".80"
+        android:layout_weight="1.0"
         android:gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
