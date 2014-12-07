@@ -113,7 +113,8 @@ public class RedditApi {
                 tmpComments.add(new RedditComment(depth, data.getChildren().get(j).getData().getAuthor(),
                         data.getChildren().get(j).getData().getScore(), commentPostDate,
                         data.getChildren().get(j).getData().getBody(),
-                        Utility.parseCommentType(data.getChildren().get(i).getKind())));
+                        Utility.parseCommentType(data.getChildren().get(i).getKind()),
+                        "t1_" + data.getChildren().get(j).getData().getId()));
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
@@ -141,7 +142,8 @@ public class RedditApi {
             tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
                     commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
                     commentObject.getData().getChildren().get(i).getData().getBody(),
-                    Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind())));
+                    Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind()),
+                    "t1_" + commentObject.getData().getChildren().get(i).getData().getId()));
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
@@ -172,6 +174,7 @@ public class RedditApi {
             int num_comments = postData.getNum_comments();
             boolean is_self = postData.isIs_self();
             String thumbnail;
+            String fullname = "t3_" + postData.getId();
 
             if(postData.getThumbnail() != "")
             {
@@ -184,7 +187,8 @@ public class RedditApi {
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self, thumbnail);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments,
+                    sub, id36, num_comments, is_self, thumbnail, fullname);
             tmpList.add(thread);
         }
 
@@ -212,6 +216,7 @@ public class RedditApi {
             int num_comments = postData.getNum_comments();
             boolean is_self = postData.isIs_self();
             String thumbnail;
+            String fullname = "t3_" + postData.getId();
 
             if(postData.getThumbnail() != "")
             {
@@ -224,7 +229,8 @@ public class RedditApi {
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self, thumbnail);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments,
+                    sub, id36, num_comments, is_self, thumbnail, fullname);
             tmpList.add(thread);
         }
 

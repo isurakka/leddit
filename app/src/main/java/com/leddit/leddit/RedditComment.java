@@ -19,15 +19,19 @@ public class RedditComment {
 
     private RedditCommentType type;
 
+    private String fullname;
+
     // TODO: Information whether comment has been edited or not
 
-    public RedditComment(int depth, String user, int score, DateTime postDate, String text, RedditCommentType type) {
+    public RedditComment(int depth, String user, int score, DateTime postDate,
+                         String text, RedditCommentType type, String fullname) {
         this.depth = depth;
         this.user = user;
         this.score = score;
         this.postDate = postDate;
         this.text = text;
         this.type = type;
+        this.fullname = fullname;
     }
 
     public String getText() {
@@ -58,5 +62,11 @@ public class RedditComment {
         this.type = type;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
 
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 }

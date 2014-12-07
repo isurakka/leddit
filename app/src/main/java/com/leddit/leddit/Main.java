@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Jonah on 20.11.2014.
  */
-/*public class Main {
+public class Main {
     public static void main(String[] args) {
 
         RedditApi api = RedditApi.getInstance();
@@ -26,7 +26,7 @@ import java.util.List;
 
         }*/
 
-        /*List<RedditThread> threadList = api.getThreads("games", "hot");
+        List<RedditThread> threadList = api.getThreads("games", "hot");
 
         for(int i = 0; i < threadList.size(); i++)
         {
@@ -40,6 +40,7 @@ import java.util.List;
                     "\n\tComments: " + thread.getCommentCount() +
                     "\n\tDate: " + thread.getPostDate() +
                     "\n\tScore: " + thread.getScore() +
+                    "\n\tFull name: " + thread.getFullname() +
                     "\n\tPosted: " + Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)) + " ago" +
                     "\n}\n");
 
@@ -56,4 +57,4 @@ import java.util.List;
         }
         return p;
     }
-}*/
+}
