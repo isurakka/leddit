@@ -8,6 +8,10 @@ import org.joda.time.DateTime;
 /**
  * Created by Iiro on 2.12.2014.
  */
+
+/*
+    Container class for data-ripped Reddit comments
+*/
 public class RedditComment extends RedditThing {
     private String text;
 

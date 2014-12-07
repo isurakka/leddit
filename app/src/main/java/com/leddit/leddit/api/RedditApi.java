@@ -3,34 +3,35 @@ package com.leddit.leddit.api;
 import android.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
 import com.leddit.leddit.api.output.MyRedditKarma;
-import com.leddit.leddit.api.output.RedditAuthorizationData;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
-import com.leddit.leddit.api.output.RedditLoginData;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
 import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 import retrofit.converter.JacksonConverter;
+
+/**
+ * Created by Jonah on 21.11.2014.
+ */
+
+/*
+    Public interface for Reddit API calls
+    Container for all APIservices and RESTadapters
+*/
 
 public class RedditApi {
 

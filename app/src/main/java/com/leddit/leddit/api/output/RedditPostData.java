@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * Created by Jonah on 21.11.2014.
  */
+
+/*
+    Container class for Reddit API output
+*/
 public class RedditPostData {
 
     private String domain;

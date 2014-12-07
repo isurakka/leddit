@@ -3,6 +3,11 @@ package com.leddit.leddit.api;
 /**
  * Created by Jonah on 7.12.2014.
  */
+
+/*
+    Reddit item sorting enum
+*/
+
 public class RedditItemSorting
 {
     private RedditItemSorting()

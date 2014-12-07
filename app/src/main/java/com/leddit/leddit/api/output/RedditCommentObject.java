@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Created by Jonah on 4.12.2014.
  */
 
+/*
+    Container class for Reddit API output
+*/
 public class RedditCommentObject
 {
     private String kind;

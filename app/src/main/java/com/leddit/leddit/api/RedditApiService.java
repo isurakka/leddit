@@ -9,6 +9,13 @@ import java.util.Map;
 
 import retrofit.http.*;
 
+/**
+ * Created by Jonah on 21.11.2014.
+ */
+
+/*
+    Defines paths and rules for all normal Reddit API calls
+*/
 
 public interface RedditApiService {
 

@@ -3,6 +3,11 @@ package com.leddit.leddit.api;
 /**
  * Created by Jonah on 7.12.2014.
  */
+
+/*
+    Base class for RedditThread and RedditComment
+*/
+
 public class RedditThing
 {
     private String fullname;

@@ -10,6 +10,10 @@ import java.util.List;
 /**
  * Created by Iiro on 30.11.2014.
  */
+
+/*
+    Container class for data-ripped Reddit threads
+*/
 public class RedditThread extends RedditThing {
     private String title;
     private int score;

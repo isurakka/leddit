@@ -7,6 +7,11 @@ import org.joda.time.Period;
 /**
  * Created by Jonah on 7.12.2014.
  */
+
+/*
+    Utility class
+*/
+
 public final class Utility
 {
     private Utility()
@@ -14,6 +19,10 @@ public final class Utility
 
     }
 
+    /*
+       Calculates a period between two datetimes and returns the result in
+       the largest possible format
+    */
     public static String redditTimePeriod(DateTime from, DateTime to)
     {
         Period p = new Period(from, to);
