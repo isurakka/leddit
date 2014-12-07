@@ -40,7 +40,7 @@ import retrofit.converter.JacksonConverter;
     Container for all APIservices and RESTadapters
 */
 
-public class RedditApi implements AuthStateListener {
+public class RedditApi {
 
     public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
     public static final String REDIRECT_URI = "http://google.fi";
@@ -63,7 +63,6 @@ public class RedditApi implements AuthStateListener {
     private RedditApi()
     {
         redditAuthState = new AuthState();
-        redditAuthState.addListener(this);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
@@ -111,6 +110,8 @@ public class RedditApi implements AuthStateListener {
 
 
     }
+
+    private List<AuthStateListener> listeners = new ArrayList<AuthStateListener>();
 
     private List<RedditComment> tmpComments;
     private List<RedditCommentObject> tmpCommentList;
@@ -315,6 +316,12 @@ public class RedditApi implements AuthStateListener {
         a.setRefresh_token(authStateProxy.getRefresh_token());
 
         this.redditAuthState = a;
+
+        for(int i = 0; i < listeners.size(); i++)
+        {
+            listeners.get(i).onAuthStateChanged();
+        }
+
         return a;
     }
 
@@ -379,6 +386,11 @@ public class RedditApi implements AuthStateListener {
                 this.redditAuthState.setToken_type(p.getToken_type());
                 this.redditAuthState.setExpires_in(DateTime.now(DateTimeZone.UTC).plusMinutes(58));
                 this.redditAuthState.setScope(p.getScope());
+
+                for(int i = 0; i < listeners.size(); i++)
+                {
+                    listeners.get(i).onAuthStateChanged();
+                }
 
                 System.out.println("REFRESH: Token refresh success!");
                 return true;
@@ -449,9 +461,13 @@ public class RedditApi implements AuthStateListener {
        this.redditAuthState = redditAuthState;
     }
 
-    @Override
-    public void authStateChanged()
+    public void addOnAuthStateChangedListener(AuthStateListener listener)
     {
-        System.out.println("ACCESS TOKEN HAS BEEN CHANGED");
+        if (listeners == null)
+        {
+            listeners = new ArrayList<AuthStateListener>();
+        }
+
+        listeners.add(listener);
     }
 }

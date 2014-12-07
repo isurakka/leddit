@@ -5,5 +5,5 @@ package com.leddit.leddit.api;
  */
 public interface AuthStateListener
 {
-    public void authStateChanged();
+    public void onAuthStateChanged();
 }

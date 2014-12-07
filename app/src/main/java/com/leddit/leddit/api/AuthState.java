@@ -27,8 +27,6 @@ public class AuthState implements Parcelable, Serializable {
     private String scope;
     private String refresh_token;
 
-    private static List<AuthStateListener> listeners = new ArrayList<AuthStateListener>();
-
     public AuthState()
     {
 
@@ -49,11 +47,6 @@ public class AuthState implements Parcelable, Serializable {
 
     public void setAccess_token(String access_token)
     {
-        for(int i = 0; i < listeners.size(); i++)
-        {
-            listeners.get(i).authStateChanged();
-        }
-
         this.access_token = access_token;
     }
 
@@ -102,10 +95,5 @@ public class AuthState implements Parcelable, Serializable {
         dest.writeLong(expires_in.getMillis());
         dest.writeString(scope);
         dest.writeString(refresh_token);
-    }
-
-    public void addListener(AuthStateListener listener)
-    {
-        listeners.add(listener);
     }
 }
