@@ -4,4 +4,6 @@
     <style name="AppTheme" parent="android:Theme.Holo">
 
     </style>
+
+    <color name="titleColor">#ecf0f1</color>
 </resources>

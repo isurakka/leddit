@@ -27,16 +27,19 @@
                     android:id="@+id/user"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:textSize="@dimen/text_size_small"
                     android:text="user"/>
                 <TextView
                     android:id="@+id/score"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:textSize="@dimen/text_size_small"
                     android:text="0"/>
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:textSize="@dimen/text_size_small"
                     android:text="0 h"/>
             </LinearLayout>
 
@@ -44,7 +47,9 @@
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum"/>
+                android:text="Lorem ipsum"
+                android:textSize="@dimen/text_size_comment"
+                android:textColor="@color/titleColor"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

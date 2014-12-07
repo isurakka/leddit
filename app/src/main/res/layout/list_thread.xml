@@ -18,6 +18,7 @@
             android:layout_weight=".15"
             android:gravity="center"
             android:textSize="@dimen/text_size_score"
+            android:textColor="@color/titleColor"
             />
 
         <LinearLayout
@@ -52,7 +53,8 @@
                 android:text="title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_title"/>
+                android:textSize="@dimen/text_size_title"
+                android:textColor="@color/titleColor"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
