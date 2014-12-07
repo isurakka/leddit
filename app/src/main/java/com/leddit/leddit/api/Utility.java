@@ -64,4 +64,20 @@ public final class Utility
            ", M: " + p.getMinutes() +
            ", S: " + p.getSeconds();*/
     }
+
+    public static RedditCommentType parseCommentType(String commentType)
+    {
+        if(commentType == "t1")
+        {
+            return RedditCommentType.DEFAULT;
+        }
+        else if(commentType == "more")
+        {
+            return RedditCommentType.MORE;
+        }
+        else
+        {
+            return RedditCommentType.DEFAULT;
+        }
+    }
 }

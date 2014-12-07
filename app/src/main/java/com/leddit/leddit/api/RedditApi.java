@@ -112,7 +112,8 @@ public class RedditApi {
 
                 tmpComments.add(new RedditComment(depth, data.getChildren().get(j).getData().getAuthor(),
                         data.getChildren().get(j).getData().getScore(), commentPostDate,
-                        data.getChildren().get(j).getData().getBody()));
+                        data.getChildren().get(j).getData().getBody(),
+                        Utility.parseCommentType(data.getChildren().get(i).getKind())));
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
@@ -139,7 +140,8 @@ public class RedditApi {
 
             tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
                     commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
-                    commentObject.getData().getChildren().get(i).getData().getBody()));
+                    commentObject.getData().getChildren().get(i).getData().getBody(),
+                    Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind())));
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
