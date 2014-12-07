@@ -22,6 +22,8 @@ import com.leddit.leddit.api.output.RedditProfile;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ import retrofit.converter.JacksonConverter;
     Container for all APIservices and RESTadapters
 */
 
-public class RedditApi {
+public class RedditApi implements AuthStateListener {
 
     public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
     public static final String REDIRECT_URI = "http://google.fi";
@@ -61,6 +63,7 @@ public class RedditApi {
     private RedditApi()
     {
         redditAuthState = new AuthState();
+        redditAuthState.addListener(this);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
@@ -103,6 +106,10 @@ public class RedditApi {
         rService = restAdapter.create(RedditApiService.class);
         aService = restAdapter2.create(RedditAuthorizationService.class);
         oService = restAdapter3.create(RedditOauthApiService.class);
+
+
+
+
     }
 
     private List<RedditComment> tmpComments;
@@ -352,8 +359,7 @@ public class RedditApi {
         System.out.println("Expire: " + redditAuthState.getExpires_in());
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
-
-        System.out.println(isCaptchaNeeded());
+        refreshToken();
     }
 
     private boolean refreshToken()
@@ -441,5 +447,11 @@ public class RedditApi {
 
     public void setRedditAuthState(AuthState redditAuthState) {
        this.redditAuthState = redditAuthState;
+    }
+
+    @Override
+    public void authStateChanged()
+    {
+        System.out.println("ACCESS TOKEN HAS BEEN CHANGED");
     }
 }

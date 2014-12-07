@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonah on 6.12.2014.
@@ -25,7 +27,12 @@ public class AuthState implements Parcelable, Serializable {
     private String scope;
     private String refresh_token;
 
-    public AuthState() {  }
+    private static List<AuthStateListener> listeners = new ArrayList<AuthStateListener>();
+
+    public AuthState()
+    {
+
+    }
 
     public AuthState(Parcel in)
     {
@@ -40,7 +47,13 @@ public class AuthState implements Parcelable, Serializable {
         return access_token;
     }
 
-    public void setAccess_token(String access_token) {
+    public void setAccess_token(String access_token)
+    {
+        for(int i = 0; i < listeners.size(); i++)
+        {
+            listeners.get(i).authStateChanged();
+        }
+
         this.access_token = access_token;
     }
 
@@ -73,6 +86,7 @@ public class AuthState implements Parcelable, Serializable {
     }
 
     public void setExpires_in(DateTime expires_in) {
+
         this.expires_in = expires_in;
     }
 
@@ -88,5 +102,10 @@ public class AuthState implements Parcelable, Serializable {
         dest.writeLong(expires_in.getMillis());
         dest.writeString(scope);
         dest.writeString(refresh_token);
+    }
+
+    public void addListener(AuthStateListener listener)
+    {
+        listeners.add(listener);
     }
 }
