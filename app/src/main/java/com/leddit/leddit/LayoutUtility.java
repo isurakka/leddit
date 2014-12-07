@@ -14,6 +14,7 @@ import com.leddit.leddit.api.Utility;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
