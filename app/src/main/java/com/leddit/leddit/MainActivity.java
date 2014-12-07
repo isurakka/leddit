@@ -159,7 +159,7 @@ public class MainActivity extends Activity
 
             mNavigationDrawerFragment.RemoveLogin();
 
-            ViewSubreddit(null, "hot");
+            ViewSubreddit(null, "hot", null);
         }
     };
 
@@ -242,6 +242,8 @@ public class MainActivity extends Activity
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     CharSequence item = (CharSequence)sortSpinner.getItemAtPosition(position);
                     Log.d("spinner click", item.toString());
+                    RedditSortData sortData = LayoutUtility.sortingOptionToSortData(item.toString());
+                    ViewSubreddit(lastSubreddit, sortData.sorting, sortData.timescale);
                 }
 
                 @Override
@@ -308,9 +310,9 @@ public class MainActivity extends Activity
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String SUBREDDIT_NAME = "";
-        private static final String SORTING = "";
-        private static final String TIMESCALE = "";
+        private static final String SUBREDDIT_NAME = "subreddit_name";
+        private static final String SORTING = "subreddit_sorting";
+        private static final String TIMESCALE = "subreddit_timescale";
 
         private ListView listView;
         public List<RedditThread> threads;
@@ -376,7 +378,10 @@ public class MainActivity extends Activity
             }
 
             threadsTask = new GetThreadsTask(this);
-            threadsTask.execute(getArguments().getString(SUBREDDIT_NAME), "hot");
+            threadsTask.execute(
+                    getArguments().getString(SUBREDDIT_NAME),
+                    getArguments().getString(SORTING),
+                    getArguments().getString(TIMESCALE));
         }
 
         class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
@@ -391,10 +396,10 @@ public class MainActivity extends Activity
             @Override
             protected List<RedditThread> doInBackground(String... params) {
                 if (params[0] == null) {
-                    return RedditApi.getInstance().getFrontpage(params[1]);
+                    return RedditApi.getInstance().getFrontpage(params[1], params[2]);
                 }
 
-                return RedditApi.getInstance().getThreads(params[0], params[1]);
+                return RedditApi.getInstance().getThreads(params[0], params[1], params[2]);
             }
 
             @Override

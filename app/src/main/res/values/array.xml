@@ -3,7 +3,6 @@
     <string-array name="sort_list">
         <item>hot</item>
         <item>new</item>
-        <item>rising</item>
         <item>top 1h</item>
         <item>top 1d</item>
         <item>top 1m</item>

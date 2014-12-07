@@ -66,18 +66,7 @@ public class LayoutUtility {
         */
     }
 
-    class RedditSortData
-    {
-        String sorting;
-        String timescale;
-
-        public RedditSortData(String sorting, String timescale)
-        {
-            this.sorting = sorting;
-            this.timescale = timescale;
-        }
-    }
-    public RedditSortData sortingOptionToSortData(String option)
+    public static RedditSortData sortingOptionToSortData(String option)
     {
         if (option.equals("hot") || option.equals("new"))
         {
