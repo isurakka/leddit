@@ -171,10 +171,20 @@ public class RedditApi {
             String id36 = postData.getId();
             int num_comments = postData.getNum_comments();
             boolean is_self = postData.isIs_self();
+            String thumbnail;
+
+            if(postData.getThumbnail() != "")
+            {
+                thumbnail = postData.getThumbnail();
+            }
+            else
+            {
+                thumbnail = null;
+            }
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self, thumbnail);
             tmpList.add(thread);
         }
 
@@ -201,10 +211,20 @@ public class RedditApi {
             String id36 = postData.getId();
             int num_comments = postData.getNum_comments();
             boolean is_self = postData.isIs_self();
+            String thumbnail;
+
+            if(postData.getThumbnail() != "")
+            {
+                thumbnail = postData.getThumbnail();
+            }
+            else
+            {
+                thumbnail = null;
+            }
 
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
-            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self);
+            thread = new RedditThread(title, score, link, domain, postDate, user, comments, sub, id36, num_comments, is_self, thumbnail);
             tmpList.add(thread);
         }
 
