@@ -3,6 +3,10 @@ package com.leddit.leddit.api.output;
 /**
  * Created by Jonah on 6.12.2014.
  */
+
+/*
+    Container class for Reddit API output
+*/
 public class RedditProfile
 {
     private boolean has_mail;

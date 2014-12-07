@@ -3,6 +3,11 @@ package com.leddit.leddit.api;
 /**
  * Created by Jonah on 7.12.2014.
  */
+
+/*
+    Reddit sorting timescale enum
+*/
+
 public class RedditSortingTimescale
 {
     private RedditSortingTimescale()

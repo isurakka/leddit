@@ -3,33 +3,35 @@ package com.leddit.leddit.api;
 import android.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
-import com.leddit.leddit.api.output.RedditAuthorizationData;
+import com.leddit.leddit.api.output.MyRedditKarma;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
-import com.leddit.leddit.api.output.RedditLoginData;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
 import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 import retrofit.converter.JacksonConverter;
+
+/**
+ * Created by Jonah on 21.11.2014.
+ */
+
+/*
+    Public interface for Reddit API calls
+    Container for all APIservices and RESTadapters
+*/
 
 public class RedditApi {
 
@@ -152,10 +154,20 @@ public class RedditApi {
         }
     }
 
-    public List<RedditThread> getThreads(String subreddit, String sorting)
+    public List<RedditThread> getThreads(String subreddit, String sorting, String timeScale)
     {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
-        RedditObject o = rService.listSubreddit(subreddit, sorting);
+        RedditObject o;
+
+        if(timeScale == null || (!sorting.equals(RedditItemSorting.CONTROVERSIAL) || !sorting.equals(RedditItemSorting.TOP)))
+        {
+            o = rService.listSubreddit(subreddit, sorting);
+        }
+        else
+        {
+            o = rService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
+        }
+
         RedditThread thread;
 
         for(int i = 0; i < o.getData().getChildren().size(); i++)
@@ -206,10 +218,21 @@ public class RedditApi {
         return tmpList;
     }
 
-    public List<RedditThread> getFrontpage(String sorting)
+    public List<RedditThread> getFrontpage(String sorting, String timeScale)
     {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
-        RedditObject o = rService.frontPage(sorting);
+        RedditObject o;
+
+        if(timeScale == null || (!sorting.equals(RedditItemSorting.CONTROVERSIAL) || !sorting.equals(RedditItemSorting.TOP)))
+        {
+            o = rService.frontPage(sorting);
+        }
+        else
+        {
+            o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+        }
+
+
         RedditThread thread;
 
         for(int i = 0; i < o.getData().getChildren().size(); i++)
@@ -269,6 +292,39 @@ public class RedditApi {
         return authState;
     }
 
+    public RedditProfile getProfile()
+    {
+        if(redditAuthState.getAccess_token() != null)
+        {
+            return oService.me();
+        }
+        else
+        {
+            System.out.println("NULL TOKEN");
+            return null;
+        }
+    }
+
+    public MyRedditKarma getKarma()
+    {
+        System.out.println(oService.myKarma());
+        return oService.myKarma();
+    }
+
+    public boolean voteItem(int vote, RedditThing thing)
+    {
+        if(redditAuthState.getAccess_token() != null)
+        {
+            oService.vote(vote, thing.getFullname());
+            return true;
+        }
+        else
+        {
+            System.out.println("NULL TOKEN");
+            return false;
+        }
+    }
+
     public void oauthCallTest()
     {
 
@@ -278,14 +334,7 @@ public class RedditApi {
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
 
-        if(redditAuthState.getAccess_token() != null)
-        {
-            System.out.println(oService.me().getName());
-        }
-        else
-        {
-            System.out.println("NULL TOKEN");
-        }
+        System.out.println(getKarma().toString());
     }
 
     public AuthState getRedditAuthState() {

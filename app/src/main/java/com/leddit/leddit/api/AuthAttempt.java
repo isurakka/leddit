@@ -9,6 +9,11 @@ import java.util.UUID;
 /**
  * Created by Jonah on 6.12.2014.
  */
+
+/*
+    Used to authorize user
+*/
+
 public class AuthAttempt
 {
     UUID state;

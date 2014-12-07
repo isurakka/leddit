@@ -1,18 +1,18 @@
 package com.leddit.leddit.api;
 
-import com.leddit.leddit.api.output.RedditAuthorizationAccessData;
-
-import java.util.Map;
-
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.Header;
 import retrofit.http.POST;
-import retrofit.http.QueryMap;
 
 /**
  * Created by Jonah on 5.12.2014.
  */
+
+/*
+    Defines path and rules for Reddit API authorization
+*/
+
 public interface RedditAuthorizationService
 {
     @FormUrlEncoded

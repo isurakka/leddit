@@ -3,6 +3,10 @@ package com.leddit.leddit.api.output;
 /**
  * Created by Jonah on 21.11.2014.
  */
+
+/*
+    Container class for Reddit API output
+*/
 public class RedditPost {
 
     private String kind;

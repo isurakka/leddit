@@ -1,5 +1,7 @@
 package com.leddit.leddit;
 
+import com.leddit.leddit.api.RedditThing;
+
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
@@ -8,7 +10,11 @@ import java.util.List;
 /**
  * Created by Iiro on 30.11.2014.
  */
-public class RedditThread {
+
+/*
+    Container class for data-ripped Reddit threads
+*/
+public class RedditThread extends RedditThing {
     private String title;
     private int score;
     private String link;
@@ -21,7 +27,6 @@ public class RedditThread {
     private int num_comments;
     private boolean is_self;
     private String thumbnail_url;
-    private String fullname;
 
     // TODO: Lazy loading + getters
     private String text;
@@ -33,6 +38,7 @@ public class RedditThread {
                         String user, List<RedditComment> comments, String subreddit, String id36,
                         int num_comments, boolean is_self, String thumbnail_url, String fullname)
     {
+        super(fullname);
         this.title = title;
         this.score = score;
         this.link = link;
@@ -45,7 +51,6 @@ public class RedditThread {
         this.num_comments = num_comments;
         this.is_self = is_self;
         this.thumbnail_url = thumbnail_url;
-        this.fullname = fullname;
     }
 
     // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
@@ -148,13 +153,5 @@ public class RedditThread {
 
     public void setThumbnail_url(String thumbnail_url) {
         this.thumbnail_url = thumbnail_url;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 }

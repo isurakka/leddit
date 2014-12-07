@@ -6,6 +6,10 @@ import java.util.List;
 /**
  * Created by Jonah on 20.11.2014.
  */
+
+/*
+    Container class for Reddit API output
+*/
 public class RedditObject {
 
     private String kind;

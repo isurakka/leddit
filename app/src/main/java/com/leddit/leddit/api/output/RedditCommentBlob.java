@@ -10,6 +10,10 @@ import java.util.List;
 /**
  * Created by Jonah on 4.12.2014.
  */
+
+/*
+    Container class for Reddit API output
+*/
 public class RedditCommentBlob
 {
     private String domain;

@@ -13,6 +13,11 @@ import retrofit.http.Path;
 /**
  * Created by Jonah on 6.12.2014.
  */
+
+/*
+    Defines paths and rules for all Reddit API Oauth calls
+*/
+
 public interface RedditOauthApiService
 {
     @GET("/api/v1/me/.json")

@@ -8,6 +8,11 @@ import java.io.Serializable;
 /**
  * Created by Jonah on 6.12.2014.
  */
+
+/*
+    Hold user authorization data
+*/
+
 public class AuthState implements Parcelable, Serializable {
 
     private static final long serialVersionUID = 0L;
