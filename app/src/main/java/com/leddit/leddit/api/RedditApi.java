@@ -79,11 +79,17 @@ public class RedditApi {
             @Override
             public void intercept(RequestFacade request) {
                 System.out.println("Oauth API Request intercepted and bearer token (" + redditAuthState.getAccess_token() + ") injected!");
-
-                //String auth = new String(Base64.encodeToString("TPdgxXER-lcR8Q:".getBytes(), Base64.DEFAULT));
-                //String fullAuth = "Basic " + auth;
-
                 request.addHeader("Authorization", "bearer " + redditAuthState.getAccess_token());
+
+                if(Utility.hasExpired(redditAuthState.getExpires_in()))
+                {
+                    System.out.println("Token needs refresh, doing that now!");
+                    refreshToken();
+                }
+                else
+                {
+                    System.out.println("Token not yet expired!");
+                }
             }
         };
 
@@ -344,15 +350,7 @@ public class RedditApi {
         System.out.println("Expire: " + redditAuthState.getExpires_in());
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
-
-        if(Utility.hasExpired(redditAuthState.getExpires_in()))
-        {
-            refreshToken();
-        }
-        else
-        {
-            getKarma();
-        }
+        getProfile();
     }
 
     private boolean refreshToken()
