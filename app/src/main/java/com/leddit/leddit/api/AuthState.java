@@ -3,6 +3,9 @@ package com.leddit.leddit.api;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.io.Serializable;
 
 /**
@@ -18,7 +21,7 @@ public class AuthState implements Parcelable, Serializable {
     private static final long serialVersionUID = 0L;
     private String access_token;
     private String token_type;
-    private long expires_in;
+    private DateTime expires_in;
     private String scope;
     private String refresh_token;
 
@@ -28,7 +31,7 @@ public class AuthState implements Parcelable, Serializable {
     {
         access_token = in.readString();
         token_type = in.readString();
-        expires_in = in.readLong();
+        expires_in = new DateTime(in.readLong(), DateTimeZone.UTC);
         scope = in.readString();
         refresh_token = in.readString();
     }
@@ -82,7 +85,7 @@ public class AuthState implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(access_token);
         dest.writeString(token_type);
-        dest.writeLong(expires_in);
+        dest.writeLong(expires_in.getMillis());
         dest.writeString(scope);
         dest.writeString(refresh_token);
     }
