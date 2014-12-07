@@ -20,6 +20,7 @@ public class RedditThread {
     private String id36;
     private int num_comments;
     private boolean is_self;
+    private String thumbnail_url;
 
     // TODO: Lazy loading + getters
     private String text;
@@ -27,7 +28,9 @@ public class RedditThread {
     // TODO: Lazy loading + getters
     private List<RedditComment> comments;
 
-    public RedditThread(String title, int score, String link, String domain, DateTime postDate, String user, List<RedditComment> comments, String subreddit, String id36, int num_comments, boolean is_self)
+    public RedditThread(String title, int score, String link, String domain, DateTime postDate,
+                        String user, List<RedditComment> comments, String subreddit, String id36,
+                        int num_comments, boolean is_self, String thumbnail_url)
     {
         this.title = title;
         this.score = score;
@@ -40,6 +43,7 @@ public class RedditThread {
         this.id36 = id36;
         this.num_comments = num_comments;
         this.is_self = is_self;
+        this.thumbnail_url = thumbnail_url;
     }
 
     // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
@@ -134,5 +138,13 @@ public class RedditThread {
 
     public void setIs_self(boolean is_self) {
         this.is_self = is_self;
+    }
+
+    public String getThumbnail_url() {
+        return thumbnail_url;
+    }
+
+    public void setThumbnail_url(String thumbnail_url) {
+        this.thumbnail_url = thumbnail_url;
     }
 }

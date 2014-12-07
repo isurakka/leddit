@@ -57,4 +57,6 @@ public class RedditComment {
     public void setType(RedditCommentType type) {
         this.type = type;
     }
+
+
 }
