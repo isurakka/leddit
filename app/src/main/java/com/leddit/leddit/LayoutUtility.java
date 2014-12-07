@@ -3,11 +3,15 @@ package com.leddit.leddit;
 import android.app.ActionBar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leddit.leddit.api.Utility;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -38,8 +42,15 @@ public class LayoutUtility {
 
         String thumbnailUrl = thread.getThumbnail_url();
         if (thumbnailUrl != null) {
+            Log.d("thumbnail url", thumbnailUrl);
+            DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .cacheOnDisk(true)
+                    .build();
             ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.displayImage(thread.getThumbnail_url(), preview);
+            imageLoader.displayImage(thread.getThumbnail_url(), preview, options);
+            preview.setVisibility(View.VISIBLE);
+        } else {
+            preview.setVisibility(View.GONE);
         }
 
         /*

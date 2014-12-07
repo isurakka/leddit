@@ -35,6 +35,7 @@ import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.RedditApi;
 import com.leddit.leddit.api.Utility;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -75,6 +76,7 @@ public class MainActivity extends Activity
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
             .build();
         ImageLoader.getInstance().init(config);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
