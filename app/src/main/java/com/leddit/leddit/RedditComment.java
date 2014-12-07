@@ -1,5 +1,7 @@
 package com.leddit.leddit;
 
+import com.leddit.leddit.api.RedditCommentType;
+
 import org.joda.time.DateTime;
 
 /**
@@ -15,14 +17,17 @@ public class RedditComment {
     private DateTime postDate;
     private int depth;
 
+    private RedditCommentType type;
+
     // TODO: Information whether comment has been edited or not
 
-    public RedditComment(int depth, String user, int score, DateTime postDate, String text) {
+    public RedditComment(int depth, String user, int score, DateTime postDate, String text, RedditCommentType type) {
         this.depth = depth;
         this.user = user;
         this.score = score;
         this.postDate = postDate;
         this.text = text;
+        this.type = type;
     }
 
     public String getText() {
@@ -43,5 +48,13 @@ public class RedditComment {
 
     public int getDepth() {
         return depth;
+    }
+
+    public RedditCommentType getType() {
+        return type;
+    }
+
+    public void setType(RedditCommentType type) {
+        this.type = type;
     }
 }
