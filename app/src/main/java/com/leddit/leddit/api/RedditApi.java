@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
+import com.leddit.leddit.api.output.MyRedditKarma;
 import com.leddit.leddit.api.output.RedditAuthorizationData;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
@@ -303,6 +304,26 @@ public class RedditApi {
         }
     }
 
+    public MyRedditKarma getKarma()
+    {
+        System.out.println(oService.myKarma());
+        return oService.myKarma();
+    }
+
+    public boolean voteItem(int vote, RedditThing thing)
+    {
+        if(redditAuthState.getAccess_token() != null)
+        {
+            oService.vote(vote, thing.getFullname());
+            return true;
+        }
+        else
+        {
+            System.out.println("NULL TOKEN");
+            return false;
+        }
+    }
+
     public void oauthCallTest()
     {
 
@@ -312,7 +333,7 @@ public class RedditApi {
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
 
-
+        System.out.println(getKarma().toString());
     }
 
     public AuthState getRedditAuthState() {

@@ -1,13 +1,14 @@
 package com.leddit.leddit;
 
 import com.leddit.leddit.api.RedditCommentType;
+import com.leddit.leddit.api.RedditThing;
 
 import org.joda.time.DateTime;
 
 /**
  * Created by Iiro on 2.12.2014.
  */
-public class RedditComment {
+public class RedditComment extends RedditThing {
     private String text;
 
     // TODO: RedditUser class with lazy loading instead?
@@ -19,19 +20,18 @@ public class RedditComment {
 
     private RedditCommentType type;
 
-    private String fullname;
-
     // TODO: Information whether comment has been edited or not
 
     public RedditComment(int depth, String user, int score, DateTime postDate,
-                         String text, RedditCommentType type, String fullname) {
+                         String text, RedditCommentType type, String fullname)
+    {
+        super(fullname);
         this.depth = depth;
         this.user = user;
         this.score = score;
         this.postDate = postDate;
         this.text = text;
         this.type = type;
-        this.fullname = fullname;
     }
 
     public String getText() {
@@ -60,13 +60,5 @@ public class RedditComment {
 
     public void setType(RedditCommentType type) {
         this.type = type;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 }
