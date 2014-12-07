@@ -163,7 +163,7 @@ public class RedditApi {
         }
         else
         {
-            o = rService.listSubredditWithTime(subreddit, sorting, timeScale);
+            o = rService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
         }
 
         RedditThread thread;
@@ -227,7 +227,7 @@ public class RedditApi {
         }
         else
         {
-            o = rService.frontPageWithTimescale(sorting, timeScale);
+            o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
         }
 
 
