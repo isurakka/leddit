@@ -69,24 +69,10 @@ public class RedditThreadListAdapter extends BaseAdapter {
 
         final View threadInfo = convertView.findViewById(R.id.thread_info);
 
-        TextView title = (TextView)threadInfo.findViewById(R.id.title);
-        TextView score = (TextView)threadInfo.findViewById(R.id.score);
-        TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
-        TextView time = (TextView)threadInfo.findViewById(R.id.time);
-        TextView user = (TextView)threadInfo.findViewById(R.id.user);
-        final TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
-        // TODO: Image preview
-
         final RedditThread thread = threads.get(position);
         final int finalPosition = position;
 
-        title.setText(thread.getTitle());
-        score.setText(Integer.toString(thread.getScore()));
-        domain.setText(thread.getDomain());
-        time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
-        user.setText(thread.getUser());
-        comments.setText(thread.getNum_comments() + " comments");
-
+        LayoutUtility.SetThreadInfo(thread, threadInfo);
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
 

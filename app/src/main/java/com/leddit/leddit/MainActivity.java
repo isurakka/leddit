@@ -412,21 +412,7 @@ public class MainActivity extends Activity
 
             threadInfo = rootView.findViewById(R.id.thread_info);
 
-            // Find views
-            TextView title = (TextView)threadInfo.findViewById(R.id.title);
-            TextView score = (TextView)threadInfo.findViewById(R.id.score);
-            TextView domain = (TextView)threadInfo.findViewById(R.id.domain);
-            TextView time = (TextView)threadInfo.findViewById(R.id.time);
-            TextView user = (TextView)threadInfo.findViewById(R.id.user);
-            final TextView comments = (TextView)threadInfo.findViewById(R.id.comments);
-
-            // Set values
-            title.setText(thread.getTitle());
-            score.setText(Integer.toString(thread.getScore()));
-            domain.setText(thread.getDomain());
-            time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
-            user.setText(thread.getUser());
-            comments.setText(thread.getNum_comments() + " comments");
+            LayoutUtility.SetThreadInfo(thread, threadInfo);
 
             // Populate list
             listView = (ListView)rootView.findViewById(R.id.comment_list);
