@@ -75,8 +75,15 @@
                 android:textSize="@dimen/text_size_small"/>
         </LinearLayout>
     </LinearLayout>
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="@dimen/thread_info_preview_height"
+        android:layout_height="match_parent" />
+    <!--
     <ImageButton
         android:id="@+id/preview"
-        android:layout_width="@dimen/thread_info_height"
-        android:layout_height="match_parent"/>
+        android:layout_width="@dimen/thread_info_preview_height"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+        -->
 </LinearLayout>

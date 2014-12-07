@@ -13,6 +13,7 @@
     <dimen name="score_width">50dp</dimen>
     <dimen name="comment_indent">20dp</dimen>
     <dimen name="thread_info_height">70dp</dimen>
+    <dimen name="thread_info_preview_height">64dp</dimen>
     <dimen name="comment_info_margin">10dp</dimen>
 
 </resources>

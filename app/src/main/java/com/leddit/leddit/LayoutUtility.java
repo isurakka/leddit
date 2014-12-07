@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.ViewParent;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,7 +34,7 @@ public class LayoutUtility {
         TextView time = (TextView)container.findViewById(R.id.time);
         TextView user = (TextView)container.findViewById(R.id.user);
         TextView comments = (TextView)container.findViewById(R.id.comments);
-        ImageButton preview = (ImageButton)container.findViewById(R.id.preview);
+        ImageView preview = (ImageView)container.findViewById(R.id.preview);
         // TODO: Image preview
 
         title.setText(thread.getTitle());
