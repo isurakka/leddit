@@ -80,7 +80,6 @@ public class RedditApi {
             @Override
             public void intercept(RequestFacade request) {
                 System.out.println("Oauth API Request intercepted and bearer token (" + redditAuthState.getAccess_token() + ") injected!");
-                request.addHeader("Authorization", "bearer " + redditAuthState.getAccess_token());
 
                 if(Utility.hasExpired(redditAuthState.getExpires_in()))
                 {
@@ -91,6 +90,8 @@ public class RedditApi {
                 {
                     System.out.println("Token not yet expired!");
                 }
+
+                request.addHeader("Authorization", "bearer " + redditAuthState.getAccess_token());
             }
         };
 
@@ -391,8 +392,7 @@ public class RedditApi {
 
     public boolean isCaptchaNeeded()
     {
-        CaptchaNeededResponse c = oService.needsCaptcha();
-        return true;
+        return oService.needsCaptcha();
     }
 
     public String getIden()

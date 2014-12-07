@@ -8,6 +8,6 @@ package com.leddit.leddit.api.output;
     Container class for Reddit API output
 */
 
-public class MyRedditKarma
+public class MyRedditKarma extends RedditError
 {
 }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /*
     Container class for Reddit API output
 */
-public class RedditPostData {
+public class RedditPostData extends RedditError {
 
     private String domain;
     private String banned_by;

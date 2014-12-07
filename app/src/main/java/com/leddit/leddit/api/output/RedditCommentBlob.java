@@ -14,7 +14,7 @@ import java.util.List;
 /*
     Container class for Reddit API output
 */
-public class RedditCommentBlob
+public class RedditCommentBlob extends RedditError
 {
     private String domain;
     private String banned_by;

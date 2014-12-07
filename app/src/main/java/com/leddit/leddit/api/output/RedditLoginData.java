@@ -7,7 +7,7 @@ package com.leddit.leddit.api.output;
 /*
     Container class for Reddit API output
 */
-public class RedditLoginData
+public class RedditLoginData extends RedditError
 {
 
 }

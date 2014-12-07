@@ -35,7 +35,7 @@ public interface RedditOauthApiService
     VoteResponse vote(@Field("dir") int direction, @Field("id") String fullname);
 
     @GET("/api/needs_captcha.json")
-    CaptchaNeededResponse needsCaptcha();
+    boolean needsCaptcha();
 
     @POST("/api/new_captcha")
     NewCaptchaResponse newCaptcha();

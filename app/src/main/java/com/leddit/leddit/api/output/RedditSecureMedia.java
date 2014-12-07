@@ -7,7 +7,7 @@ package com.leddit.leddit.api.output;
 /*
     Container class for Reddit API output
 */
-public class RedditSecureMedia {
+public class RedditSecureMedia extends RedditError {
 
     private String type;
     private RedditOembed oembed;

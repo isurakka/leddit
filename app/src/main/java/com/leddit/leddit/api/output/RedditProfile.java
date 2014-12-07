@@ -7,7 +7,7 @@ package com.leddit.leddit.api.output;
 /*
     Container class for Reddit API output
 */
-public class RedditProfile
+public class RedditProfile extends RedditError
 {
     private boolean has_mail;
     private String name;

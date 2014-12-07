@@ -3,7 +3,7 @@ package com.leddit.leddit.api.output;
 /**
  * Created by Jonah on 7.12.2014.
  */
-public class RedditAuthStateProxy
+public class RedditAuthStateProxy extends RedditError
 {
     private String access_token;
     private String token_type;

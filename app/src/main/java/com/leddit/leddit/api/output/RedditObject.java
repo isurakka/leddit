@@ -10,7 +10,7 @@ import java.util.List;
 /*
     Container class for Reddit API output
 */
-public class RedditObject {
+public class RedditObject extends RedditError {
 
     private String kind;
     private RedditData data;

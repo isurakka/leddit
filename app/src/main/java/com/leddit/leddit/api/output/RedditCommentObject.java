@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /*
     Container class for Reddit API output
 */
-public class RedditCommentObject
+public class RedditCommentObject extends RedditError
 {
     private String kind;
     private RedditCommentData data;

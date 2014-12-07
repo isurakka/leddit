@@ -10,7 +10,7 @@ import java.util.List;
 /*
     Container class for Reddit API output
 */
-public class RedditCommentData
+public class RedditCommentData extends RedditError
 {
     private String modhash;
     private String after;
