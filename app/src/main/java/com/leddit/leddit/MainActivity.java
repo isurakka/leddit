@@ -27,6 +27,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -230,6 +231,23 @@ public class MainActivity extends Activity
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
+
+            /*
+            Spinner sortSpinner = (Spinner)menu.findItem(R.id.menuSort).getActionView();
+            ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
+                    R.array.sort_list, android.R.layout.simple_spinner_item);
+            //spinnerAdapter.setDropDownViewResource(R.);
+            sortSpinner.setAdapter(spinnerAdapter);
+            sortSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    CharSequence item = (CharSequence)parent.getItemAtPosition(position);
+                    Log.d("spinner click", item.toString());
+                }
+            });
+            */
+            //sortSpinner.setAdapter(spinnerAdapter);
+
             return true;
         }
         return super.onCreateOptionsMenu(menu);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_list">
+        <item>hot</item>
+        <item>new</item>
+        <item>rising</item>
+        <item>top 1h</item>
+        <item>top 1d</item>
+        <item>top 1m</item>
+        <item>top 1y</item>
+        <item>top all</item>
+        <item>conv 1h</item>
+        <item>conv 1d</item>
+        <item>conv 1m</item>
+        <item>conv 1y</item>
+        <item>conv all</item>
+    </string-array>
+</resources>

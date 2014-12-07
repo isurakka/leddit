@@ -1,9 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.leddit.leddit.MainActivity">
+    <Spinner xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/sort_list" />
+    <item
+        android:title="sorting"
+        android:id="@+id/menuSort"
+        android:showAsAction="ifRoom"
+        android:actionLayout="@layout/sort_list" />
     <item
         android:id="@+id/action_refresh"
         android:title="Refresh"
-        android:showAsAction="withText|ifRoom" />
+        android:icon="@android:drawable/ic_popup_sync"
+        android:showAsAction="ifRoom" />
+    <!--
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
+    -->
 </menu>
