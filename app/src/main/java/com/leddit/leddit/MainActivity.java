@@ -174,9 +174,11 @@ public class MainActivity extends Activity
             // TODO: Checking via displayed string is a bad way to do this
             if (item == "Login")
             {
+                Log.d("authorizeFragment", "GOING");
+
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, AuthorizeFragment.newInstance(), "threadListFragment")
+                        .replace(R.id.container, AuthorizeFragment.newInstance(), "authorizeFragment")
                         .commit();
             }
             else if (item == "Front page")
@@ -191,6 +193,28 @@ public class MainActivity extends Activity
     }
 
     private String lastSubreddit;
+
+    private enum FragmentState
+    {
+        COMMENTS,
+        SUBREDDIT,
+        OTHER
+    }
+
+    private FragmentState getFragmentState()
+    {
+        FragmentManager fm = getFragmentManager();
+
+        if (fm.findFragmentByTag("threadListFragment") != null) {
+            return FragmentState.SUBREDDIT;
+        }
+
+        if (fm.findFragmentByTag("commentsFragment") != null) {
+            return FragmentState.COMMENTS;
+        }
+
+        return FragmentState.OTHER;
+    }
 
     public void ViewSubreddit(String subreddit, String sorting, String timescale)
     {
@@ -212,7 +236,7 @@ public class MainActivity extends Activity
     {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, CommentsFragment.newInstance(thread))
+                .replace(R.id.container, CommentsFragment.newInstance(thread), "commentsFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -230,6 +254,7 @@ public class MainActivity extends Activity
         actionBar.setTitle(mTitle == null ? "Front page" : mTitle);
     }
 
+    private String lastSorting = "hot";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -246,8 +271,15 @@ public class MainActivity extends Activity
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     CharSequence item = (CharSequence)sortSpinner.getItemAtPosition(position);
                     Log.d("spinner click", item.toString());
+
+                    if (item == lastSorting || getFragmentState() == FragmentState.OTHER)
+                    {
+                        return;
+                    }
+
                     RedditSortData sortData = LayoutUtility.sortingOptionToSortData(item.toString());
                     ViewSubreddit(lastSubreddit, sortData.sorting, sortData.timescale);
+                    lastSorting = sortData.sorting;
                 }
 
                 @Override
@@ -525,6 +557,8 @@ public class MainActivity extends Activity
 
             fragment.attempt = new AuthAttempt();
 
+            Log.d("authorizeFragment", "newInstance");
+
             return fragment;
         }
 
@@ -535,6 +569,8 @@ public class MainActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_authorize, container, false);
+
+            Log.d("authorizeFragment", "onCreateView");
 
             final WebView webView = (WebView)rootView.findViewById(R.id.webView);
             webView.setWebViewClient(new WebViewClient() {
