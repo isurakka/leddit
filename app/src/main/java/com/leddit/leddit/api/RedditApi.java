@@ -162,7 +162,7 @@ public class RedditApi {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
         RedditObject o;
 
-        if(timeScale == null || (!sorting.equals(RedditItemSorting.CONTROVERSIAL) || !sorting.equals(RedditItemSorting.TOP)))
+        if(timeScale == null)
         {
             o = rService.listSubreddit(subreddit, sorting);
         }
@@ -226,7 +226,7 @@ public class RedditApi {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
         RedditObject o;
 
-        if(timeScale == null || (!sorting.equals(RedditItemSorting.CONTROVERSIAL) || !sorting.equals(RedditItemSorting.TOP)))
+        if(timeScale == null)
         {
             o = rService.frontPage(sorting);
         }
