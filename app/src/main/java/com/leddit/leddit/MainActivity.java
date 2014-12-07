@@ -196,6 +196,10 @@ public class MainActivity extends Activity
     {
         // TODO: Use sorting
 
+        Log.d("subreddit", subreddit != null ? subreddit : "null");
+        Log.d("sorting", sorting != null ? sorting : "null");
+        Log.d("timescale", timescale != null ? timescale : "null");
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, ThreadListFragment.newInstance(subreddit, sorting, timescale), "threadListFragment")
