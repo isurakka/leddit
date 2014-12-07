@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
+import com.leddit.leddit.api.output.CaptchaIdenResponse;
+import com.leddit.leddit.api.output.CaptchaNeededResponse;
 import com.leddit.leddit.api.output.MyRedditKarma;
+import com.leddit.leddit.api.output.NewCaptchaResponse;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
@@ -368,6 +371,24 @@ public class RedditApi {
             System.out.println("REFRESH: Original refresh_token is null!");
             return false;
         }
+    }
+
+    public boolean isCaptchaNeeded()
+    {
+        CaptchaNeededResponse c = oService.needsCaptcha();
+        return true;
+    }
+
+    public String getIden()
+    {
+        NewCaptchaResponse n = oService.newCaptcha();
+        return "";
+    }
+
+    public String getCaptcha(String iden)
+    {
+        CaptchaIdenResponse c = oService.iden(iden);
+        return "";
     }
 
     private String getBasicAuthString()

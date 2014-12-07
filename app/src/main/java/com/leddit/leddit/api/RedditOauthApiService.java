@@ -1,6 +1,9 @@
 package com.leddit.leddit.api;
 
+import com.leddit.leddit.api.output.CaptchaIdenResponse;
+import com.leddit.leddit.api.output.CaptchaNeededResponse;
 import com.leddit.leddit.api.output.MyRedditKarma;
+import com.leddit.leddit.api.output.NewCaptchaResponse;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditProfile;
 import com.leddit.leddit.api.output.VoteResponse;
@@ -9,6 +12,7 @@ import retrofit.http.Field;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Created by Jonah on 6.12.2014.
@@ -28,4 +32,13 @@ public interface RedditOauthApiService
 
     @POST("/api/vote/.json")
     VoteResponse vote(@Field("dir") int direction, @Field("id") String fullname);
+
+    @GET("/api/needs_captcha.json")
+    CaptchaNeededResponse needsCaptcha();
+
+    @POST("/api/new_captcha")
+    NewCaptchaResponse newCaptcha();
+
+    @GET("/captcha/iden")
+    CaptchaIdenResponse iden(@Query("iden") String iden);
 }
