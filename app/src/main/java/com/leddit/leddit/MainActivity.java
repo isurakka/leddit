@@ -35,6 +35,8 @@ import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.RedditApi;
 import com.leddit.leddit.api.Utility;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -68,6 +70,11 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Init image loader
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+            .build();
+        ImageLoader.getInstance().init(config);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);

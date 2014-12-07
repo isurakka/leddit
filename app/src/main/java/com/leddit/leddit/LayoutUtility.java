@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leddit.leddit.api.Utility;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -34,6 +36,11 @@ public class LayoutUtility {
         user.setText(thread.getUser());
         comments.setText(thread.getNum_comments() + " comments");
 
+        String thumbnailUrl = thread.getThumbnail_url();
+        if (thumbnailUrl != null) {
+            ImageLoader imageLoader = ImageLoader.getInstance();
+            imageLoader.displayImage(thread.getThumbnail_url(), preview);
+        }
 
         /*
         int w = preview.getMeasuredWidth();
