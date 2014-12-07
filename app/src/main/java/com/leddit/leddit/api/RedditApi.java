@@ -16,6 +16,7 @@ import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
+import com.leddit.leddit.api.output.RedditPostSubmitResponse;
 import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
@@ -350,7 +351,8 @@ public class RedditApi {
         System.out.println("Expire: " + redditAuthState.getExpires_in());
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
-        getProfile();
+
+        System.out.println(isCaptchaNeeded());
     }
 
     private boolean refreshToken()
@@ -409,6 +411,28 @@ public class RedditApi {
     {
         String auth = new String(Base64.encodeToString((CLIENT_ID + ":").getBytes(), Base64.DEFAULT));
         return "Basic " + auth;
+    }
+
+    public void submitSelfPost(String subreddit, String title, String text, String captcha, String iden)
+    {
+        if(captcha == null || iden == null)
+        {
+            captcha = "";
+            iden = "";
+        }
+
+        oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
+    }
+
+    public void submitLinkPost(String subreddit, String title, String url, String captcha, String iden)
+    {
+        if(captcha == null || iden == null)
+        {
+            captcha = "";
+            iden = "";
+        }
+
+        oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
     }
 
     public AuthState getRedditAuthState() {
