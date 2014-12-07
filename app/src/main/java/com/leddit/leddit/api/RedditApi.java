@@ -11,6 +11,7 @@ import com.leddit.leddit.api.output.CaptchaIdenResponse;
 import com.leddit.leddit.api.output.CaptchaNeededResponse;
 import com.leddit.leddit.api.output.MyRedditKarma;
 import com.leddit.leddit.api.output.NewCaptchaResponse;
+import com.leddit.leddit.api.output.RedditAuthStateProxy;
 import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
@@ -289,9 +290,17 @@ public class RedditApi {
     {
         String auth = getBasicAuthString();
 
-        AuthState authState = aService.authorize(auth, REDIRECT_URI, code, "authorization_code");
-        this.redditAuthState = authState;
-        return authState;
+        RedditAuthStateProxy authStateProxy = aService.authorize(auth, REDIRECT_URI, code, "authorization_code");
+
+        AuthState a = new AuthState();
+        a.setAccess_token(authStateProxy.getAccess_token());
+        a.setToken_type(authStateProxy.getToken_type());
+        a.setExpires_in(DateTime.now(DateTimeZone.UTC).plusMinutes(58));
+        a.setScope(authStateProxy.getScope());
+        a.setRefresh_token(authStateProxy.getRefresh_token());
+
+        this.redditAuthState = a;
+        return a;
     }
 
     public RedditProfile getProfile()
@@ -336,7 +345,14 @@ public class RedditApi {
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
 
-        System.out.println(getKarma().toString());
+        if(Utility.hasExpired(redditAuthState.getExpires_in()))
+        {
+            refreshToken();
+        }
+        else
+        {
+            getKarma();
+        }
     }
 
     private boolean refreshToken()
@@ -348,14 +364,14 @@ public class RedditApi {
 
         if(refresh_token.length() > 0)
         {
-            AuthState authState = aService.refresh(auth, refresh_token, "refresh_token");
+            RedditAuthStateProxy p = aService.refresh(auth, refresh_token, "refresh_token");
 
-            if(authState != null)
+            if(p != null)
             {
-                this.redditAuthState.setAccess_token(authState.getAccess_token());
-                this.redditAuthState.setToken_type(authState.getToken_type());
-                this.redditAuthState.setExpires_in(authState.getExpires_in());
-                this.redditAuthState.setScope(authState.getScope());
+                this.redditAuthState.setAccess_token(p.getAccess_token());
+                this.redditAuthState.setToken_type(p.getToken_type());
+                this.redditAuthState.setExpires_in(DateTime.now(DateTimeZone.UTC).plusMinutes(58));
+                this.redditAuthState.setScope(p.getScope());
 
                 System.out.println("REFRESH: Token refresh success!");
                 return true;

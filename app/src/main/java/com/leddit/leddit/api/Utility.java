@@ -1,8 +1,11 @@
 package com.leddit.leddit.api;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.joda.time.Period;
+
+import java.util.Date;
 
 /**
  * Created by Jonah on 7.12.2014.
@@ -88,5 +91,11 @@ public final class Utility
         {
             return RedditCommentType.DEFAULT;
         }
+    }
+
+    public static boolean hasExpired(DateTime time)
+    {
+        Period p = new Period(DateTime.now(DateTimeZone.UTC), time);
+        return p.getSeconds() < 0;
     }
 }
