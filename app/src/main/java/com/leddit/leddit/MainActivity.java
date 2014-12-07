@@ -120,7 +120,7 @@ public class MainActivity extends Activity
                 authorizedReceiver,
                 new IntentFilter("authorized"));
 
-        ViewSubreddit(null, "hot");
+        ViewSubreddit(null, "hot", null);
     }
 
     private BroadcastReceiver openCommentsReceiver = new BroadcastReceiver() {
@@ -167,7 +167,7 @@ public class MainActivity extends Activity
     public void onNavigationDrawerSubredditSelected(String listName, String item) {
         if (listName == "subreddits")
         {
-            ViewSubreddit(item, "hot");
+            ViewSubreddit(item, "hot", null);
         }
         else if (listName == "actions")
         {
@@ -181,7 +181,7 @@ public class MainActivity extends Activity
             }
             else if (item == "Front page")
             {
-                ViewSubreddit(null, "hot");
+                ViewSubreddit(null, "hot", null);
             }
             else if (item == "Test")
             {
@@ -190,14 +190,18 @@ public class MainActivity extends Activity
         }
     }
 
-    public void ViewSubreddit(String subreddit, String sorting)
+    private String lastSubreddit;
+
+    public void ViewSubreddit(String subreddit, String sorting, String timescale)
     {
         // TODO: Use sorting
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, ThreadListFragment.newInstance(subreddit), "threadListFragment")
+                .replace(R.id.container, ThreadListFragment.newInstance(subreddit, sorting, timescale), "threadListFragment")
                 .commit();
+
+        lastSubreddit = subreddit;
     }
 
     public void ViewComments(RedditThread thread)
@@ -304,22 +308,21 @@ public class MainActivity extends Activity
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String SUBREDDIT_NAME = "section_number";
+        private static final String SUBREDDIT_NAME = "";
+        private static final String SORTING = "";
+        private static final String TIMESCALE = "";
 
         private ListView listView;
         public List<RedditThread> threads;
         private RedditThreadListAdapter adapter;
         private GetThreadsTask threadsTask;
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         * @param subredditName
-         */
-        public static ThreadListFragment newInstance(String subredditName) {
+        public static ThreadListFragment newInstance(String subreddit, String sorting, String timescale) {
             ThreadListFragment fragment = new ThreadListFragment();
             Bundle args = new Bundle();
-            args.putString(SUBREDDIT_NAME, subredditName);
+            args.putString(SUBREDDIT_NAME, subreddit);
+            args.putString(SORTING, sorting);
+            args.putString(TIMESCALE, timescale);
             fragment.setArguments(args);
 
             return fragment;

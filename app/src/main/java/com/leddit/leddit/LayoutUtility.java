@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leddit.leddit.api.RedditItemSorting;
+import com.leddit.leddit.api.RedditSortingTimescale;
 import com.leddit.leddit.api.Utility;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -62,5 +64,66 @@ public class LayoutUtility {
         int min = Math.min(w, h);
         preview.setLayoutParams(new LinearLayout.LayoutParams(min, min));
         */
+    }
+
+    class RedditSortData
+    {
+        String sorting;
+        String timescale;
+
+        public RedditSortData(String sorting, String timescale)
+        {
+            this.sorting = sorting;
+            this.timescale = timescale;
+        }
+    }
+    public RedditSortData sortingOptionToSortData(String option)
+    {
+        if (option.equals("hot") || option.equals("new"))
+        {
+            return new RedditSortData(option, null);
+        }
+        else
+        {
+            String[] split = option.split(" ");
+
+            String sorting;
+            if (split[0].equals("conv"))
+            {
+                sorting = RedditItemSorting.CONTROVERSIAL;
+            }
+            else
+            {
+                sorting = split[0];
+            }
+
+            String timescale = RedditSortingTimescale.MONTH;
+            if (split[1].equals("1h"))
+            {
+                timescale = RedditSortingTimescale.HOUR;
+            }
+            else if (split[1].equals("1d"))
+            {
+                timescale = RedditSortingTimescale.DAY;
+            }
+            else if (split[1].equals("1w"))
+            {
+                timescale = RedditSortingTimescale.WEEK;
+            }
+            else if (split[1].equals("1m"))
+            {
+                timescale = RedditSortingTimescale.MONTH;
+            }
+            else if (split[1].equals("1y"))
+            {
+                timescale = RedditSortingTimescale.YEAR;
+            }
+            else if (split[1].equals("all"))
+            {
+                timescale = RedditSortingTimescale.ALL;
+            }
+
+            return new RedditSortData(sorting, timescale);
+        }
     }
 }
