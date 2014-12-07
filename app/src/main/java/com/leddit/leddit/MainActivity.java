@@ -34,6 +34,7 @@ import android.widget.ViewFlipper;
 
 import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
+import com.leddit.leddit.api.AuthStateListener;
 import com.leddit.leddit.api.RedditApi;
 import com.leddit.leddit.api.Utility;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -107,6 +108,13 @@ public class MainActivity extends Activity
             e.printStackTrace();
         }
 
+        RedditApi.getInstance().addOnAuthStateChangedListener(new AuthStateListener() {
+            @Override
+            public void onAuthStateChanged() {
+                saveAuthState(RedditApi.getInstance().getRedditAuthState());
+            }
+        });
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
@@ -143,25 +151,28 @@ public class MainActivity extends Activity
 
             AuthState authState = intent.getParcelableExtra("authState");
 
-            Log.d("files dir", getFilesDir().toString());
-
-            try {
-                FileOutputStream fos = MainActivity.this.openFileOutput("authState", Context.MODE_PRIVATE);
-                ObjectOutputStream os = new ObjectOutputStream(fos);
-                os.writeObject(authState);
-                os.close();
-                fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            saveAuthState(authState);
 
             mNavigationDrawerFragment.RemoveLogin();
 
             ViewSubreddit(null, "hot", null);
         }
     };
+
+    private void saveAuthState(AuthState authState)
+    {
+        try {
+            FileOutputStream fos = MainActivity.this.openFileOutput("authState", Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(authState);
+            os.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onNavigationDrawerSubredditSelected(String listName, String item) {
