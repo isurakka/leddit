@@ -178,7 +178,18 @@ public class RedditApi {
 
             if(postData.getThumbnail() != "")
             {
-                thumbnail = postData.getThumbnail();
+                if(postData.getThumbnail() == "self")
+                {
+                    thumbnail = "http://i.imgur.com/LAOXHdN.png";
+                }
+                else if(postData.getThumbnail() == "nsfw")
+                {
+                    thumbnail = "http://i.imgur.com/cgDTKfV.png";
+                }
+                else
+                {
+                    thumbnail = postData.getThumbnail();
+                }
             }
             else
             {
@@ -220,7 +231,18 @@ public class RedditApi {
 
             if(postData.getThumbnail() != "")
             {
-                thumbnail = postData.getThumbnail();
+                if(postData.getThumbnail() == "self")
+                {
+                    thumbnail = "http://i.imgur.com/LAOXHdN.png";
+                }
+                else if(postData.getThumbnail() == "nsfw")
+                {
+                    thumbnail = "http://i.imgur.com/cgDTKfV.png";
+                }
+                else
+                {
+                    thumbnail = postData.getThumbnail();
+                }
             }
             else
             {
