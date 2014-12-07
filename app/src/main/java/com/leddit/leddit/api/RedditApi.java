@@ -284,10 +284,9 @@ public class RedditApi {
 
     public AuthState authorize(String state, String code)
     {
-        String auth = new String(Base64.encodeToString((CLIENT_ID + ":").getBytes(), Base64.DEFAULT));
-        String fullAuth = "Basic " + auth;
+        String auth = getBasicAuthString();
 
-        AuthState authState = aService.authorize(fullAuth, REDIRECT_URI, code, "authorization_code");
+        AuthState authState = aService.authorize(auth, REDIRECT_URI, code, "authorization_code");
         this.redditAuthState = authState;
         return authState;
     }
@@ -335,6 +334,46 @@ public class RedditApi {
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
 
         System.out.println(getKarma().toString());
+    }
+
+    private boolean refreshToken()
+    {
+        String auth = getBasicAuthString();
+
+
+        String refresh_token = redditAuthState.getRefresh_token();
+
+        if(refresh_token.length() > 0)
+        {
+            AuthState authState = aService.refresh(auth, refresh_token, "refresh_token");
+
+            if(authState != null)
+            {
+                this.redditAuthState.setAccess_token(authState.getAccess_token());
+                this.redditAuthState.setToken_type(authState.getToken_type());
+                this.redditAuthState.setExpires_in(authState.getExpires_in());
+                this.redditAuthState.setScope(authState.getScope());
+
+                System.out.println("REFRESH: Token refresh success!");
+                return true;
+            }
+            else
+            {
+                System.out.println("REFRESH: Refreshed authstate returned null!");
+                return false;
+            }
+        }
+        else
+        {
+            System.out.println("REFRESH: Original refresh_token is null!");
+            return false;
+        }
+    }
+
+    private String getBasicAuthString()
+    {
+        String auth = new String(Base64.encodeToString((CLIENT_ID + ":").getBytes(), Base64.DEFAULT));
+        return "Basic " + auth;
     }
 
     public AuthState getRedditAuthState() {

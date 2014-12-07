@@ -24,6 +24,7 @@ public class RedditOembed {
     private String thumbnail_url;
     private String type;
     private String author_url;
+    private double mean_alpha;
 
     public String getProvider_url() {
         return provider_url;
@@ -143,5 +144,13 @@ public class RedditOembed {
 
     public void setAuthor_url(String author_url) {
         this.author_url = author_url;
+    }
+
+    public double getMean_alpha() {
+        return mean_alpha;
+    }
+
+    public void setMean_alpha(double mean_alpha) {
+        this.mean_alpha = mean_alpha;
     }
 }
