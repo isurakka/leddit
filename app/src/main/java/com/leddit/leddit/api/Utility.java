@@ -96,6 +96,7 @@ public final class Utility
     public static boolean hasExpired(DateTime time)
     {
         Period p = new Period(DateTime.now(DateTimeZone.UTC), time);
+        System.out.println(p.toStandardSeconds().getSeconds());
         return p.getSeconds() < 0;
     }
 }

@@ -24,6 +24,6 @@ public interface RedditAuthorizationService
                         @Field("grant_type") String grant_type);
 
     @FormUrlEncoded
-    @POST("/api/v1/refresh_token")
+    @POST("/api/v1/access_token")
     RedditAuthStateProxy refresh(@Header("Authorization") String auth, @Field("refresh_token") String refresh_token, @Field("grant_type") String grant_type);
 }
