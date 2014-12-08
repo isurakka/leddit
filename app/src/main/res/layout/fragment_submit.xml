@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <RadioButton
-            android:id="@+id/self"
+            android:id="@+id/selfSubmit"
             android:text="self"
             android:checked="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"/>
         <RadioButton
-            android:id="@+id/link"
+            android:id="@+id/linkSubmit"
             android:text="link"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,22 +27,22 @@
     </RadioGroup>
 
     <EditText
-        android:id="@+id/subreddit"
+        android:id="@+id/subredditSubmit"
         android:hint="subreddit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/titleSubmit"
         android:hint="title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/text"
+        android:id="@+id/textSubmit"
         android:hint="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/submitSubmit"
         android:text="Submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

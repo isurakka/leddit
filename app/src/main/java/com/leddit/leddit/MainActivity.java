@@ -29,6 +29,8 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -958,6 +960,11 @@ public class MainActivity extends Activity
         private String captcha = null;
         private String iden = null;
 
+        boolean self;
+        String subreddit;
+        String title;
+        String text;
+
         public static SubmitFragment newInstance(String subreddit) {
             SubmitFragment fragment = new SubmitFragment();
             Bundle args = new Bundle();
@@ -971,17 +978,62 @@ public class MainActivity extends Activity
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        public View onCreateView(LayoutInflater inflater, ViewGroup viewGroupContainer,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_submit, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_submit, viewGroupContainer, false);
 
-            TextView subreddit = (TextView)rootView.findViewById(R.id.subreddit);
-            subreddit.setText(getArguments().getString(SUBREDDIT_NAME));
+            TextView subredditViewCreate = (TextView)rootView.findViewById(R.id.subredditSubmit);
+            subredditViewCreate.setText(getArguments().getString(SUBREDDIT_NAME));
 
-            final Button submit = (Button)rootView.findViewById(R.id.submit);
+            final EditText textViewTemp = (EditText)rootView.findViewById(R.id.textSubmit);
+
+            RadioButton linkRadio = (RadioButton)rootView.findViewById(R.id.linkSubmit);
+            linkRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked)
+                    {
+                        textViewTemp.setHint("link");
+                    }
+                    else
+                    {
+                        textViewTemp.setHint("text");
+                    }
+                }
+            });
+
+            final Button submit = (Button)rootView.findViewById(R.id.submitSubmit);
             submit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    View container = SubmitFragment.this.getView();
+
+                    self = ((RadioButton)container.findViewById(R.id.selfSubmit)).isChecked();
+                    EditText subredditView = (EditText)container.findViewById(R.id.subredditSubmit);
+                    EditText titleView = (EditText)container.findViewById(R.id.titleSubmit);
+                    EditText textView = (EditText)container.findViewById(R.id.textSubmit);
+
+                    subreddit = subredditView.getText().toString();
+                    title = titleView.getText().toString();
+                    text = textView.getText().toString();
+
+                    if (subreddit.isEmpty() || title.isEmpty() || text.isEmpty())
+                    {
+                        Toast.makeText(getActivity(), "No empty fields allowed!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if (title.length() < 3)
+                    {
+                        Toast.makeText(getActivity(), "Title is too short.", Toast.LENGTH_LONG).show();
+                    }
+
+                    if (text.length() < 5)
+                    {
+                        Toast.makeText(getActivity(), "Text is too short.", Toast.LENGTH_LONG).show();
+                    }
+
                     new NeedCaptchaTask(SubmitFragment.this).execute();
                 }
             });
@@ -1083,31 +1135,11 @@ public class MainActivity extends Activity
         {
             SubmitFragment fragment;
 
-            boolean self;
-            String subreddit;
-            String title;
-            String text;
             boolean success = false;
 
             public SubmitTask(SubmitFragment fragment)
             {
                 this.fragment = fragment;
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-                View container = fragment.getView();
-
-                self = ((RadioButton)container.findViewById(R.id.self)).isChecked();
-                TextView subredditView = (TextView)container.findViewById(R.id.subreddit);
-                TextView titleView = (TextView)container.findViewById(R.id.title);
-                TextView textView = (TextView)container.findViewById(R.id.text);
-
-                subreddit = subredditView.getText().toString();
-                title = titleView.getText().toString();
-                text = textView.getText().toString();
             }
 
             @Override
