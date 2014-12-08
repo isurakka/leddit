@@ -68,7 +68,7 @@ public class NavigationDrawerFragment extends Fragment {
         actions = new ArrayList<String>() {{
                 add("Front page");
                 add("Login");
-                add("Test");
+                //add("Test");
         }};
 
         defaultActions = new ArrayList<String>(actions);
