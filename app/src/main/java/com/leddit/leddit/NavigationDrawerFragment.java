@@ -4,6 +4,7 @@ package com.leddit.leddit;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -136,6 +138,9 @@ public class NavigationDrawerFragment extends Fragment {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                         mCallbacks != null) {
                     mCallbacks.onNavigationDrawerGotoAction(mDrawerGoto.getText().toString());
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mDrawerGoto.getWindowToken(), 0);
                     mDrawerLayout.closeDrawer(mFragmentContainerView);
                     return true;
                 }
@@ -239,6 +244,11 @@ public class NavigationDrawerFragment extends Fragment {
                 super.onDrawerOpened(drawerView);
                 if (!isAdded()) {
                     return;
+                }
+
+                if (mDrawerGoto != null)
+                {
+                    mDrawerGoto.setText("");
                 }
 
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
