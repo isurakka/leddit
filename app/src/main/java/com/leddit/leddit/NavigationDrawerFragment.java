@@ -145,6 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
                         "AdviceAnimals",
                         "gifs",
                         "askscience",
+                        "test",
                 }));
         mDrawerSubredditListView.setItemChecked(mCurrentSelectedSubredditPosition, true);
 
