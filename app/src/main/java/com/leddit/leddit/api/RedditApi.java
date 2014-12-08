@@ -393,7 +393,7 @@ public class RedditApi {
 
         if(isCaptchaNeeded())
         {
-            System.out.println(getCaptcha(getIden()));
+            //System.out.println(getCaptcha());
         }
         else
         {
