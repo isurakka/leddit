@@ -12,7 +12,11 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="#000"
-        android:layout_weight="0.6"/>
+        android:layout_weight="0.58"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/divider"/>
     <ListView
         android:id="@+id/actions"
         android:layout_width="match_parent"
