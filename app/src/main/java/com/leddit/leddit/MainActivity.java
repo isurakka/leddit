@@ -174,6 +174,11 @@ public class MainActivity extends Activity
             RedditThread thread = threadListFragment.threads.get(threadPosition);
             int vote = intent.getIntExtra("vote", 0);
 
+            if (thread.getLikes() == vote && thread.getLikes() != 0)
+            {
+                vote = 0;
+            }
+
             if (voteTask != null && voteTask.getStatus() == AsyncTask.Status.RUNNING)
             {
                 voteTask.cancel(true);
@@ -362,6 +367,7 @@ public class MainActivity extends Activity
     class VoteTask extends AsyncTask<Integer, Void, Boolean>
     {
         RedditThing thing;
+        Integer oldLikes = null;
 
         public VoteTask(RedditThing thing)
         {
@@ -372,7 +378,18 @@ public class MainActivity extends Activity
         protected Boolean doInBackground(Integer... vote) {
             Log.d("VoteTask", "START");
 
+            oldLikes = thing.getLikes();
+            thing.setLikes(vote[0]);
             return RedditApi.getInstance().voteItem(vote[0], thing);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            if (oldLikes != null)
+            {
+                thing.setLikes(oldLikes);
+            }
         }
 
         @Override
