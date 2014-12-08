@@ -423,7 +423,7 @@ public class RedditApi {
         return oService.needsCaptcha();
     }
 
-    public NewCaptchaResponse getIden()
+    private NewCaptchaResponse getIden()
     {
         return oService.newCaptcha();
     }
