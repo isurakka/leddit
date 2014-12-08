@@ -124,9 +124,26 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        "games",
+                        "funny",
+                        "pics",
+                        "AskReddit",
+                        "todayilearned",
+                        "worldnews",
+                        "science",
+                        "blog",
+                        "IAmA",
                         "videos",
-                        "programming",
+                        "gaming",
+                        "movies",
+                        "Music",
+                        "aww",
+                        "technology",
+                        "bestof",
+                        "WTF",
+                        "news",
+                        "AdviceAnimals",
+                        "gifs",
+                        "askscience",
                 }));
         mDrawerSubredditListView.setItemChecked(mCurrentSelectedSubredditPosition, true);
 
