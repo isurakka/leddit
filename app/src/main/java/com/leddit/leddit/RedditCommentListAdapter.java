@@ -76,6 +76,7 @@ public class RedditCommentListAdapter extends BaseAdapter {
 
         user.setText(comment.getUser());
         score.setText(Integer.toString(comment.getScore()));
+        score.setTextColor(LayoutUtility.getVoteColor(score.getContext(), comment.getLikes()));
         time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
         text.setText(comment.getText());
 
