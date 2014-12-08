@@ -51,6 +51,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -242,6 +243,13 @@ public class MainActivity extends Activity
     private void saveAuthState(AuthState authState)
     {
         try {
+            if (authState == null) {
+                File dir = getFilesDir();
+                File file = new File(dir, "authState");
+                file.delete();
+                return;
+            }
+
             FileOutputStream fos = MainActivity.this.openFileOutput("authState", Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(authState);
@@ -297,6 +305,12 @@ public class MainActivity extends Activity
                         .replace(R.id.container, ProfileFragment.newInstance(), "profileFragment")
                         .addToBackStack(null)
                         .commit();
+            }
+            else if (item == "Logout")
+            {
+                RedditApi.getInstance().logout();
+                saveAuthState(null);
+                ViewSubreddit(null, "hot", null);
             }
             else if (item == "Test")
             {
