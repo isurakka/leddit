@@ -445,14 +445,14 @@ public class RedditApi {
         return oService.needsCaptcha();
     }
 
-    public NewCaptchaResponse getIden()
+    public String getIden()
     {
-        return oService.newCaptcha();
+        return oService.newCaptcha().getIden();
     }
 
-    public String getCaptcha()
+    public String getCaptcha(String iden)
     {
-        return "http://www.reddit.com/captcha/" + getIden().getIden() + ".png";
+        return "http://www.reddit.com/captcha/" + iden + ".png";
     }
 
     private String getBasicAuthString()
