@@ -11,10 +11,12 @@ package com.leddit.leddit.api;
 public class RedditThing
 {
     private String fullname;
+    private int likes;
 
-    public RedditThing(String fullname)
+    public RedditThing(String fullname, int likes)
     {
         this.fullname = fullname;
+        this.likes = likes;
     }
 
     public String getFullname() {
@@ -23,5 +25,13 @@ public class RedditThing
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

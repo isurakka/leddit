@@ -27,7 +27,6 @@ public class RedditThread extends RedditThing {
     private int num_comments;
     private boolean is_self;
     private String thumbnail_url;
-    private int likes;
 
     // TODO: Lazy loading + getters
     private String text;
@@ -39,7 +38,7 @@ public class RedditThread extends RedditThing {
                         String user, List<RedditComment> comments, String subreddit, String id36,
                         int num_comments, boolean is_self, String thumbnail_url, String fullname, int likes)
     {
-        super(fullname);
+        super(fullname, likes);
         this.title = title;
         this.score = score;
         this.link = link;
@@ -52,7 +51,6 @@ public class RedditThread extends RedditThing {
         this.num_comments = num_comments;
         this.is_self = is_self;
         this.thumbnail_url = thumbnail_url;
-        this.likes = likes;
     }
 
     // TODO: Remove setters (type should be immutable; constructor initialization only (like RedditComment class))
@@ -157,11 +155,4 @@ public class RedditThread extends RedditThing {
         this.thumbnail_url = thumbnail_url;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
 }
