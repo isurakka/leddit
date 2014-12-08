@@ -11,9 +11,9 @@ package com.leddit.leddit.api;
 public class RedditThing
 {
     private String fullname;
-    private int likes;
+    private boolean likes;
 
-    public RedditThing(String fullname, int likes)
+    public RedditThing(String fullname, boolean likes)
     {
         this.fullname = fullname;
         this.likes = likes;
@@ -27,11 +27,11 @@ public class RedditThing
         this.fullname = fullname;
     }
 
-    public int getLikes() {
+    public boolean getLikes() {
         return likes;
     }
 
-    public void setLikes(int likes) {
+    public void setLikes(boolean likes) {
         this.likes = likes;
     }
 }

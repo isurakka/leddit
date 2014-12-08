@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.leddit.leddit.RedditComment;
 import com.leddit.leddit.RedditThread;
-import com.leddit.leddit.api.output.CaptchaIdenResponse;
-import com.leddit.leddit.api.output.CaptchaNeededResponse;
 import com.leddit.leddit.api.output.MyRedditKarma;
 import com.leddit.leddit.api.output.NewCaptchaResponse;
 import com.leddit.leddit.api.output.RedditAuthStateProxy;
@@ -16,18 +14,13 @@ import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
-import com.leddit.leddit.api.output.RedditPostSubmitResponse;
 import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.callback.UnsupportedCallbackException;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -137,7 +130,7 @@ public class RedditApi {
                         data.getChildren().get(j).getData().getBody(),
                         Utility.parseCommentType(data.getChildren().get(i).getKind()),
                         "t1_" + data.getChildren().get(j).getData().getId(),
-                        data.getChildren().get(i).getData().getLikes()));
+                        data.getChildren().get(i).getData().isLikes()));
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
@@ -167,7 +160,7 @@ public class RedditApi {
                     commentObject.getData().getChildren().get(i).getData().getBody(),
                     Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind()),
                     "t1_" + commentObject.getData().getChildren().get(i).getData().getId(),
-                    commentObject.getData().getChildren().get(i).getData().getLikes()));
+                    commentObject.getData().getChildren().get(i).getData().isLikes()));
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
@@ -209,7 +202,7 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
-            int likes = postData.getLikes();
+            boolean likes = postData.getLikes();
 
             if(postData.getThumbnail() != "")
             {
@@ -274,7 +267,7 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
-            int likes = postData.getLikes();
+            boolean likes = postData.getLikes();
 
             if(postData.getThumbnail() != "")
             {
