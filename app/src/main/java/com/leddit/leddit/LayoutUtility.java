@@ -1,6 +1,7 @@
 package com.leddit.leddit;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class LayoutUtility {
 
         title.setText(thread.getTitle());
         score.setText(Integer.toString(thread.getScore()));
+        score.setTextColor(getVoteColor(score.getContext(), thread.getLikes()));
         domain.setText(thread.getDomain());
         time.setText(Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)));
         user.setText(thread.getUser());
@@ -115,5 +117,23 @@ public class LayoutUtility {
 
             return new RedditSortData(sorting, timescale);
         }
+    }
+
+    public static int getVoteColor(Context context, int vote)
+    {
+        int id;
+        switch (vote)
+        {
+            case -1:
+                id = R.color.downvote;
+                break;
+            case 1:
+                id = R.color.upvote;
+                break;
+            default:
+                id = R.color.titleColor;
+                break;
+        }
+        return context.getResources().getColor(id);
     }
 }

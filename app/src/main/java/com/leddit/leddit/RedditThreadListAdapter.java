@@ -75,6 +75,12 @@ public class RedditThreadListAdapter extends BaseAdapter {
         LayoutUtility.SetThreadInfo(thread, threadInfo);
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
+        int noVoteColor = context.getResources().getColor(R.color.titleColor);
+
+        ImageButton upvoteButton = (ImageButton)flipper.findViewById(R.id.thread_upvote_button);
+        upvoteButton.setColorFilter(thread.getLikes() == 1 ? context.getResources().getColor(R.color.upvote) : noVoteColor);
+        ImageButton downvoteButton = (ImageButton)flipper.findViewById(R.id.thread_downvote_button);
+        downvoteButton.setColorFilter(thread.getLikes() == -1 ? context.getResources().getColor(R.color.downvote) : noVoteColor);
 
         // TODO: This is not the correct place to do event stuff
         flipper.setOnTouchListener(new View.OnTouchListener() {
@@ -137,8 +143,10 @@ public class RedditThreadListAdapter extends BaseAdapter {
                             broadcastOpenComments(finalPosition);
                         } else if (inUpvote) {
                             broadcastVote(finalPosition, 1);
+                            flipper.showNext();
                         } else if (inDownvote) {
                             broadcastVote(finalPosition, -1);
+                            flipper.showNext();
                         }
                     }
                 }

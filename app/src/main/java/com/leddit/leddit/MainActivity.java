@@ -184,8 +184,8 @@ public class MainActivity extends Activity
                 voteTask.cancel(true);
             }
 
-            voteTask = new VoteTask(thread);
-            voteTask.execute(vote);
+            voteTask = new VoteTask(vote, thread, threadListFragment);
+            voteTask.execute();
 
             Log.d("receiver", "Got vote" + new Integer(vote).toString());
         }
@@ -364,23 +364,34 @@ public class MainActivity extends Activity
         super.onDestroy();
     }
 
-    class VoteTask extends AsyncTask<Integer, Void, Boolean>
+    class VoteTask extends AsyncTask<Void, Void, Boolean>
     {
+        private final ThreadListFragment fragment;
         RedditThing thing;
+        int vote;
         Integer oldLikes = null;
 
-        public VoteTask(RedditThing thing)
+        public VoteTask(int vote, RedditThing thing, ThreadListFragment fragment)
         {
+            this.vote = vote;
             this.thing = thing;
+            this.fragment = fragment;
         }
 
         @Override
-        protected Boolean doInBackground(Integer... vote) {
-            Log.d("VoteTask", "START");
+        protected void onPreExecute() {
+            super.onPreExecute();
 
             oldLikes = thing.getLikes();
-            thing.setLikes(vote[0]);
-            return RedditApi.getInstance().voteItem(vote[0], thing);
+            thing.setLikes(vote);
+            fragment.listChanged();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... asd) {
+            Log.d("VoteTask", "START");
+
+            return RedditApi.getInstance().voteItem(vote, thing);
         }
 
         @Override
@@ -389,6 +400,7 @@ public class MainActivity extends Activity
             if (oldLikes != null)
             {
                 thing.setLikes(oldLikes);
+                fragment.listChanged();
             }
         }
 
@@ -481,6 +493,14 @@ public class MainActivity extends Activity
                 threadsTask.cancel(true);
             }
             super.onDetach();
+        }
+
+        public void listChanged()
+        {
+            if (adapter != null)
+            {
+                adapter.notifyDataSetChanged();
+            }
         }
 
         public void Refresh()

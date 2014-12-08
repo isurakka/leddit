@@ -6,4 +6,6 @@
     </style>
 
     <color name="titleColor">#ecf0f1</color>
+    <color name="upvote">#ff8b60</color>
+    <color name="downvote">#9494ff</color>
 </resources>
