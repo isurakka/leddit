@@ -75,8 +75,8 @@ public class RedditThreadListAdapter extends BaseAdapter {
         LayoutUtility.SetThreadInfo(thread, threadInfo);
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
-        int noVoteColor = context.getResources().getColor(R.color.titleColor);
 
+        int noVoteColor = context.getResources().getColor(R.color.titleColor);
         ImageButton upvoteButton = (ImageButton)flipper.findViewById(R.id.thread_upvote_button);
         upvoteButton.setColorFilter(thread.getLikes() == 1 ? context.getResources().getColor(R.color.upvote) : noVoteColor);
         ImageButton downvoteButton = (ImageButton)flipper.findViewById(R.id.thread_downvote_button);

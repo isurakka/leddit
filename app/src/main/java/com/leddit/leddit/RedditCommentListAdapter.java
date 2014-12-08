@@ -84,6 +84,12 @@ public class RedditCommentListAdapter extends BaseAdapter {
 
         final ViewFlipper flipper = (ViewFlipper)convertView.findViewById(R.id.viewFlipper);
 
+        int noVoteColor = context.getResources().getColor(R.color.titleColor);
+        ImageButton upvoteButton = (ImageButton)flipper.findViewById(R.id.comment_upvote_button);
+        upvoteButton.setColorFilter(comment.getLikes() == 1 ? context.getResources().getColor(R.color.upvote) : noVoteColor);
+        ImageButton downvoteButton = (ImageButton)flipper.findViewById(R.id.comment_downvote_button);
+        downvoteButton.setColorFilter(comment.getLikes() == -1 ? context.getResources().getColor(R.color.downvote) : noVoteColor);
+
         // TODO: This is not the correct place to do event stuff
         flipper.setOnTouchListener(new View.OnTouchListener() {
 
@@ -108,6 +114,28 @@ public class RedditCommentListAdapter extends BaseAdapter {
                     {
                         flipper.showNext();
                         return true;
+                    }
+
+                    if (flipper.getDisplayedChild() == 1)
+                    {
+                        Log.d("flipper touch", "UP COMMENT ACTIONS");
+                        float hitX = event.getX();
+                        float hitY = event.getY();
+                        ImageButton upvoteButton = (ImageButton)flipper.findViewById(R.id.comment_upvote_button);
+                        Rect upvoteRect = new Rect();
+                        upvoteButton.getHitRect(upvoteRect);
+                        ImageButton downvoteButton = (ImageButton)flipper.findViewById(R.id.comment_downvote_button);
+                        Rect downvoteRect = new Rect();
+                        downvoteButton.getHitRect(downvoteRect);
+                        boolean inUpvote = upvoteRect.contains((int)hitX, (int)hitY);
+                        boolean inDownvote = downvoteRect.contains((int)hitX, (int)hitY);
+                        if (inUpvote) {
+                            broadcastVote(position, 1);
+                            flipper.showNext();
+                        } else if (inDownvote) {
+                            broadcastVote(position, -1);
+                            flipper.showNext();
+                        }
                     }
 
                     /*
@@ -144,5 +172,14 @@ public class RedditCommentListAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private void broadcastVote(int position, int vote)
+    {
+        Log.d("sender", "Broadcasting comment vote message");
+        Intent intent = new Intent("vote-comment");
+        intent.putExtra("commentPosition", position);
+        intent.putExtra("vote", vote);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

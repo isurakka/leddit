@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,33 +17,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.AuthStateListener;
 import com.leddit.leddit.api.RedditApi;
 import com.leddit.leddit.api.RedditThing;
-import com.leddit.leddit.api.Utility;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Hours;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,7 +43,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -129,8 +118,11 @@ public class MainActivity extends Activity
                 authorizedReceiver,
                 new IntentFilter("authorized"));
         bm.registerReceiver(
-                voteReceiver,
+                threadVoteReceiver,
                 new IntentFilter("vote-thread"));
+        bm.registerReceiver(
+                commentVoteReceiver,
+                new IntentFilter("vote-comment"));
 
         ViewSubreddit(null, "hot", null);
     }
@@ -163,11 +155,11 @@ public class MainActivity extends Activity
         }
     };
 
-    VoteTask voteTask;
-    private BroadcastReceiver voteReceiver = new BroadcastReceiver() {
+    VoteTask threadVoteTask;
+    private BroadcastReceiver threadVoteReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("receiver", "Got authorized broadcast");
+            Log.d("receiver", "Got thread vote broadcast");
 
             ThreadListFragment threadListFragment = (ThreadListFragment)getFragmentManager().findFragmentByTag("threadListFragment");
             int threadPosition = intent.getIntExtra("threadPosition", 0);
@@ -179,15 +171,50 @@ public class MainActivity extends Activity
                 vote = 0;
             }
 
-            if (voteTask != null && voteTask.getStatus() == AsyncTask.Status.RUNNING)
+            if (threadVoteTask != null && threadVoteTask.getStatus() == AsyncTask.Status.RUNNING)
             {
-                voteTask.cancel(true);
+                threadVoteTask.cancel(true);
             }
 
-            voteTask = new VoteTask(vote, thread, threadListFragment);
-            voteTask.execute();
+            threadVoteTask = new VoteTask(vote, thread, threadListFragment);
+            threadVoteTask.execute();
 
-            Log.d("receiver", "Got vote" + new Integer(vote).toString());
+            Log.d("receiver", "Got thread vote" + new Integer(vote).toString());
+        }
+    };
+
+    VoteTask commentVoteTask;
+    private BroadcastReceiver commentVoteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "Got comments vote broadcast");
+
+            if (lastViewCommentsThread == null || getFragmentState() != FragmentState.COMMENTS)
+            {
+                return;
+            }
+
+            CommentsFragment commentsFragment = (CommentsFragment)getFragmentManager().findFragmentByTag("commentsFragment");
+            int commentPosition = intent.getIntExtra("commentPosition", 0);
+
+            RedditThread thread = lastViewCommentsThread;
+            RedditComment comment = thread.getComments().get(commentPosition);
+            int vote = intent.getIntExtra("vote", 0);
+
+            if (comment.getLikes() == vote && comment.getLikes() != 0)
+            {
+                vote = 0;
+            }
+
+            if (commentVoteTask != null && commentVoteTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                commentVoteTask.cancel(true);
+            }
+
+            commentVoteTask = new VoteTask(vote, comment, commentsFragment);
+            commentVoteTask.execute();
+
+            Log.d("receiver", "Got comment vote" + new Integer(vote).toString());
         }
     };
 
@@ -275,8 +302,11 @@ public class MainActivity extends Activity
         lastSubreddit = subreddit;
     }
 
+    private RedditThread lastViewCommentsThread;
     public void ViewComments(RedditThread thread, String sorting, String timescale)
     {
+        lastViewCommentsThread = thread;
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, CommentsFragment.newInstance(thread, sorting, timescale), "commentsFragment")
@@ -366,12 +396,12 @@ public class MainActivity extends Activity
 
     class VoteTask extends AsyncTask<Void, Void, Boolean>
     {
-        private final ThreadListFragment fragment;
+        private final ListFragment fragment;
         RedditThing thing;
         int vote;
         Integer oldLikes = null;
 
-        public VoteTask(int vote, RedditThing thing, ThreadListFragment fragment)
+        public VoteTask(int vote, RedditThing thing, ListFragment fragment)
         {
             this.vote = vote;
             this.thing = thing;
@@ -430,7 +460,21 @@ public class MainActivity extends Activity
         }
     }
 
-    public static class ThreadListFragment extends Fragment {
+    public abstract static class ListFragment extends Fragment
+    {
+        protected ListView listView;
+        protected BaseAdapter adapter;
+
+        public void listChanged()
+        {
+            if (adapter != null)
+            {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    public static class ThreadListFragment extends ListFragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -439,9 +483,7 @@ public class MainActivity extends Activity
         private static final String SORTING = "subreddit_sorting";
         private static final String TIMESCALE = "subreddit_timescale";
 
-        private ListView listView;
         public List<RedditThread> threads;
-        private RedditThreadListAdapter adapter;
         private GetThreadsTask threadsTask;
 
         public static ThreadListFragment newInstance(String subreddit, String sorting, String timescale) {
@@ -495,14 +537,6 @@ public class MainActivity extends Activity
             super.onDetach();
         }
 
-        public void listChanged()
-        {
-            if (adapter != null)
-            {
-                adapter.notifyDataSetChanged();
-            }
-        }
-
         public void Refresh()
         {
             if (threadsTask != null && threadsTask.getStatus() == AsyncTask.Status.RUNNING)
@@ -544,7 +578,7 @@ public class MainActivity extends Activity
         }
     }
 
-    public static class CommentsFragment extends Fragment {
+    public static class CommentsFragment extends ListFragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -554,8 +588,6 @@ public class MainActivity extends Activity
         private static final String TIMESCALE_NAME = "timescale";
 
         private View threadInfo;
-        private ListView listView;
-        private RedditCommentListAdapter adapter;
         private RedditThread thread;
         private CommentsLoadTask commentsTask;
 
