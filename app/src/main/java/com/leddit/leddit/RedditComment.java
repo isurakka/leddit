@@ -24,10 +24,12 @@ public class RedditComment extends RedditThing {
 
     private RedditCommentType type;
 
+    private int likes;
+
     // TODO: Information whether comment has been edited or not
 
     public RedditComment(int depth, String user, int score, DateTime postDate,
-                         String text, RedditCommentType type, String fullname)
+                         String text, RedditCommentType type, String fullname, int likes)
     {
         super(fullname);
         this.depth = depth;
@@ -36,6 +38,7 @@ public class RedditComment extends RedditThing {
         this.postDate = postDate;
         this.text = text;
         this.type = type;
+        this.likes = likes;
     }
 
     public String getText() {
@@ -64,5 +67,13 @@ public class RedditComment extends RedditThing {
 
     public void setType(RedditCommentType type) {
         this.type = type;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

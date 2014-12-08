@@ -108,9 +108,6 @@ public class RedditApi {
         aService = restAdapter2.create(RedditAuthorizationService.class);
         oService = restAdapter3.create(RedditOauthApiService.class);
 
-
-
-
     }
 
     private List<AuthStateListener> listeners = new ArrayList<AuthStateListener>();
@@ -121,7 +118,8 @@ public class RedditApi {
     public List<RedditComment> getComments(RedditThread thread)
     {
         tmpComments = new ArrayList<RedditComment>();
-        List<RedditCommentObject> tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), null);
+
+        List<RedditCommentObject> tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), null);
 
         for (int i = 0; i < tmpCommentList.size(); i++)
         {
@@ -138,7 +136,8 @@ public class RedditApi {
                         data.getChildren().get(j).getData().getScore(), commentPostDate,
                         data.getChildren().get(j).getData().getBody(),
                         Utility.parseCommentType(data.getChildren().get(i).getKind()),
-                        "t1_" + data.getChildren().get(j).getData().getId()));
+                        "t1_" + data.getChildren().get(j).getData().getId(),
+                        data.getChildren().get(i).getData().getLikes()));
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
@@ -167,7 +166,8 @@ public class RedditApi {
                     commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
                     commentObject.getData().getChildren().get(i).getData().getBody(),
                     Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind()),
-                    "t1_" + commentObject.getData().getChildren().get(i).getData().getId()));
+                    "t1_" + commentObject.getData().getChildren().get(i).getData().getId(),
+                    commentObject.getData().getChildren().get(i).getData().getLikes()));
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
@@ -183,11 +183,11 @@ public class RedditApi {
 
         if(timeScale == null)
         {
-            o = rService.listSubreddit(subreddit, sorting);
+            o = oService.listSubreddit(subreddit, sorting);
         }
         else
         {
-            o = rService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
+            o = oService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
         }
 
         RedditThread thread;
@@ -209,6 +209,7 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
+            int likes = postData.getLikes();
 
             if(postData.getThumbnail() != "")
             {
@@ -233,7 +234,7 @@ public class RedditApi {
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
             thread = new RedditThread(title, score, link, domain, postDate, user, comments,
-                    sub, id36, num_comments, is_self, thumbnail, fullname);
+                    sub, id36, num_comments, is_self, thumbnail, fullname, likes);
             tmpList.add(thread);
         }
 
@@ -247,11 +248,11 @@ public class RedditApi {
 
         if(timeScale == null)
         {
-            o = rService.frontPage(sorting);
+            o = oService.frontPage(sorting);
         }
         else
         {
-            o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+            o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
         }
 
 
@@ -273,6 +274,7 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
+            int likes = postData.getLikes();
 
             if(postData.getThumbnail() != "")
             {
@@ -297,7 +299,7 @@ public class RedditApi {
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
             thread = new RedditThread(title, score, link, domain, postDate, user, comments,
-                    sub, id36, num_comments, is_self, thumbnail, fullname);
+                    sub, id36, num_comments, is_self, thumbnail, fullname, likes);
             tmpList.add(thread);
         }
 

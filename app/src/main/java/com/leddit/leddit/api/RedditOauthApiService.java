@@ -4,10 +4,14 @@ import com.leddit.leddit.api.output.CaptchaIdenResponse;
 import com.leddit.leddit.api.output.CaptchaNeededResponse;
 import com.leddit.leddit.api.output.MyRedditKarma;
 import com.leddit.leddit.api.output.NewCaptchaResponse;
+import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostSubmitResponse;
 import com.leddit.leddit.api.output.RedditProfile;
 import com.leddit.leddit.api.output.VoteResponse;
+
+import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -16,6 +20,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.http.Streaming;
 import retrofit.mime.TypedFile;
 
@@ -62,4 +67,20 @@ public interface RedditOauthApiService
             @Field("title") String title,
             @Field("url") String url
     );
+
+    @GET("/r/{subreddit}/{orderby}/.json")
+    RedditObject listSubreddit(@Path("subreddit") String subreddit, @Path("orderby") String orderBy);
+
+    @GET("/r/{subreddit}/{orderby}/.json")
+    RedditObject listSubredditWithTime(@Path("subreddit") String subreddit, @Path("orderby") String orderBy,
+                                       @Query("sort") String sort, @Query("t") String timeScale);
+
+    @GET("/{orderby}/.json")
+    RedditObject frontPage(@Path("orderby") String orderBy);
+
+    @GET("/{orderby}/.json")
+    RedditObject frontPageWithTimescale(@Path("orderby") String orderBy, @Query("sort") String sort, @Query("t") String timeScale);
+
+    @GET("/r/{subreddit}/comments/{article}/.json")
+    List<RedditCommentObject> listThreadComments(@Path("subreddit") String subreddit, @Path("article") String article, @QueryMap Map<String, String> options);
 }
