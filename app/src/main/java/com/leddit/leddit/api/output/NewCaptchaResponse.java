@@ -1,7 +1,25 @@
 package com.leddit.leddit.api.output;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jonah on 7.12.2014.
  */
-public class NewCaptchaResponse extends RedditError {
+public class NewCaptchaResponse extends RedditError
+{
+    private List<List<Object>> jquery = new ArrayList<List<Object>>();
+
+    public List<List<Object>> getJquery() {
+        return jquery;
+    }
+
+    public void setJquery(List<List<Object>> jquery) {
+        this.jquery = jquery;
+    }
+
+    public String getIden()
+    {
+        return jquery.get(jquery.size()-1).get(jquery.get(jquery.size()-1).size()).toString();
+    }
 }
