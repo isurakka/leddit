@@ -118,15 +118,10 @@ public class RedditApi {
         if(sorting == null || sorting.length() == 0)
             sorting = "hot";
 
-        try {
-            if (isAuth()) {
-                tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
-            } else {
-                tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
-            }
-        }catch(RetrofitError re)
-        {
-            throw re;
+        if (isAuth()) {
+            tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
+        } else {
+            tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
         }
 
         for (int i = 0; i < tmpCommentList.size(); i++)
@@ -192,30 +187,26 @@ public class RedditApi {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
         RedditObject o;
 
-        try
+
+        if(timeScale == null)
         {
-            if(timeScale == null)
+            if(isAuth()) {
+                o = oService.listSubreddit(subreddit, sorting);
+            }else
             {
-                if(isAuth()) {
-                    o = oService.listSubreddit(subreddit, sorting);
-                }else
-                {
-                    o = rService.listSubreddit(subreddit, sorting);
-                }
+                o = rService.listSubreddit(subreddit, sorting);
             }
-            else
-            {
-                if(isAuth()) {
-                    o = oService.listSubreddit(subreddit, sorting);
-                }else
-                {
-                    o = rService.listSubreddit(subreddit, sorting);
-                }
-            }
-        }catch(RetrofitError re)
-        {
-            throw re;
         }
+        else
+        {
+            if(isAuth()) {
+                o = oService.listSubreddit(subreddit, sorting);
+            }else
+            {
+                o = rService.listSubreddit(subreddit, sorting);
+            }
+        }
+
 
         RedditThread thread;
 
@@ -274,29 +265,23 @@ public class RedditApi {
         List<RedditThread> tmpList = new ArrayList<RedditThread>();
         RedditObject o;
 
-        try
+        if(timeScale == null)
         {
-            if(timeScale == null)
+            if(isAuth()) {
+                o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }else
             {
-                if(isAuth()) {
-                    o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
-                }else
-                {
-                    o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
-                }
+                o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
             }
-            else
-            {
-                if(isAuth()) {
-                    o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
-                }else
-                {
-                    o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
-                }
-            }
-        }catch(RetrofitError re)
+        }
+        else
         {
-            throw re;
+            if(isAuth()) {
+                o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }else
+            {
+                o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }
         }
 
         RedditThread thread;
@@ -375,13 +360,8 @@ public class RedditApi {
         String auth = getBasicAuthString();
         RedditAuthStateProxy authStateProxy;
 
-        try
-        {
-            authStateProxy = aService.authorize(auth, REDIRECT_URI, code, "authorization_code");
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        authStateProxy = aService.authorize(auth, REDIRECT_URI, code, "authorization_code");
+
 
         AuthState a = new AuthState();
         a.setAccess_token(authStateProxy.getAccess_token());
@@ -406,13 +386,7 @@ public class RedditApi {
         {
             RedditProfile p;
 
-            try
-            {
-                p = oService.me();
-            }catch(RetrofitError re)
-            {
-                throw re;
-            }
+            p = oService.me();
 
             p.setActual_created_utc(new DateTime(p.getCreated_utc() * 1000, DateTimeZone.UTC));
             return p;
@@ -426,27 +400,14 @@ public class RedditApi {
 
     public MyRedditKarma getKarma()
     {
-        try
-        {
-            return oService.myKarma();
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        return oService.myKarma();
     }
 
     public boolean voteItem(int vote, RedditThing thing)
     {
         if(redditAuthState.getAccess_token() != null)
         {
-            try
-            {
-                oService.vote(vote, thing.getFullname());
-            }catch(RetrofitError re)
-            {
-                throw re;
-            }
-
+            oService.vote(vote, thing.getFullname());
             return true;
         }
         else
@@ -486,13 +447,7 @@ public class RedditApi {
         {
             RedditAuthStateProxy p;
 
-            try
-            {
-                p = aService.refresh(auth, refresh_token, "refresh_token");
-            }catch(RetrofitError re)
-            {
-                throw re;
-            }
+            p = aService.refresh(auth, refresh_token, "refresh_token");
 
             if(p != null)
             {
@@ -524,24 +479,12 @@ public class RedditApi {
 
     public boolean isCaptchaNeeded()
     {
-        try
-        {
-            return oService.needsCaptcha();
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        return oService.needsCaptcha();
     }
 
     public String getIden()
     {
-        try
-        {
-            return oService.newCaptcha().getIden();
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        return oService.newCaptcha().getIden();
     }
 
     public String getCaptcha(String iden)
@@ -565,13 +508,7 @@ public class RedditApi {
 
         RedditPostResponse r;
 
-        try
-        {
-            r = oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        r = oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
 
         if(r.getJson().getErrors() != null)
         {
@@ -600,13 +537,7 @@ public class RedditApi {
 
         RedditPostResponse r;
 
-        try
-        {
-            r = oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
-        }catch(RetrofitError re)
-        {
-            throw re;
-        }
+        r = oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
 
         if(r.getJson().getErrors() != null)
         {
