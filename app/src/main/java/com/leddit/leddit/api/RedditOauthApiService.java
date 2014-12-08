@@ -16,6 +16,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -40,6 +41,7 @@ public interface RedditOauthApiService
     @GET("/api/v1/me/karma/.json")
     MyRedditKarma myKarma();
 
+    @FormUrlEncoded
     @POST("/api/vote/.json")
     VoteResponse vote(@Field("dir") int direction, @Field("id") String fullname);
 
@@ -52,6 +54,7 @@ public interface RedditOauthApiService
     @GET("/captcha/iden")
     TypedFile iden(@Query("iden") String iden);
 
+    @FormUrlEncoded
     @POST("/api/submit")
     RedditPostSubmitResponse submitPost(
             @Field("api_type") String api_type,
