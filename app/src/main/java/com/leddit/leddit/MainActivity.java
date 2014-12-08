@@ -140,7 +140,7 @@ public class MainActivity extends Activity
             //threadListFragment
 
             int threadPosition = intent.getIntExtra("threadPosition", 0);
-            ViewComments(threadListFragment.threads.get(threadPosition));
+            ViewComments(threadListFragment.threads.get(threadPosition), "hot", null);
         }
     };
 
@@ -243,11 +243,11 @@ public class MainActivity extends Activity
         lastSubreddit = subreddit;
     }
 
-    public void ViewComments(RedditThread thread)
+    public void ViewComments(RedditThread thread, String sorting, String timescale)
     {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, CommentsFragment.newInstance(thread), "commentsFragment")
+                .replace(R.id.container, CommentsFragment.newInstance(thread, sorting, timescale), "commentsFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -463,7 +463,9 @@ public class MainActivity extends Activity
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String SUBREDDIT_NAME = "section_number";
+        //private static final String THREAD_NAME = "thread";
+        private static final String SORTING_NAME = "sorting";
+        private static final String TIMESCALE_NAME = "timescale";
 
         private View threadInfo;
         private ListView listView;
@@ -471,10 +473,11 @@ public class MainActivity extends Activity
         private RedditThread thread;
         private CommentsLoadTask commentsTask;
 
-        public static CommentsFragment newInstance(RedditThread thread) {
+        public static CommentsFragment newInstance(RedditThread thread, String sorting, String timescale) {
             CommentsFragment fragment = new CommentsFragment();
             Bundle args = new Bundle();
-            //args.putString(SUBREDDIT_NAME, subredditName);
+            args.putString(SORTING_NAME, sorting);
+            args.putString(TIMESCALE_NAME, timescale);
             fragment.setArguments(args);
 
             fragment.thread = thread;
