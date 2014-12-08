@@ -33,6 +33,7 @@ public interface RedditApiService {
     RedditObject frontPageWithTimescale(@Path("orderby") String orderBy, @Query("sort") String sort, @Query("t") String timeScale);
 
     @GET("/r/{subreddit}/comments/{article}/.json")
-    List<RedditCommentObject> listThreadComments(@Path("subreddit") String subreddit, @Path("article") String article, @QueryMap Map<String, String> options);
+    List<RedditCommentObject> listThreadComments(@Path("subreddit") String subreddit, @Path("article") String article,
+                                                 @Query("sort") String sort);
 
 }

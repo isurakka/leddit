@@ -117,7 +117,12 @@ public class RedditApi {
         if(sorting == null || sorting.length() == 0)
             sorting = "hot";
 
-        tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
+        if(isAuth()) {
+            tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
+        }else
+        {
+            tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
+        }
 
         for (int i = 0; i < tmpCommentList.size(); i++)
         {
@@ -184,11 +189,22 @@ public class RedditApi {
 
         if(timeScale == null)
         {
-            o = oService.listSubreddit(subreddit, sorting);
+            if(isAuth()) {
+                o = oService.listSubreddit(subreddit, sorting);
+            }else
+            {
+                o = rService.listSubreddit(subreddit, sorting);
+            }
+
         }
         else
         {
-            o = oService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
+            if(isAuth()) {
+                o = oService.listSubreddit(subreddit, sorting);
+            }else
+            {
+                o = rService.listSubreddit(subreddit, sorting);
+            }
         }
 
         RedditThread thread;
@@ -250,11 +266,21 @@ public class RedditApi {
 
         if(timeScale == null)
         {
-            o = oService.frontPage(sorting);
+            if(isAuth()) {
+                o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }else
+            {
+                o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }
         }
         else
         {
-            o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+            if(isAuth()) {
+                o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }else
+            {
+                o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+            }
         }
 
 
@@ -513,6 +539,18 @@ public class RedditApi {
             {
                 return true;
             }
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    private boolean isAuth()
+    {
+        if(redditAuthState == null ||redditAuthState.getAccess_token() == null ||redditAuthState.getAccess_token().length() == 0)
+        {
+            return false;
         }
         else
         {
