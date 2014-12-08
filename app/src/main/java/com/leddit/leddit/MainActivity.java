@@ -649,8 +649,7 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getString("asd"));
+            ((MainActivity) activity).onSectionAttached(thread.getSubreddit());
 
             Refresh();
         }
@@ -768,11 +767,7 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-
-
-
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getString("asd"));
+            ((MainActivity) activity).onSectionAttached("Login");
         }
 
         class UserAuthTaskParams
@@ -856,8 +851,7 @@ public class MainActivity extends Activity
 
             Refresh();
 
-            //String subredditName = getArguments().getString(SUBREDDIT_NAME);
-            //((MainActivity) activity).onSectionAttached(subredditName);
+            ((MainActivity) activity).onSectionAttached("Profile");
         }
 
         @Override
