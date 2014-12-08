@@ -127,11 +127,11 @@ public class RedditApi {
 
                 int f_likes;
 
-                if(data.getChildren().get(i).getData().isLikes() == true)
+                if(data.getChildren().get(j).getData().isLikes() == true)
                 {
                     f_likes = 1;
                 }
-                else if(data.getChildren().get(i).getData().isLikes() == false)
+                else if(data.getChildren().get(j).getData().isLikes() == false)
                 {
                     f_likes = -1;
                 }
