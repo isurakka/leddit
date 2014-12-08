@@ -3,20 +3,24 @@ package com.leddit.leddit;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +28,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -266,6 +272,20 @@ public class MainActivity extends Activity
             else if (item == "Front page")
             {
                 ViewSubreddit(null, "hot", null);
+            }
+            else if (item == "Submit")
+            {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container,            // TODO: Never do this
+                                SubmitFragment.newInstance(
+                                        getFragmentState() == FragmentState.SUBREDDIT &&
+                                                mTitle != null &&
+                                                mTitle != "Front page" ?
+                                                mTitle.toString() :
+                                                ""), "submitFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
             else if (item == "Profile")
             {
@@ -925,6 +945,143 @@ public class MainActivity extends Activity
                 age.setText("Account created " + Utility.redditTimePeriod(profile.getActual_created_utc(), new DateTime(DateTimeZone.UTC)) + " ago");
                 karma.setText("Karma " + new Integer(profile.getLink_karma()).toString() + " / " + new Integer(profile.getComment_karma()).toString());
                 email.setText(profile.isHas_verified_email() ? "Verified email" : "Email not verified");
+            }
+        }
+    }
+
+    public static class SubmitFragment extends Fragment {
+
+        private static final String SUBREDDIT_NAME = "subreddit_name";
+
+        private SubmitTask submitTask;
+        private String captcha = null;
+        private String iden = null;
+
+        public static SubmitFragment newInstance(String subreddit) {
+            SubmitFragment fragment = new SubmitFragment();
+            Bundle args = new Bundle();
+            args.putString(SUBREDDIT_NAME, subreddit);
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
+        public SubmitFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_submit, container, false);
+
+            TextView subreddit = (TextView)rootView.findViewById(R.id.subreddit);
+            subreddit.setText(getArguments().getString(SUBREDDIT_NAME));
+
+            Button submit = (Button)rootView.findViewById(R.id.submit);
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new NeedCaptchaTask(SubmitFragment.this).execute();
+                }
+            });
+
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+
+            //Refresh();
+
+            ((MainActivity) activity).onSectionAttached("Submit");
+        }
+
+        @Override
+        public void onDetach() {
+            if (submitTask != null && submitTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                submitTask.cancel(true);
+            }
+            super.onDetach();
+        }
+
+        public void Refresh()
+        {
+            if (submitTask != null && submitTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                return;
+            }
+
+            submitTask = new SubmitTask(this);
+            submitTask.execute();
+        }
+
+        class NeedCaptchaTask extends AsyncTask<Void, Void, String>
+        {
+            SubmitFragment fragment;
+
+            public NeedCaptchaTask(SubmitFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected String doInBackground(Void... asd) {
+                boolean needCaptcha = RedditApi.getInstance().isCaptchaNeeded();
+                Log.d("captchaNeed", new Boolean(needCaptcha).toString());
+                if (needCaptcha)
+                {
+                    return RedditApi.getInstance().getCaptcha();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String captchaUri) {
+                Log.d("captcha", captchaUri != null ? captchaUri : "null");
+
+                AlertDialog.Builder captchaBuilder = new AlertDialog.Builder(fragment.getActivity());
+                captchaBuilder.setTitle("Captcha");
+                LayoutInflater inflater = (LayoutInflater)fragment.getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View layout = inflater.inflate(R.layout.captcha, null);
+
+                ImageView captchaImage = (ImageView)layout.findViewById(R.id.captchaImage);
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.displayImage(captchaUri, captchaImage);
+
+                captchaBuilder.setView(layout);
+                captchaBuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("captcha", "Pressed captcha submit");
+                    }
+                });
+
+                captchaBuilder.show();
+            }
+        }
+
+        class SubmitTask extends AsyncTask<Void, Void, RedditProfile>
+        {
+            SubmitFragment fragment;
+
+            public SubmitTask(SubmitFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected RedditProfile doInBackground(Void... asd) {
+                return RedditApi.getInstance().getProfile();
+            }
+
+            @Override
+            protected void onPostExecute(RedditProfile profile) {
+
             }
         }
     }
