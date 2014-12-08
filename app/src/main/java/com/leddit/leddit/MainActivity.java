@@ -406,7 +406,7 @@ public class MainActivity extends Activity
                     CharSequence item = (CharSequence)sortSpinner.getItemAtPosition(position);
                     Log.d("spinner click", item.toString());
 
-                    if (item == lastSorting || getFragmentState() == FragmentState.OTHER)
+                    if (item == lastSorting || getFragmentState() == FragmentState.OTHER || getFragmentState() == FragmentState.COMMENTS)
                     {
                         return;
                     }
