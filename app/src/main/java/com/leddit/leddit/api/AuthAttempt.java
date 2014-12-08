@@ -21,18 +21,23 @@ public class AuthAttempt
 
     public AuthAttempt()
     {
+        //Generate random UUID to differentiate devices
         this.state = UUID.randomUUID();
+
+        //Define which parts of reddit our app wants to access
         scope = "modposts,identity,edit,flair,history,modconfig,modflair,modlog,"+
                 "modposts,modwiki,mysubreddits,privatemessages,read,report,save,submit,"+
                 "subscribe,vote,wikiedit,wikiread";
     }
 
+    //Get full application authentication url
     public String getAuthUrl()
     {
         return "https://ssl.reddit.com/api/v1/authorize?state=" + this.state + "&duration=permanent"
                 + "&response_type=code&scope=" + this.scope + "&client_id=" + RedditApi.CLIENT_ID + "&redirect_uri=" + RedditApi.REDIRECT_URI;
     }
 
+    //Authenticate user and ask for permission to use user data
     public AuthState userAuthProcess(String returnedState, String code)
     {
         if(UUID.fromString(returnedState).compareTo(this.state) == 0)

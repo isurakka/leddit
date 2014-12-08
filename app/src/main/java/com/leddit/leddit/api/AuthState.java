@@ -15,12 +15,12 @@ import java.util.List;
  */
 
 /*
-    Hold user authorization data
+    Holds user authorization data
 */
 
 public class AuthState implements Parcelable, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; //For file writing
     private String access_token;
     private String token_type;
     private DateTime expires_in;
