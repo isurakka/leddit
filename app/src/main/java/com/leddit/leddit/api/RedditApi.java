@@ -14,6 +14,7 @@ import com.leddit.leddit.api.output.RedditCommentData;
 import com.leddit.leddit.api.output.RedditCommentObject;
 import com.leddit.leddit.api.output.RedditObject;
 import com.leddit.leddit.api.output.RedditPostData;
+import com.leddit.leddit.api.output.RedditPostResponse;
 import com.leddit.leddit.api.output.RedditProfile;
 
 import org.joda.time.DateTime;
@@ -108,11 +109,15 @@ public class RedditApi {
     private List<RedditComment> tmpComments;
     private List<RedditCommentObject> tmpCommentList;
 
-    public List<RedditComment> getComments(RedditThread thread)
+    public List<RedditComment> getComments(RedditThread thread, String sorting)
     {
         tmpComments = new ArrayList<RedditComment>();
+        List<RedditCommentObject> tmpCommentList;
 
-        List<RedditCommentObject> tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), null);
+        if(sorting == null || sorting.length() == 0)
+            sorting = "hot";
+
+        tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
 
         for (int i = 0; i < tmpCommentList.size(); i++)
         {
@@ -469,7 +474,7 @@ public class RedditApi {
             iden = "";
         }
 
-        oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
+        RedditPostResponse r = oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
     }
 
     public void submitLinkPost(String subreddit, String title, String url, String captcha, String iden)
@@ -480,7 +485,7 @@ public class RedditApi {
             iden = "";
         }
 
-        oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
+        RedditPostResponse r = oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
     }
 
     public AuthState getRedditAuthState() {
