@@ -1,5 +1,7 @@
 package com.leddit.leddit.api.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.joda.time.DateTime;
 
 /**
@@ -26,6 +28,8 @@ public class RedditProfile extends RedditError
     private boolean has_verified_email;
     private String id;
     private boolean has_mod_mail;
+
+    @JsonIgnore
     private DateTime actual_created_utc;
 
     public boolean isHas_mail() {
