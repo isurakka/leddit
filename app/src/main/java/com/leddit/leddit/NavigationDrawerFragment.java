@@ -136,6 +136,7 @@ public class NavigationDrawerFragment extends Fragment {
                         event.getAction() == KeyEvent.ACTION_DOWN &&
                         mCallbacks != null) {
                     mCallbacks.onNavigationDrawerGotoAction(mDrawerGoto.getText().toString());
+                    mDrawerLayout.closeDrawer(mFragmentContainerView);
                     return true;
                 }
                 return false;

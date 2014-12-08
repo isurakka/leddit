@@ -9,4 +9,5 @@
     <color name="upvote">#ff8b60</color>
     <color name="downvote">#9494ff</color>
     <color name="divider">#444444</color>
+    <color name="background">#000000</color>
 </resources>
