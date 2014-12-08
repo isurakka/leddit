@@ -125,20 +125,7 @@ public class RedditApi {
                 DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
                 commentPostDate.plus(data.getChildren().get(j).getData().getCreated_utc());
 
-                int f_likes;
-
-                if(data.getChildren().get(j).getData().isLikes() == true)
-                {
-                    f_likes = 1;
-                }
-                else if(data.getChildren().get(j).getData().isLikes() == false)
-                {
-                    f_likes = 0;
-                }
-                else
-                {
-                    f_likes = -1;
-                }
+                int f_likes = checkLikes(data.getChildren().get(j).getData().isLikes());
 
 
                 tmpComments.add(new RedditComment(depth, data.getChildren().get(j).getData().getAuthor(),
@@ -170,20 +157,7 @@ public class RedditApi {
             DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
             commentPostDate.plus(commentObject.getData().getChildren().get(i).getData().getCreated_utc());
 
-            int f_likes;
-
-            if(commentObject.getData().getChildren().get(i).getData().isLikes() == true)
-            {
-                f_likes = 1;
-            }
-            else if(commentObject.getData().getChildren().get(i).getData().isLikes() == false)
-            {
-                f_likes = 0;
-            }
-            else
-            {
-                f_likes = -1;
-            }
+            int f_likes = checkLikes(commentObject.getData().getChildren().get(i).getData().isLikes());
 
             tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
                     commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
@@ -232,20 +206,7 @@ public class RedditApi {
             String thumbnail;
             String fullname = "t3_" + postData.getId();
             Boolean likes = postData.getLikes();
-            int f_likes;
-
-            if(likes == true)
-            {
-                f_likes = 1;
-            }
-            else if(likes == false)
-            {
-                f_likes = -1;
-            }
-            else
-            {
-                f_likes = 0;
-            }
+            int f_likes = checkLikes(likes);
 
             if(postData.getThumbnail() != "")
             {
@@ -311,20 +272,7 @@ public class RedditApi {
             String thumbnail;
             String fullname = "t3_" + postData.getId();
             Boolean likes = postData.getLikes();
-            int f_likes;
-
-            if(likes == true)
-            {
-                f_likes = 1;
-            }
-            else if(likes == false)
-            {
-                f_likes = -1;
-            }
-            else
-            {
-                f_likes = 0;
-            }
+            int f_likes = checkLikes(likes);
 
             if(postData.getThumbnail() != "")
             {
@@ -354,6 +302,26 @@ public class RedditApi {
         }
 
         return tmpList;
+    }
+
+    private int checkLikes(Boolean likes)
+    {
+        int f_likes;
+
+        if(likes == null)
+        {
+            f_likes = 0;
+        }
+        else if(likes == true)
+        {
+            f_likes = 1;
+        }
+        else
+        {
+            f_likes = -1;
+        }
+
+        return f_likes;
     }
 
     public AuthState authorize(String state, String code)

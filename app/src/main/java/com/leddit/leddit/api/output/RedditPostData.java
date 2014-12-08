@@ -106,11 +106,11 @@ public class RedditPostData extends RedditError {
         this.selftext = selftext;
     }
 
-    public boolean getLikes() {
+    public Boolean getLikes() {
         return likes;
     }
 
-    public void setLikes(boolean likes) {
+    public void setLikes(Boolean likes) {
         this.likes = likes;
     }
 

@@ -124,11 +124,11 @@ public class RedditCommentBlob extends RedditError
         this.selftext = selftext;
     }
 
-    public boolean isLikes() {
+    public Boolean isLikes() {
         return likes;
     }
 
-    public void setLikes(boolean likes) {
+    public void setLikes(Boolean likes) {
         this.likes = likes;
     }
 
