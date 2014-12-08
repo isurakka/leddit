@@ -36,6 +36,7 @@ import com.leddit.leddit.api.AuthAttempt;
 import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.AuthStateListener;
 import com.leddit.leddit.api.RedditApi;
+import com.leddit.leddit.api.RedditThing;
 import com.leddit.leddit.api.Utility;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -127,6 +128,9 @@ public class MainActivity extends Activity
         bm.registerReceiver(
                 authorizedReceiver,
                 new IntentFilter("authorized"));
+        bm.registerReceiver(
+                voteReceiver,
+                new IntentFilter("vote-thread"));
 
         ViewSubreddit(null, "hot", null);
     }
@@ -156,6 +160,29 @@ public class MainActivity extends Activity
             mNavigationDrawerFragment.RemoveLogin();
 
             ViewSubreddit(null, "hot", null);
+        }
+    };
+
+    VoteTask voteTask;
+    private BroadcastReceiver voteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "Got authorized broadcast");
+
+            ThreadListFragment threadListFragment = (ThreadListFragment)getFragmentManager().findFragmentByTag("threadListFragment");
+            int threadPosition = intent.getIntExtra("threadPosition", 0);
+            RedditThread thread = threadListFragment.threads.get(threadPosition);
+            int vote = intent.getIntExtra("vote", 0);
+
+            if (voteTask != null && voteTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                voteTask.cancel(true);
+            }
+
+            voteTask = new VoteTask(thread);
+            voteTask.execute(vote);
+
+            Log.d("receiver", "Got vote" + new Integer(vote).toString());
         }
     };
 
@@ -330,6 +357,28 @@ public class MainActivity extends Activity
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(openCommentsReceiver);
         super.onDestroy();
+    }
+
+    class VoteTask extends AsyncTask<Integer, Void, Boolean>
+    {
+        RedditThing thing;
+
+        public VoteTask(RedditThing thing)
+        {
+            this.thing = thing;
+        }
+
+        @Override
+        protected Boolean doInBackground(Integer... vote) {
+            Log.d("VoteTask", "START");
+
+            return RedditApi.getInstance().voteItem(vote[0], thing);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            Log.d("VoteTask", "END " + success.toString());
+        }
     }
 
     class TestTask extends AsyncTask<Void, Void, Void>

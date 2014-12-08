@@ -119,16 +119,26 @@ public class RedditThreadListAdapter extends BaseAdapter {
                     else if (flipper.getDisplayedChild() == 1)
                     {
                         Log.d("flipper touch", "UP THREAD ACTIONS");
-                        ImageButton commentsButton = (ImageButton)flipper.findViewById(R.id.thread_comments_button);
-                        Rect rect = new Rect();
-                        commentsButton.getHitRect(rect);
                         float hitX = event.getX();
                         float hitY = event.getY();
-                        boolean contains = rect.contains((int)hitX, (int)hitY);
-                        if (contains)
-                        {
-                            Log.d("flipper touch", "UP COMMENTS BUTTON");
+                        ImageButton commentsButton = (ImageButton)flipper.findViewById(R.id.thread_comments_button);
+                        Rect commentsRect = new Rect();
+                        commentsButton.getHitRect(commentsRect);
+                        ImageButton upvoteButton = (ImageButton)flipper.findViewById(R.id.thread_upvote_button);
+                        Rect upvoteRect = new Rect();
+                        upvoteButton.getHitRect(upvoteRect);
+                        ImageButton downvoteButton = (ImageButton)flipper.findViewById(R.id.thread_downvote_button);
+                        Rect downvoteRect = new Rect();
+                        downvoteButton.getHitRect(downvoteRect);
+                        boolean inComments = commentsRect.contains((int)hitX, (int)hitY);
+                        boolean inUpvote = upvoteRect.contains((int)hitX, (int)hitY);
+                        boolean inDownvote = downvoteRect.contains((int)hitX, (int)hitY);
+                        if (inComments) {
                             broadcastOpenComments(finalPosition);
+                        } else if (inUpvote) {
+                            broadcastVote(finalPosition, 1);
+                        } else if (inDownvote) {
+                            broadcastVote(finalPosition, -1);
                         }
                     }
                 }
@@ -140,11 +150,21 @@ public class RedditThreadListAdapter extends BaseAdapter {
         return convertView;
     }
 
+
     private void broadcastOpenComments(int position)
     {
         Log.d("sender", "Broadcasting open comments message");
         Intent intent = new Intent("open-comments");
         intent.putExtra("threadPosition", position);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    private void broadcastVote(int position, int vote)
+    {
+        Log.d("sender", "Broadcasting vote message");
+        Intent intent = new Intent("vote-thread");
+        intent.putExtra("threadPosition", position);
+        intent.putExtra("vote", vote);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }
