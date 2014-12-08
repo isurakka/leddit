@@ -36,7 +36,7 @@ public class RedditThread extends RedditThing {
 
     public RedditThread(String title, int score, String link, String domain, DateTime postDate,
                         String user, List<RedditComment> comments, String subreddit, String id36,
-                        int num_comments, boolean is_self, String thumbnail_url, String fullname, Boolean likes)
+                        int num_comments, boolean is_self, String thumbnail_url, String fullname, int likes)
     {
         super(fullname, likes);
         this.title = title;

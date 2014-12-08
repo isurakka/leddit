@@ -125,12 +125,27 @@ public class RedditApi {
                 DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
                 commentPostDate.plus(data.getChildren().get(j).getData().getCreated_utc());
 
+                int f_likes;
+
+                if(data.getChildren().get(i).getData().isLikes() == true)
+                {
+                    f_likes = 1;
+                }
+                else if(data.getChildren().get(i).getData().isLikes() == false)
+                {
+                    f_likes = -1;
+                }
+                else
+                {
+                    f_likes = 0;
+                }
+
+
                 tmpComments.add(new RedditComment(depth, data.getChildren().get(j).getData().getAuthor(),
                         data.getChildren().get(j).getData().getScore(), commentPostDate,
                         data.getChildren().get(j).getData().getBody(),
                         Utility.parseCommentType(data.getChildren().get(i).getKind()),
-                        "t1_" + data.getChildren().get(j).getData().getId(),
-                        data.getChildren().get(i).getData().isLikes()));
+                        "t1_" + data.getChildren().get(j).getData().getId(), f_likes));
 
                 if (data.getChildren().get(j).getData().getReplies().getData() != null)
                 {
@@ -155,12 +170,26 @@ public class RedditApi {
             DateTime commentPostDate = new DateTime(DateTimeZone.UTC);
             commentPostDate.plus(commentObject.getData().getChildren().get(i).getData().getCreated_utc());
 
+            int f_likes;
+
+            if(commentObject.getData().getChildren().get(i).getData().isLikes() == true)
+            {
+                f_likes = 1;
+            }
+            else if(commentObject.getData().getChildren().get(i).getData().isLikes() == false)
+            {
+                f_likes = -1;
+            }
+            else
+            {
+                f_likes = 0;
+            }
+
             tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
                     commentObject.getData().getChildren().get(i).getData().getScore(), commentPostDate,
                     commentObject.getData().getChildren().get(i).getData().getBody(),
                     Utility.parseCommentType(commentObject.getData().getChildren().get(i).getKind()),
-                    "t1_" + commentObject.getData().getChildren().get(i).getData().getId(),
-                    commentObject.getData().getChildren().get(i).getData().isLikes()));
+                    "t1_" + commentObject.getData().getChildren().get(i).getData().getId(), f_likes));
 
             if (commentObject.getData().getChildren().get(i).getData().getReplies().getData() != null)
             {
@@ -202,7 +231,21 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
-            boolean likes = postData.getLikes();
+            Boolean likes = postData.getLikes();
+            int f_likes;
+
+            if(likes == true)
+            {
+                f_likes = 1;
+            }
+            else if(likes == false)
+            {
+                f_likes = -1;
+            }
+            else
+            {
+                f_likes = 0;
+            }
 
             if(postData.getThumbnail() != "")
             {
@@ -227,7 +270,7 @@ public class RedditApi {
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
             thread = new RedditThread(title, score, link, domain, postDate, user, comments,
-                    sub, id36, num_comments, is_self, thumbnail, fullname, likes);
+                    sub, id36, num_comments, is_self, thumbnail, fullname, f_likes);
             tmpList.add(thread);
         }
 
@@ -267,7 +310,21 @@ public class RedditApi {
             boolean is_self = postData.isIs_self();
             String thumbnail;
             String fullname = "t3_" + postData.getId();
-            boolean likes = postData.getLikes();
+            Boolean likes = postData.getLikes();
+            int f_likes;
+
+            if(likes == true)
+            {
+                f_likes = 1;
+            }
+            else if(likes == false)
+            {
+                f_likes = -1;
+            }
+            else
+            {
+                f_likes = 0;
+            }
 
             if(postData.getThumbnail() != "")
             {
@@ -292,7 +349,7 @@ public class RedditApi {
             List<RedditComment> comments = new ArrayList<RedditComment>();
 
             thread = new RedditThread(title, score, link, domain, postDate, user, comments,
-                    sub, id36, num_comments, is_self, thumbnail, fullname, likes);
+                    sub, id36, num_comments, is_self, thumbnail, fullname, f_likes);
             tmpList.add(thread);
         }
 
