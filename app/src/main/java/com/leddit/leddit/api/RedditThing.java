@@ -11,9 +11,9 @@ package com.leddit.leddit.api;
 public class RedditThing
 {
     private String fullname;
-    private boolean likes;
+    private Boolean likes;
 
-    public RedditThing(String fullname, boolean likes)
+    public RedditThing(String fullname, Boolean likes)
     {
         this.fullname = fullname;
         this.likes = likes;

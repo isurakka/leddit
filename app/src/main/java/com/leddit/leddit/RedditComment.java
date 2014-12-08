@@ -27,7 +27,7 @@ public class RedditComment extends RedditThing {
     // TODO: Information whether comment has been edited or not
 
     public RedditComment(int depth, String user, int score, DateTime postDate,
-                         String text, RedditCommentType type, String fullname, boolean likes)
+                         String text, RedditCommentType type, String fullname, Boolean likes)
     {
         super(fullname, likes);
         this.depth = depth;

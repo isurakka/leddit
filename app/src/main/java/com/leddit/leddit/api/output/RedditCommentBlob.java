@@ -20,7 +20,7 @@ public class RedditCommentBlob extends RedditError
     private String subreddit;
     private String selftext_html;
     private String selftext;
-    private boolean likes;
+    private Boolean likes;
     private String[] user_reports;
     private RedditSecureMedia secure_media;
     private String link_flair_text;
