@@ -11,15 +11,19 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +61,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
+    private EditText mDrawerGoto;
     private ListView mDrawerSubredditListView;
     private ListView mDrawerActionListView;
     private View mFragmentContainerView;
@@ -122,6 +127,21 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        mDrawerGoto = (EditText)rootView.findViewById(R.id.gotoSubreddit);
+        mDrawerGoto.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_NULL &&
+                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                        mCallbacks != null) {
+                    mCallbacks.onNavigationDrawerGotoAction(mDrawerGoto.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mDrawerSubredditListView = (ListView)rootView.findViewById(R.id.subreddits);
         mDrawerActionListView = (ListView)rootView.findViewById(R.id.actions);
 
@@ -327,5 +347,6 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerSubredditSelected(String listName, String item);
+        void onNavigationDrawerGotoAction(String subreddit);
     }
 }

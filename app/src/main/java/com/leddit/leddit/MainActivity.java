@@ -320,6 +320,11 @@ public class MainActivity extends Activity
         }
     }
 
+    @Override
+    public void onNavigationDrawerGotoAction(String subreddit) {
+        ViewSubreddit(subreddit, "hot", null);
+    }
+
     private String lastSubreddit;
 
     private enum FragmentState
@@ -633,42 +638,42 @@ public class MainActivity extends Activity
                     getArguments().getString(TIMESCALE));
         }
 
-        class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
+    class GetThreadsTask extends AsyncTask<String, Void, List<RedditThread>>
+    {
+        ThreadListFragment fragment;
+
+        public GetThreadsTask(ThreadListFragment fragment)
         {
-            ThreadListFragment fragment;
+            this.fragment = fragment;
+        }
 
-            public GetThreadsTask(ThreadListFragment fragment)
-            {
-                this.fragment = fragment;
-            }
-
-            @Override
-            protected List<RedditThread> doInBackground(String... params) {
-                try {
-                    if (params[0] == null) {
-                        return RedditApi.getInstance().getFrontpage(params[1], params[2]);
-                    }
-
-                    return RedditApi.getInstance().getThreads(params[0], params[1], params[2]);
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<RedditThread> redditThreads) {
-                if (redditThreads == null)
-                {
-                    Toast.makeText(fragment.getActivity(), "Thread fetching failed!", Toast.LENGTH_LONG).show();
-                    return;
+        @Override                                  // 0: subreddit, 1: sorting, 2: timescale
+        protected List<RedditThread> doInBackground(String... params) {
+            try {
+                if (params[0] == null) {
+                    return RedditApi.getInstance().getFrontpage(params[1], params[2]);
                 }
 
-                fragment.threads = redditThreads;
-                fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
-                fragment.listView.setAdapter(adapter);
+                return RedditApi.getInstance().getThreads(params[0], params[1], params[2]);
+            } catch (Exception e) {
+                return null;
             }
         }
+
+        @Override
+        protected void onPostExecute(List<RedditThread> redditThreads) {
+            if (redditThreads == null)
+            {
+                Toast.makeText(fragment.getActivity(), "Thread fetching failed!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            fragment.threads = redditThreads;
+            fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+            fragment.listView.setAdapter(adapter);
+        }
     }
+}
 
     public static class CommentsFragment extends ListFragment {
         /**
