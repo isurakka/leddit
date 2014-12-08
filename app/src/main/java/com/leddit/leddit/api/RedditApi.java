@@ -39,16 +39,19 @@ import retrofit.converter.JacksonConverter;
 
 public class RedditApi {
 
+    //Define client id and redirect url for calls
     public static final String CLIENT_ID = "TPdgxXER-lcR8Q";
     public static final String REDIRECT_URI = "http://google.fi";
 
+    //Define services
     private RedditOauthApiService oService;
     private RedditAuthorizationService aService;
     private RedditApiService rService;
-    private static RedditApi instance = null;
 
     private AuthState redditAuthState;
 
+    //Singleton instance
+    private static RedditApi instance = null;
 
     public static RedditApi getInstance() {
         if (instance == null) {
@@ -57,24 +60,30 @@ public class RedditApi {
         return instance;
     }
 
+    //Singleton
     private RedditApi()
     {
         redditAuthState = new AuthState();
 
+        //Create new objectmapper for JSON converter
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
+        //Create new converter for adapters
         JacksonConverter converter = new JacksonConverter(mapper);
 
+        //Create adapter for normal api
         RestAdapter restAdapter = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint("http://www.reddit.com/").setConverter(converter)
                 .build();
 
+        //Create adapter for secure api
         RestAdapter restAdapter2 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint("https://ssl.reddit.com/").setConverter(converter)
                 .build();
 
+        //Create new request interceptor, so we can inject bearer token to outgoing requests
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
@@ -83,22 +92,26 @@ public class RedditApi {
                 if(Utility.hasExpired(redditAuthState.getExpires_in()))
                 {
                     System.out.println("Token needs refresh, doing that now!");
-                    refreshToken();
+                    refreshToken(); //Refresh bearer token
                 }
                 else
                 {
                     System.out.println("Token not yet expired!");
                 }
 
+                //Inject token to secure request
                 request.addHeader("Authorization", "bearer " + redditAuthState.getAccess_token());
             }
         };
 
+        //Create adapter for oauth api
         RestAdapter restAdapter3 = new RestAdapter.Builder().setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(requestInterceptor)
                 .setEndpoint("https://oauth.reddit.com/").setConverter(converter)
                 .build();
 
+
+        //Instantiate services
         rService = restAdapter.create(RedditApiService.class);
         aService = restAdapter2.create(RedditAuthorizationService.class);
         oService = restAdapter3.create(RedditOauthApiService.class);
@@ -115,15 +128,18 @@ public class RedditApi {
         tmpComments = new ArrayList<RedditComment>();
         List<RedditCommentObject> tmpCommentList;
 
+        //If sorting not specified, fall back to "hot"
         if(sorting == null || sorting.length() == 0)
             sorting = "hot";
 
+        //Use different service depending on auth state
         if (isAuth()) {
             tmpCommentList = oService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
         } else {
             tmpCommentList = rService.listThreadComments(thread.getSubreddit(), thread.getId36(), sorting);
         }
 
+        //Construct a list of RedditComment -objects
         for (int i = 0; i < tmpCommentList.size(); i++)
         {
             RedditCommentData data = tmpCommentList.get(i).getData();
@@ -154,6 +170,7 @@ public class RedditApi {
         return tmpComments;
     }
 
+    //Comments have depth and comments can have comments, so we need to recursively loop comments
     private void recursive(RedditCommentObject commentObject, int depth)
     {
         if(commentObject == null)
@@ -200,16 +217,17 @@ public class RedditApi {
         else
         {
             if(isAuth()) {
-                o = oService.listSubreddit(subreddit, sorting);
+                o = oService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
             }else
             {
-                o = rService.listSubreddit(subreddit, sorting);
+                o = rService.listSubredditWithTime(subreddit, sorting, sorting, timeScale);
             }
         }
 
 
         RedditThread thread;
 
+        //Construct a list of RedditThread objects
         for(int i = 0; i < o.getData().getChildren().size(); i++)
         {
             RedditPostData postData = o.getData().getChildren().get(i).getData();
@@ -268,10 +286,10 @@ public class RedditApi {
         if(timeScale == null)
         {
             if(isAuth()) {
-                o = oService.frontPageWithTimescale(sorting, sorting, timeScale);
+                o = oService.frontPage(sorting);
             }else
             {
-                o = rService.frontPageWithTimescale(sorting, sorting, timeScale);
+                o = rService.frontPage(sorting);
             }
         }
         else
@@ -335,6 +353,7 @@ public class RedditApi {
         return tmpList;
     }
 
+    //Convert Boolean to int between -1 and 1
     private int checkLikes(Boolean likes)
     {
         int f_likes;
@@ -372,6 +391,8 @@ public class RedditApi {
 
         this.redditAuthState = a;
 
+
+        //Inform authstate listeners that the authstate has changed
         for(int i = 0; i < listeners.size(); i++)
         {
             listeners.get(i).onAuthStateChanged();
