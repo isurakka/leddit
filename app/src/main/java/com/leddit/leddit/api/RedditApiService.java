@@ -35,7 +35,4 @@ public interface RedditApiService {
     @GET("/r/{subreddit}/comments/{article}/.json")
     List<RedditCommentObject> listThreadComments(@Path("subreddit") String subreddit, @Path("article") String article, @QueryMap Map<String, String> options);
 
-    @POST("/api/login/.json")
-    RedditLoginData login(@QueryMap Map<String, String> loginOptions);
-
 }

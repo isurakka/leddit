@@ -26,7 +26,7 @@ import java.util.List;
 
         }*/
 
-        /*List<RedditThread> threadList = api.getThreads("games", "hot");
+        /*List<RedditThread> threadList = api.getThreads("games", "hot", null);
 
         for(int i = 0; i < threadList.size(); i++)
         {
@@ -42,6 +42,7 @@ import java.util.List;
                     "\n\tScore: " + thread.getScore() +
                     "\n\tFull name: " + thread.getFullname() +
                     "\n\tPosted: " + Utility.redditTimePeriod(thread.getPostDate(), DateTime.now(DateTimeZone.UTC)) + " ago" +
+                    "\n\tMyvote: " + thread.getLikes() +
                     "\n}\n");
 
         }
