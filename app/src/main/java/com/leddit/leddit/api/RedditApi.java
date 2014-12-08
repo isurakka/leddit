@@ -366,7 +366,15 @@ public class RedditApi {
         System.out.println("Expire: " + redditAuthState.getExpires_in());
         System.out.println("Scope: " + redditAuthState.getScope());
         System.out.println("Refresh token: " + redditAuthState.getRefresh_token());
-        refreshToken();
+
+        if(isCaptchaNeeded())
+        {
+            System.out.println(getIden());
+        }
+        else
+        {
+            System.out.println("Captcha not needed");
+        }
     }
 
     private boolean refreshToken()
@@ -413,10 +421,9 @@ public class RedditApi {
         return oService.needsCaptcha();
     }
 
-    public String getIden()
+    public NewCaptchaResponse getIden()
     {
-        NewCaptchaResponse n = oService.newCaptcha();
-        return "";
+        return oService.newCaptcha();
     }
 
     public String getCaptcha(String iden)
