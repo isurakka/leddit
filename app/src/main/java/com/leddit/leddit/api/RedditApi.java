@@ -466,7 +466,7 @@ public class RedditApi {
         return "Basic " + auth;
     }
 
-    public void submitSelfPost(String subreddit, String title, String text, String captcha, String iden)
+    public boolean submitSelfPost(String subreddit, String title, String text, String captcha, String iden)
     {
         if(captcha == null || iden == null)
         {
@@ -475,9 +475,25 @@ public class RedditApi {
         }
 
         RedditPostResponse r = oService.submitPost("json", captcha, "", iden, RedditPostKind.SELF, true, true, subreddit, text, RedditPostThen.COMMENTS, title, "");
+
+        if(r.getJson().getErrors() != null)
+        {
+            if(r.getJson().getErrors().size() > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
     }
 
-    public void submitLinkPost(String subreddit, String title, String url, String captcha, String iden)
+    public boolean submitLinkPost(String subreddit, String title, String url, String captcha, String iden)
     {
         if(captcha == null || iden == null)
         {
@@ -486,6 +502,22 @@ public class RedditApi {
         }
 
         RedditPostResponse r = oService.submitPost("json", captcha, "", iden, RedditPostKind.LINK, true, true, subreddit, "", RedditPostThen.COMMENTS, title, url);
+
+        if(r.getJson().getErrors() != null)
+        {
+            if(r.getJson().getErrors().size() > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public AuthState getRedditAuthState() {
