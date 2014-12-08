@@ -9,11 +9,15 @@ import com.leddit.leddit.api.output.RedditPostSubmitResponse;
 import com.leddit.leddit.api.output.RedditProfile;
 import com.leddit.leddit.api.output.VoteResponse;
 
+import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.Streaming;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by Jonah on 6.12.2014.
@@ -41,7 +45,7 @@ public interface RedditOauthApiService
     NewCaptchaResponse newCaptcha();
 
     @GET("/captcha/iden")
-    CaptchaIdenResponse iden(@Query("iden") String iden);
+    TypedFile iden(@Query("iden") String iden);
 
     @POST("/api/submit")
     RedditPostSubmitResponse submitPost(

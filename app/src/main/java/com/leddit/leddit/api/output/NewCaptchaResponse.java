@@ -20,6 +20,6 @@ public class NewCaptchaResponse extends RedditError
 
     public String getIden()
     {
-        return jquery.get(jquery.size()-1).get(jquery.get(jquery.size()-1).size()).toString();
+        return ((List<String>)(List<?>)jquery.get(jquery.size()-1).get(jquery.get(jquery.size()-1).size()-1)).get(0);
     }
 }
