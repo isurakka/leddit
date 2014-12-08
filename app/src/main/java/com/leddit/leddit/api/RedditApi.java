@@ -240,11 +240,11 @@ public class RedditApi {
             }
             else if(likes == false)
             {
-                f_likes = -1;
+                f_likes = 0;
             }
             else
             {
-                f_likes = 0;
+                f_likes = -1;
             }
 
             if(postData.getThumbnail() != "")
@@ -319,11 +319,11 @@ public class RedditApi {
             }
             else if(likes == false)
             {
-                f_likes = -1;
+                f_likes = 0;
             }
             else
             {
-                f_likes = 0;
+                f_likes = -1;
             }
 
             if(postData.getThumbnail() != "")
