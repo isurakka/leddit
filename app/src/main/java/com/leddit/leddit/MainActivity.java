@@ -718,7 +718,7 @@ public class MainActivity extends Activity
             protected List<RedditComment> doInBackground(Void... asd) {
                 Log.d("CommentsLoadTask", "START");
 
-                return RedditApi.getInstance().getComments(fragment.thread);
+                return RedditApi.getInstance().getComments(fragment.thread, null);
             }
 
             @Override
