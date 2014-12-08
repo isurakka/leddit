@@ -641,6 +641,16 @@ public class MainActivity extends Activity
             // Populate list
             listView = (ListView)rootView.findViewById(R.id.comment_list);
 
+            if (thread != null)
+            {
+                adapter = new RedditCommentListAdapter(listView.getContext(), thread);
+                listView.setAdapter(adapter);
+            }
+            else
+            {
+                Refresh();
+            }
+
             return rootView;
         }
 
@@ -910,8 +920,9 @@ public class MainActivity extends Activity
                 TextView karma = (TextView)container.findViewById(R.id.karma);
                 TextView email = (TextView)container.findViewById(R.id.email);
 
+
                 username.setText(profile.getName());
-                age.setText("Account created " + Utility.redditTimePeriod(new DateTime(profile.getCreated_utc(), DateTimeZone.UTC), new DateTime(DateTimeZone.UTC)) + " ago");
+                age.setText("Account created " + Utility.redditTimePeriod(profile.getActual_created_utc(), new DateTime(DateTimeZone.UTC)) + " ago");
                 karma.setText("Karma " + new Integer(profile.getLink_karma()).toString() + " / " + new Integer(profile.getComment_karma()).toString());
                 email.setText(profile.isHas_verified_email() ? "Verified email" : "Email not verified");
             }
