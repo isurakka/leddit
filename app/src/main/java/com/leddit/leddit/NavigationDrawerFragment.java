@@ -79,6 +79,7 @@ public class NavigationDrawerFragment extends Fragment {
         int loginPosition = actions.indexOf("Login");
         actions.add(loginPosition, "Logout");
         actions.add(loginPosition, "Profile");
+        actions.add(loginPosition, "Submit");
         actions.remove("Login");
         adapter.notifyDataSetChanged();
     }
@@ -144,6 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
                         "AdviceAnimals",
                         "gifs",
                         "askscience",
+                        "test",
                 }));
         mDrawerSubredditListView.setItemChecked(mCurrentSelectedSubredditPosition, true);
 
