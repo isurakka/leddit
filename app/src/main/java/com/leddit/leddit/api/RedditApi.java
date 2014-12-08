@@ -27,6 +27,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.JacksonConverter;
@@ -369,7 +371,7 @@ public class RedditApi {
 
         if(isCaptchaNeeded())
         {
-            System.out.println(getIden());
+            System.out.println(getCaptcha());
         }
         else
         {
@@ -421,15 +423,14 @@ public class RedditApi {
         return oService.needsCaptcha();
     }
 
-    public NewCaptchaResponse getIden()
+    private NewCaptchaResponse getIden()
     {
         return oService.newCaptcha();
     }
 
-    public String getCaptcha(String iden)
+    public String getCaptcha()
     {
-        CaptchaIdenResponse c = oService.iden(iden);
-        return "";
+        return "http://www.reddit.com/captcha/" + getIden().getIden() + ".png";
     }
 
     private String getBasicAuthString()
