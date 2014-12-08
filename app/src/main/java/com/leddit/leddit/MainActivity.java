@@ -310,6 +310,7 @@ public class MainActivity extends Activity
             {
                 RedditApi.getInstance().logout();
                 saveAuthState(null);
+                mNavigationDrawerFragment.ResetActions();
                 ViewSubreddit(null, "hot", null);
             }
             else if (item == "Test")

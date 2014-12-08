@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class NavigationDrawerFragment extends Fragment {
 
+    public ArrayList<String> defaultActions;
     public ArrayList<String> actions;
 
     /**
@@ -69,6 +70,8 @@ public class NavigationDrawerFragment extends Fragment {
                 add("Login");
                 add("Test");
         }};
+
+        defaultActions = new ArrayList<String>(actions);
     }
 
     public void RemoveLogin()
@@ -81,6 +84,17 @@ public class NavigationDrawerFragment extends Fragment {
         actions.add(loginPosition, "Profile");
         actions.add(loginPosition, "Submit");
         actions.remove("Login");
+        adapter.notifyDataSetChanged();
+    }
+
+    public void ResetActions()
+    {
+        ListView view = (ListView)getView().findViewById(R.id.actions);
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>)view.getAdapter();
+        actions.clear();
+        for (int i = 0; i < defaultActions.size(); i++) {
+            actions.add(defaultActions.get(i));
+        }
         adapter.notifyDataSetChanged();
     }
 
