@@ -106,8 +106,15 @@ public class RedditThreadListAdapter extends BaseAdapter {
                     if (flipper.getDisplayedChild() == 0)
                     {
                         Log.d("flipper touch", "UP THREAD INFO");
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(thread.getLink()));
-                        context.startActivity(browserIntent);
+                        if (thread.isIs_self())
+                        {
+                            broadcastOpenComments(finalPosition);
+                        }
+                        else
+                        {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(thread.getLink()));
+                            context.startActivity(browserIntent);
+                        }
                     }
                     else if (flipper.getDisplayedChild() == 1)
                     {
@@ -121,10 +128,7 @@ public class RedditThreadListAdapter extends BaseAdapter {
                         if (contains)
                         {
                             Log.d("flipper touch", "UP COMMENTS BUTTON");
-                            Log.d("sender", "Broadcasting message");
-                            Intent intent = new Intent("open-comments");
-                            intent.putExtra("threadPosition", finalPosition);
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            broadcastOpenComments(finalPosition);
                         }
                     }
                 }
@@ -134,5 +138,13 @@ public class RedditThreadListAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private void broadcastOpenComments(int position)
+    {
+        Log.d("sender", "Broadcasting open comments message");
+        Intent intent = new Intent("open-comments");
+        intent.putExtra("threadPosition", position);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }
