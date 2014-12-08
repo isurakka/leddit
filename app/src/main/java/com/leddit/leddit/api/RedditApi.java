@@ -351,7 +351,9 @@ public class RedditApi {
     {
         if(redditAuthState.getAccess_token() != null)
         {
-            return oService.me();
+            RedditProfile p = oService.me();
+            p.setActual_created_utc(new DateTime(p.getCreated_utc() * 1000, DateTimeZone.UTC));
+            return p;
         }
         else
         {

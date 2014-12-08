@@ -1,5 +1,7 @@
 package com.leddit.leddit.api.output;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by Jonah on 6.12.2014.
  */
@@ -24,6 +26,7 @@ public class RedditProfile extends RedditError
     private boolean has_verified_email;
     private String id;
     private boolean has_mod_mail;
+    private DateTime actual_created_utc;
 
     public boolean isHas_mail() {
         return has_mail;
@@ -143,5 +146,13 @@ public class RedditProfile extends RedditError
 
     public void setHas_mod_mail(boolean has_mod_mail) {
         this.has_mod_mail = has_mod_mail;
+    }
+
+    public DateTime getActual_created_utc() {
+        return actual_created_utc;
+    }
+
+    public void setActual_created_utc(DateTime actual_created_utc) {
+        this.actual_created_utc = actual_created_utc;
     }
 }
