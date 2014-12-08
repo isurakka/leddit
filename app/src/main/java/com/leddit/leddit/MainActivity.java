@@ -212,6 +212,12 @@ public class MainActivity extends Activity
                 vote = 0;
             }
 
+            if (comment == null)
+            {
+                Log.d("ERROR", "COMMENT IS NULL");
+            }
+            Log.d("before comment vote execute", "Got comment vote " + new Integer(vote).toString());
+
             if (commentVoteTask != null && commentVoteTask.getStatus() == AsyncTask.Status.RUNNING)
             {
                 commentVoteTask.cancel(true);
@@ -220,7 +226,7 @@ public class MainActivity extends Activity
             commentVoteTask = new VoteTask(vote, comment, commentsFragment);
             commentVoteTask.execute();
 
-            Log.d("receiver", "Got comment vote" + new Integer(vote).toString());
+            Log.d("receiver", "Got comment vote " + new Integer(vote).toString());
         }
     };
 
@@ -288,12 +294,15 @@ public class MainActivity extends Activity
     private FragmentState getFragmentState()
     {
         FragmentManager fm = getFragmentManager();
+        Fragment f;
 
-        if (fm.findFragmentByTag("threadListFragment") != null) {
+        f = fm.findFragmentByTag("threadListFragment");
+        if (f != null && f.isVisible()) {
             return FragmentState.SUBREDDIT;
         }
 
-        if (fm.findFragmentByTag("commentsFragment") != null) {
+        f = fm.findFragmentByTag("commentsFragment");
+        if (f != null && f.isVisible()) {
             return FragmentState.COMMENTS;
         }
 
