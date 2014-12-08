@@ -467,7 +467,12 @@ public class MainActivity extends Activity
         protected Boolean doInBackground(Void... asd) {
             Log.d("VoteTask", "START");
 
-            return RedditApi.getInstance().voteItem(vote, thing);
+            try {
+                return RedditApi.getInstance().voteItem(vote, thing);
+            } catch (Exception e) {
+                onCancelled();
+                return false;
+            }
         }
 
         @Override
@@ -482,11 +487,16 @@ public class MainActivity extends Activity
 
         @Override
         protected void onPostExecute(Boolean success) {
+            if (!success)
+            {
+                Toast.makeText(getApplicationContext(), "Voting failed!", Toast.LENGTH_LONG).show();
+            }
+
             Log.d("VoteTask", "END " + success.toString());
         }
     }
 
-    class TestTask extends AsyncTask<Void, Void, Void>
+    class TestTask extends AsyncTask<Void, Void, Boolean>
     {
         public TestTask()
         {
@@ -494,14 +504,25 @@ public class MainActivity extends Activity
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             Log.d("TestTask", "oauthCallTest START");
-            RedditApi.getInstance().oauthCallTest();
-            return null;
+            try {
+                RedditApi.getInstance().oauthCallTest();
+            } catch (Exception e) {
+                return false;
+            }
+
+            return true;
         }
 
         @Override
-        protected void onPostExecute(Void asd) {
+        protected void onPostExecute(Boolean success) {
+
+            if (!success)
+            {
+                Toast.makeText(getApplicationContext(), "Test threw an exception!", Toast.LENGTH_LONG).show();
+            }
+
             Log.d("TestTask", "oauthCallTest END");
         }
     }
@@ -608,15 +629,25 @@ public class MainActivity extends Activity
 
             @Override
             protected List<RedditThread> doInBackground(String... params) {
-                if (params[0] == null) {
-                    return RedditApi.getInstance().getFrontpage(params[1], params[2]);
-                }
+                try {
+                    if (params[0] == null) {
+                        return RedditApi.getInstance().getFrontpage(params[1], params[2]);
+                    }
 
-                return RedditApi.getInstance().getThreads(params[0], params[1], params[2]);
+                    return RedditApi.getInstance().getThreads(params[0], params[1], params[2]);
+                } catch (Exception e) {
+                    return null;
+                }
             }
 
             @Override
             protected void onPostExecute(List<RedditThread> redditThreads) {
+                if (redditThreads == null)
+                {
+                    Toast.makeText(fragment.getActivity(), "Thread fetching failed!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 fragment.threads = redditThreads;
                 fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
                 fragment.listView.setAdapter(adapter);
@@ -718,11 +749,21 @@ public class MainActivity extends Activity
             protected List<RedditComment> doInBackground(Void... asd) {
                 Log.d("CommentsLoadTask", "START");
 
-                return RedditApi.getInstance().getComments(fragment.thread, null);
+                try {
+                    return RedditApi.getInstance().getComments(fragment.thread, null);
+                } catch (Exception e) {
+                    return null;
+                }
             }
 
             @Override
             protected void onPostExecute(List<RedditComment> comments) {
+                if (comments == null)
+                {
+                    Toast.makeText(fragment.getActivity(), "Comment fetching failed!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 fragment.thread.setComments(comments);
                 fragment.adapter = new RedditCommentListAdapter(listView.getContext(), fragment.thread);
                 fragment.listView.setAdapter(adapter);
@@ -927,14 +968,20 @@ public class MainActivity extends Activity
 
             @Override
             protected RedditProfile doInBackground(Void... asd) {
-                return RedditApi.getInstance().getProfile();
+                try {
+                    return RedditApi.getInstance().getProfile();
+                } catch (Exception e) {
+                    return null;
+                }
             }
 
             @Override
             protected void onPostExecute(RedditProfile profile) {
-                //fragment.threads = redditThreads;
-                //fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
-                //fragment.listView.setAdapter(adapter);
+                if (profile == null)
+                {
+                    Toast.makeText(fragment.getActivity(), "Profile fetching failed!", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 View container = fragment.getView();
 
@@ -1073,6 +1120,7 @@ public class MainActivity extends Activity
         class NeedCaptchaTask extends AsyncTask<Void, Void, String>
         {
             SubmitFragment fragment;
+            boolean failed = false;
 
             public NeedCaptchaTask(SubmitFragment fragment)
             {
@@ -1081,12 +1129,23 @@ public class MainActivity extends Activity
 
             @Override
             protected String doInBackground(Void... asd) {
-                boolean needCaptcha = RedditApi.getInstance().isCaptchaNeeded();
+                boolean needCaptcha;
+                try {
+                    needCaptcha = RedditApi.getInstance().isCaptchaNeeded();
+                } catch (Exception e) {
+                    failed = true;
+                    return null;
+                }
                 Log.d("captchaNeed", new Boolean(needCaptcha).toString());
                 if (needCaptcha)
                 {
-                    fragment.iden = RedditApi.getInstance().getIden();
-                    return RedditApi.getInstance().getCaptcha(fragment.iden);
+                    try {
+                        fragment.iden = RedditApi.getInstance().getIden();
+                        return RedditApi.getInstance().getCaptcha(fragment.iden);
+                    } catch (Exception e) {
+                        failed = true;
+                        return null;
+                    }
                 }
                 else
                 {
@@ -1096,6 +1155,12 @@ public class MainActivity extends Activity
 
             @Override
             protected void onPostExecute(String captchaUri) {
+                if (failed)
+                {
+                    Toast.makeText(fragment.getActivity(), "Loading captcha failed!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 Log.d("captcha", captchaUri != null ? captchaUri : "null");
 
                 if (captchaUri == null)
@@ -1131,7 +1196,7 @@ public class MainActivity extends Activity
             }
         }
 
-        class SubmitTask extends AsyncTask<Void, Void, Void>
+        class SubmitTask extends AsyncTask<Void, Void, Boolean>
         {
             SubmitFragment fragment;
 
@@ -1143,23 +1208,29 @@ public class MainActivity extends Activity
             }
 
             @Override
-            protected Void doInBackground(Void... asd) {
+            protected Boolean doInBackground(Void... asd) {
 
-                if (self)
-                {
-                    RedditApi.getInstance().submitSelfPost(subreddit, title, text, fragment.captcha, fragment.iden);
+                try {
+                    if (self) {
+                        return RedditApi.getInstance().submitSelfPost(subreddit, title, text, fragment.captcha, fragment.iden);
+                    } else {
+                        return RedditApi.getInstance().submitLinkPost(subreddit, title, text, fragment.captcha, fragment.iden);
+                    }
+                } catch (Exception e) {
+                    return false;
                 }
-                else
-                {
-                    RedditApi.getInstance().submitLinkPost(subreddit, title, text, fragment.captcha, fragment.iden);
-                }
-
-                return null;
             }
 
             @Override
-            protected void onPostExecute(Void asd) {
-                Toast.makeText(fragment.getActivity(), "Submitted!", Toast.LENGTH_LONG).show();
+            protected void onPostExecute(Boolean success) {
+                if (success)
+                {
+                    Toast.makeText(fragment.getActivity(), "Submitted!", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(fragment.getActivity(), "Submit failed!", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
