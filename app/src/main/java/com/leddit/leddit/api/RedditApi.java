@@ -637,6 +637,11 @@ public class RedditApi {
         }
     }
 
+    public void logout()
+    {
+        this.setRedditAuthState(null);
+    }
+
     public AuthState getRedditAuthState() {
         return redditAuthState;
     }
