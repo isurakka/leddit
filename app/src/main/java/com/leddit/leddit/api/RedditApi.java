@@ -133,11 +133,11 @@ public class RedditApi {
                 }
                 else if(data.getChildren().get(j).getData().isLikes() == false)
                 {
-                    f_likes = -1;
+                    f_likes = 0;
                 }
                 else
                 {
-                    f_likes = 0;
+                    f_likes = -1;
                 }
 
 
@@ -178,11 +178,11 @@ public class RedditApi {
             }
             else if(commentObject.getData().getChildren().get(i).getData().isLikes() == false)
             {
-                f_likes = -1;
+                f_likes = 0;
             }
             else
             {
-                f_likes = 0;
+                f_likes = -1;
             }
 
             tmpComments.add(new RedditComment(depth, commentObject.getData().getChildren().get(i).getData().getAuthor(),
