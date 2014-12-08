@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leddit.leddit.api.AuthAttempt;
@@ -33,8 +34,13 @@ import com.leddit.leddit.api.AuthState;
 import com.leddit.leddit.api.AuthStateListener;
 import com.leddit.leddit.api.RedditApi;
 import com.leddit.leddit.api.RedditThing;
+import com.leddit.leddit.api.Utility;
+import com.leddit.leddit.api.output.RedditProfile;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -254,6 +260,14 @@ public class MainActivity extends Activity
             else if (item == "Front page")
             {
                 ViewSubreddit(null, "hot", null);
+            }
+            else if (item == "Profile")
+            {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, ProfileFragment.newInstance(), "profileFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
             else if (item == "Test")
             {
@@ -805,6 +819,98 @@ public class MainActivity extends Activity
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                 Log.d("UserAuthTask", "END");
+            }
+        }
+    }
+
+    public static class ProfileFragment extends Fragment {
+
+        private GetProfileTask profileTask;
+
+        public static ProfileFragment newInstance() {
+            ProfileFragment fragment = new ProfileFragment();
+            //Bundle args = new Bundle();
+            //args.putString(SUBREDDIT_NAME, subreddit);
+            //args.putString(SORTING, sorting);
+            //args.putString(TIMESCALE, timescale);
+            //fragment.setArguments(args);
+
+            return fragment;
+        }
+
+        public ProfileFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+
+            Refresh();
+
+            //String subredditName = getArguments().getString(SUBREDDIT_NAME);
+            //((MainActivity) activity).onSectionAttached(subredditName);
+        }
+
+        @Override
+        public void onDetach() {
+            if (profileTask != null && profileTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                profileTask.cancel(true);
+            }
+            super.onDetach();
+        }
+
+        public void Refresh()
+        {
+            if (profileTask != null && profileTask.getStatus() == AsyncTask.Status.RUNNING)
+            {
+                return;
+            }
+
+            profileTask = new GetProfileTask(this);
+            profileTask.execute();
+        }
+
+        class GetProfileTask extends AsyncTask<Void, Void, RedditProfile>
+        {
+            ProfileFragment fragment;
+
+            public GetProfileTask(ProfileFragment fragment)
+            {
+                this.fragment = fragment;
+            }
+
+            @Override
+            protected RedditProfile doInBackground(Void... asd) {
+                return RedditApi.getInstance().getProfile();
+            }
+
+            @Override
+            protected void onPostExecute(RedditProfile profile) {
+                //fragment.threads = redditThreads;
+                //fragment.adapter = new RedditThreadListAdapter(listView.getContext(), threads);
+                //fragment.listView.setAdapter(adapter);
+
+                View container = fragment.getView();
+
+                TextView username = (TextView)container.findViewById(R.id.username);
+                TextView age = (TextView)container.findViewById(R.id.age);
+                TextView karma = (TextView)container.findViewById(R.id.karma);
+                TextView email = (TextView)container.findViewById(R.id.email);
+
+                username.setText(profile.getName());
+                age.setText("Account created " + Utility.redditTimePeriod(new DateTime(profile.getCreated_utc(), DateTimeZone.UTC), new DateTime(DateTimeZone.UTC)) + " ago");
+                karma.setText("Karma " + new Integer(profile.getLink_karma()).toString() + " / " + new Integer(profile.getComment_karma()).toString());
+                email.setText(profile.isHas_verified_email() ? "Verified email" : "Email not verified");
             }
         }
     }
