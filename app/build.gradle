@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "com.tidder.tidder"
+        applicationId "com.leddit.leddit"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -19,7 +19,7 @@ android {
     }
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java', 'src/main/java/2', 'src/main/java/com.tidder.tidder/']
+            java.srcDirs = ['src/main/java', 'src/main/java/2', 'src/main/java/com.leddit.leddit/']
         }
     }
 

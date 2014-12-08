@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tidder.tidder.NavigationDrawerFragment">
+    tools:context="com.leddit.leddit.NavigationDrawerFragment">
     <ListView
         android:id="@+id/subreddits"
         android:layout_width="match_parent"
